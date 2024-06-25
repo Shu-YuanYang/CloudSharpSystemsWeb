@@ -1,0 +1,19 @@
+﻿CREATE TABLE [EXTERNAL_STACKEXCHANGE].[TB_CS_EDUCATOR_POSTS] (
+    [ID]                  VARCHAR (100)  NOT NULL,
+    [POST_TYPE_ID]        VARCHAR (100)  NOT NULL,
+    [CREATION_DATE]       DATETIME       NOT NULL,
+    [SCORE]               INT            NOT NULL,
+    [VIEW_COUNT]          INT            NOT NULL,
+    [BODY]                NVARCHAR (MAX) NOT NULL,
+    [OWNER_USER_ID]       VARCHAR (100)  NOT NULL,
+    [LAST_EDITOR_USER_ID] VARCHAR (100)  NOT NULL,
+    [LAST_EDIT_DATE]      DATETIME       NOT NULL,
+    [LAST_ACTIVITY_DATE]  DATETIME       NOT NULL,
+    [TITLE]               NVARCHAR (200) NOT NULL,
+    [TAGS]                NVARCHAR (200) NOT NULL,
+    [ANSWER_COUNT]        INT            NOT NULL,
+    [COMMENT_COUNT]       INT            NOT NULL,
+    [CONTENT_LICENSE]     VARCHAR (50)   NOT NULL,
+    PRIMARY KEY CLUSTERED ([ID] ASC)
+);
+

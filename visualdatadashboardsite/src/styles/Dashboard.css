@@ -1,0 +1,669 @@
+/*
+.logo {
+    height: 6em;
+    padding: 1.5em;
+    will-change: filter;
+    transition: filter 300ms;
+}
+*/
+
+
+#root {
+    height: 100%;
+}
+
+
+body {
+    /* Need to remove margins */
+    margin: 0;
+    /* Full Height */
+    min-height: 100vh;
+    /*max-height: 100vh;*/
+    display: grid;
+    align-items: center;
+    /*justify-content: center;*/
+    /*grid-template-rows: auto minmax(0, 1fr);*/
+    overflow: hidden;
+}
+
+canvas {
+    /*background-color: #ccc;*/
+    display: block;
+    position: absolute;
+    /*top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;*/
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+
+.frame-wrap {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    overflow: clip;
+}
+
+.frame {
+    width: 1000px;
+    height: 2000px;
+    border: 0px;
+    zoom: 0.75;
+    -moz-transform: scale(0.75);
+    -moz-transform-origin: 0 0;
+    -o-transform: scale(0.75);
+    -o-transform-origin: 0 0;
+    -webkit-transform: scale(0.75);
+    -webkit-transform-origin: 0 0;
+}
+
+.container.full-width {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    /*overflow-y: clip;*/
+}
+
+.container.full-height {
+    height: 100%;
+    max-width: 100%;
+}
+
+.container.content-height {
+    height: 100%;
+    height: -webkit-calc(100% - 30px);
+    height: -moz-calc(100% - 30px);
+    height: calc(100% - 30px);
+    max-width: 100%;
+}
+
+.container.message-box {
+    height: 300px;
+    background-color: white;
+    font-size: 20px;
+}
+
+.container.margin-medium {
+    margin: 20px;
+}
+
+.container.modal {
+    margin: 0 auto;
+    /*background-color: white;*/
+}
+
+
+
+
+.scroll-control-y {
+    overflow-y: scroll;
+}
+
+.scroll-control-x {
+    overflow-x: scroll;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+
+
+
+
+
+.board {
+    height: 96%;
+    /*min-height: 90%;*/
+    max-width: 100vw;
+    max-height: 96vh;
+    vertical-align: middle;
+}
+
+.board.main {
+    padding-bottom: 1%;
+}
+
+.board.component {
+    height: 100%;
+    /*max-height: 100%;*/
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+
+
+.column-right {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+
+.column {
+    height: 100%;
+    /*max-height: 100%;*/
+    float: left;
+}
+
+.c15 {
+    width: 15%;
+}
+
+.c30 {
+    width: 30%;
+    /*background-color: yellow;*/
+}
+
+.c45 {
+    width: 45%;
+}
+
+.c50 {
+    width: 50%;
+}
+
+.c70 {
+    width: 70%;
+    /*background-color: red;*/
+}
+
+.c95 {
+    width: 95%;
+}
+
+
+
+
+
+.row-flex-box {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    max-height: 100%;
+}
+
+.rauto {
+    flex: 1 1 auto;
+}
+
+.r25 {
+    flex: 0 1 25%;
+}
+
+.r40 {
+    flex: 0 1 40%;
+}
+
+.r95 {
+    flex: 0 1 95%;
+    height: 95%;
+    max-height: 95%;
+}
+
+.rmax77 {
+    max-height: 77%
+}
+
+
+.text-error {
+    color: red;
+}
+
+
+
+
+.cardboard {
+    width: 100%;
+    height: 50px;
+    background-color: aqua;
+}
+
+
+
+
+
+.nav-item {
+    display: inline-flex;
+    padding: 10px;
+    font-size: large;
+}
+
+.nav-item-account {
+    background-color: whitesmoke;
+    border-color: whitesmoke;
+    border-width: thin;
+    border-style: solid;
+    border-radius: 7px;
+    display: inline-flex;
+    padding-left: 4px;
+    padding-right: 4px;
+    white-space: nowrap;
+}
+
+
+
+
+
+.menu {
+    height: 100%;
+    /*max-height: 100%;*/
+    max-width: 300px;
+}
+
+.menu-horitontal {
+    /*height: 100%;*/
+    max-height: 180px;
+    /*max-height: 100%;*/
+    /*max-width: 100%;*/
+}
+
+.selectable-menu {
+    /*max-width: 300px;*/
+    height: 100%;
+    /*max-height: 100%;*/
+    float: left;
+}
+
+.selectable-menu-horizontal {
+    max-width: 100%;
+    max-height: 180px;
+    /*max-height: 100%;*/
+}
+
+
+
+.menu-header {
+    border-radius: 7px 7px 0px 0px;
+    background-color: rgba(200, 200, 200, 1.0);
+    padding: 6px;
+}
+
+    .menu-header.large {
+        font-weight: bold;
+        font-size: 20px;
+    }
+
+.menu-header-square {
+    /*border-radius: 7px 7px 0px 0px;*/
+    background-color: rgba(200, 200, 200, 1.0);
+    padding: 6px;
+}
+
+.sticky {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 250;
+}
+
+.menu-footer {
+    border-radius: 0px 0px 7px 7px;
+    background-color: rgba(200, 200, 200, 1.0);
+    padding: 6px;
+}
+
+
+.menu-select-section {
+    position: relative;
+    right: 0;
+    background-color: rgb(100, 100, 100);
+    width: 100%;
+    height: 100%;
+    /*max-height: 100%;*/
+    float: right;
+    color: white;
+    z-index: 100;
+}
+
+.menu-select-section-horizontal {
+    position: relative;
+    left: 0;
+    background-color: rgb(100, 100, 100);
+    width: 100%;
+    height: 100%;
+    /*max-height: 100%;*/
+    /*float: left;*/
+    color: white;
+    z-index: 100;
+}
+
+    .menu-select-section-horizontal.scroll-control-x {
+        white-space: nowrap;
+        overflow-x: auto;
+    }
+
+.menu-select {
+    /*max-height: 100%;*/
+    background-color: rgb(100, 100, 100);
+}
+
+
+
+
+
+
+
+.dashboard {
+    /*position: relative*/
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 10px 10px 0 0;
+    border-color: rgba(150, 150, 150, 0.6);
+    /*max-height: 100%;*/
+    height: 100%;
+}
+
+.dashboard-square {
+    border-style: solid;
+    border-width: 2px;
+    /*border-radius: 10px;*/
+    border-color: rgba(150, 150, 150, 0.6);
+    height: 100%;
+}
+
+.dashboard.scroll-control-y {
+    overflow-y: scroll;
+}
+
+.dashboard-square.scroll-control-x {
+    white-space: nowrap;
+    overflow-x: auto;
+}
+
+.dashboard.monitor {
+    height: 100%;
+}
+
+
+.dashboard-note-section {
+    right: 0;
+    background-color: rgb(255, 255, 255);
+    width: 100%;
+    height: 100%;
+    float: right;
+    font-size: 14px;
+    /*color: white;*/
+}
+
+.dashboard-note-section-horizontal {
+    left: 0;
+    background-color: rgb(255, 255, 255);
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    /*color: white;*/
+}
+
+
+
+
+
+.dashboard.card {
+    /*min-height: 100px;*/
+    min-width: 100px;
+    /*max-width: 200px;*/
+    /*border: solid;*/
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card.highlighted {
+    border-color: blue;
+}
+
+.card.small {
+    min-height: 50px;
+}
+
+.card-img {
+    /*height: 70%;*/
+    border-width: 0px;
+    border-radius: 9px 9px 0 0;
+    background-color: white;
+    opacity: 1.0;
+    flex: 1;
+}
+
+.card-inline {
+    display: inline-block;
+    min-width: 200px;
+    max-width: 250px;
+    width: 200px;
+}
+
+    .card-img-element.icon {
+        width: 100%;
+        max-height: 70px;
+    }
+
+
+.card-header {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 3px;
+    background-color: rgba(200, 200, 200, 1.0);
+    border-radius: 7px 7px 0px 0px;
+    display: inline-block;
+}
+
+.card-footer {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 3px;
+    background-color: rgba(200, 200, 200, 1.0);
+    border-radius: 0 0 7px 7px;
+    display: inline-block;
+}
+
+.card-footer-buttons {
+    display: inline;
+    float: right;
+}
+
+
+.card-editor {
+    position: relative;
+}
+
+.card-nav-item {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 170;
+}
+
+.card-account-item {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 170;
+}
+
+.card-note-area {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    max-height: 100%;
+    z-index: 0;
+}
+
+.card-button {
+    /*height: 100%;
+    width: 100%;*/
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 170;
+}
+
+.card-button-center {
+    /*height: 100%;
+    width: 100%;*/
+    position: absolute;
+    left: 50%;
+    z-index: 300;
+}
+
+
+
+
+
+
+.button-small {
+    min-width: 35px;
+    height: 20px;
+    max-height: 30px;
+    margin-right: 2px;
+}
+
+.button-medium {
+    /*min-width: 70px;*/
+    max-width: fit-content;
+    height: 25px;
+    max-height: 40px;
+    margin-right: 2px;
+    margin-left: 2px;
+}
+
+.button-custom {
+    background-color: whitesmoke;
+    border-color: lightgray;
+    border-width: thin;
+    border-style: solid;
+    border-radius: 7px;
+    display: inline-flex;
+    padding-left: 4px;
+    padding-right: 4px;
+    white-space: nowrap;
+} 
+
+    .button-custom:hover {
+        background-color: lightgray;
+        cursor: default;
+    }
+
+
+.icon {
+    text-align: center;
+    width: inherit;
+    height: inherit;
+    overflow: clip;
+    border-radius: 10px;
+}
+
+
+.icon-img {
+    max-height: 80px;
+}
+
+.icon-img-small {
+    max-height: 45px;
+}
+
+.icon-img-extra-small {
+    vertical-align: middle;
+    max-width: 35px;
+    max-height: -webkit-fill-available;
+    max-height: 100%;
+    margin-right: 5px;
+    border-radius: 6px;
+}
+
+
+
+.remove-icon {
+    /*background-image: url("../assets/remove.png");
+    background-repeat: no-repeat;*/
+    /*background-attachment: fixed;*/
+    font-weight: bold;
+    /*background-size: 100% 100%;*/
+}
+
+.button-small.remove-icon {
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+.add-icon {
+    /*background-image: url("../assets/add.png");
+    background-repeat: no-repeat;*/
+    /*background-attachment: fixed;*/
+    font-weight: bold;
+    /*background-size: 100% 100%;*/
+}
+
+.button-small.add-icon {
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+.move-icon {
+    min-width: 25px;
+    font-weight: bold;
+    background-color: rgba(200, 200, 200, 0.9);
+    text-align: center;
+}
+
+.button-small.move-icon {
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+
+.title {
+    font-weight: bold;
+    font-size: 32px;
+}
+
+    .page.title {
+        padding-top: 2px;
+        padding-bottom: 2px;
+        text-align: center;
+    }
+
+/************************************************************************************/
+.itempad {
+    /*background-color: azure;*/
+}
+
+.itempad.medium {
+    padding: 5px 10%;
+}
+
+.itempad.small {
+    padding: 5px 1%;
+}
+
+
+
+/************************************************************************************/
+
+.modal-background {
+    display: flex;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    top: 0;
+    left: 0;
+}
+
+
+.modal-team-note {
+    width: 50%;
+}
+
+.modal-textarea {
+    width: 95%;
+    font-size: 20px;
+}
+
+

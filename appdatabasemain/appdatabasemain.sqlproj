@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>appdatabasemain</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{5480cc5a-b20e-403d-ad70-4245622d42d5}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>appdatabasemain</RootNamespace>
+    <AssemblyName>appdatabasemain</AssemblyName>
+    <ModelCollation>1033,CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
+    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="APPLICATIONS\" />
+    <Folder Include="APPLICATIONS\Tables\" />
+    <Folder Include="NETWORK\" />
+    <Folder Include="NETWORK\Tables\" />
+    <Folder Include="PRODUCTS\" />
+    <Folder Include="PRODUCTS\Tables\" />
+    <Folder Include="APPLICATIONS\Views\" />
+    <Folder Include="NETWORK\Functions\" />
+    <Folder Include="NETWORK\Stored Procedures\" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Stored Procedures\" />
+    <Folder Include="Security\" />
+    <Folder Include="APPLICATIONS\Fuunctions" />
+    <Folder Include="INTERFACES\" />
+    <Folder Include="INTERFACES\Tables\" />
+    <Folder Include="PRODUCTS\Views\" />
+    <Folder Include="INTERFACES\Functions\" />
+    <Folder Include="EXTERNAL_STACKEXCHANGE\" />
+    <Folder Include="EXTERNAL_STACKEXCHANGE\Tables\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="APPLICATIONS\Tables\TB_CENTRAL_SYSTEM_LOG.sql" />
+    <Build Include="NETWORK\Tables\TB_HOST_STATUS_LOG.sql" />
+    <Build Include="APPLICATIONS\Tables\TB_APP.sql" />
+    <Build Include="APPLICATIONS\Tables\TB_APP_DATA_CONTROL.sql" />
+    <Build Include="PRODUCTS\Tables\TB_SERVER.sql" />
+    <Build Include="NETWORK\Tables\TB_WEBSITE.sql" />
+    <Build Include="NETWORK\Tables\TB_WEBSITE_HOST.sql" />
+    <Build Include="NETWORK\Tables\TB_USER_SESSION.sql" />
+    <Build Include="NETWORK\Tables\TB_USER_SESSION_HISTORY_LOG.sql" />
+    <Build Include="APPLICATIONS\Views\V_APP_DATA_CONTROL.sql" />
+    <Build Include="NETWORK\Functions\IS_HOST_RESPONSIVE.sql" />
+    <Build Include="NETWORK\Functions\GET_SERVER_DETAILS.sql" />
+    <Build Include="NETWORK\Functions\GET_SERVER_LOAD.sql" />
+    <Build Include="NETWORK\Stored Procedures\INSERT_HOST_STATUS_LOG.sql" />
+    <Build Include="NETWORK\Stored Procedures\LOAD_BALANCE_WEIGHTED_FAULT_AVOIDANCE.sql" />
+    <Build Include="NETWORK\Stored Procedures\LOAD_BALANCE_VALIDATE_LOAD_CACHE.sql" />
+    <Build Include="dbo\Stored Procedures\PROC_TEST.sql" />
+    <Build Include="NETWORK\Stored Procedures\VALIDATE_USER_SESSIONS.sql" />
+    <Build Include="NETWORK\Stored Procedures\LOAD_BALANCE_WEIGHTED_ROUND_ROBIN.sql" />
+    <Build Include="NETWORK\Stored Procedures\UPDATE_HOST_IP_BY_SN.sql" />
+    <Build Include="NETWORK\Stored Procedures\RESET_SERVER_CAPACITY.sql" />
+    <Build Include="NETWORK\Stored Procedures\LOAD_BALANCE_LEAST_CONNECTIONS.sql" />
+    <Build Include="NETWORK\Stored Procedures\LOAD_BALANCE_NONE.sql" />
+    <Build Include="NETWORK\Stored Procedures\LOAD_BALANCE.sql" />
+    <Build Include="NETWORK\Stored Procedures\UPDATE_HOST_STATUS.sql" />
+    <Build Include="NETWORK\Stored Procedures\LOAD_BALANCE_RESET.sql" />
+    <Build Include="Security\APPLICATIONS.sql" />
+    <Build Include="Security\NETWORK.sql" />
+    <Build Include="Security\PRODUCTS.sql" />
+    <Build Include="Security\azuredeploy.sql" />
+    <Build Include="Security\azuredeploy_1.sql" />
+    <Build Include="Security\RoleMemberships.sql" />
+    <Build Include="Security\appagent.sql" />
+    <Build Include="Security\appagent_1.sql" />
+    <Build Include="NETWORK\Functions\GET_DB_HOST_LATENCY_STATISTICS.sql" />
+    <Build Include="APPLICATIONS\Fuunctions\CENTRAL_SYSTEM_LOG_VOLUME.sql" />
+    <Build Include="INTERFACES\Tables\TB_WEBSITE_MENU_ITEM.sql" />
+    <Build Include="INTERFACES\Tables\TB_WEBSITE_MENU_HEADER.sql" />
+    <Build Include="PRODUCTS\Views\V_SERVER_USAGE.sql" />
+    <Build Include="INTERFACES\Functions\GET_MENU_ITEMS_BY_MENU.sql" />
+    <Build Include="Security\INTERFACES.sql" />
+    <Build Include="EXTERNAL_STACKEXCHANGE\Tables\TB_CS_EDUCATOR_POSTS.sql" />
+    <Build Include="EXTERNAL_STACKEXCHANGE\Tables\TB_CS_EDUCATOR_RAW.sql" />
+    <Build Include="INTERFACES\Functions\GET_SUBMENU_ITEMS_BY_MENU.sql" />
+    <Build Include="Security\EXTERNAL_STACKEXCHANGE.sql" />
+    <Build Include="PRODUCTS\Tables\TB_TEST_GRAPH_EDGE.sql" />
+  </ItemGroup>
+</Project>

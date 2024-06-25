@@ -1,0 +1,48 @@
+{
+  "FieldQueryConfigDict": {
+    "GetCSEducatorPostsByQuery": [
+      {
+        "QueryableField": "ID",
+        "FieldType": "String"
+      },
+      {
+        "QueryableField": "TITLE",
+        "FieldType": "String"
+      },
+      {
+        "QueryableField": "TAGS",
+        "FieldType": "String"
+      },
+      {
+        "QueryableField": "BODY",
+        "FieldType": "String"
+      },
+      {
+        "QueryableField": "VIEW_COUNT",
+        "FieldType": "Int32"
+      },
+      {
+        "QueryableField": "COMMENT_COUNT",
+        "FieldType": "Int32"
+      },
+      {
+        "QueryableField": "ANSWER_COUNT",
+        "FieldType": "Int32"
+      },
+      {
+        "QueryableField": "SCORE",
+        "FieldType": "Int32"
+      },
+      {
+        "QueryableField": "CREATION_DATE",
+        "FieldType": "DateTime"
+      },
+      {
+        "QueryableField": "LAST_ACTIVITY_DATE",
+        "FieldType": "DateTime"
+      }
+    ]
+    // Function
+
+  }
+}

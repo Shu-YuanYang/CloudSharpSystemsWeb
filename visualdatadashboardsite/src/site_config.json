@@ -1,0 +1,212 @@
+{
+
+
+  "APIEndpoints": {
+    "CloudSharpMicroService": {
+      "url": "https://cloudsharpsystemswebmicro.azurewebsites.net",
+      "api": {
+        "get_system_log_volume": {
+          "path": "/home/get_system_log_volume",
+          "method": "GET",
+          "default_body": null
+        },
+        "get_server_load_distribution": {
+          "path": "/test/get_server_load_distribution",
+          "method": "GET",
+          "default_body": null
+        },
+        "get_recent_host_status_logs": {
+          "path": "/dbmonitor/get_recent_host_status_logs?offset_time_in_hours=5",
+          "method": "GET",
+          "default_body": null
+        },
+        "get_recent_db_status_logs": {
+          "path": "/dbmonitor/get_recent_db_status_logs?offset_time_in_hours=5",
+          "method": "GET",
+          "default_body": null
+        },
+        "get_menu_config": {
+          "path": "/visualdata/get_menu_config",
+          "method": "GET",
+          "default_body": null
+        },
+        "get_menu_list": {
+          "path": "/visualdata/get_menu_list",
+          "method": "GET",
+          "default_body": null
+        },
+        "get_sortable_links_menu": {
+          "path": "/visualdata/get_sortable_links_menu",
+          "method": "GET",
+          "default_body": null
+        },
+        "update_sortable_links_menu": {
+          "path": "/visualdata/update_sortable_links_menu",
+          "method": "POST",
+          "default_body": null
+        },
+        "get_sortable_charts_menu": {
+          "path": "/visualdata/get_sortable_charts_menu",
+          "method": "GET",
+          "default_body": null
+        },
+        "update_sortable_charts_menu": {
+          "path": "/visualdata/update_sortable_charts_menu",
+          "method": "POST",
+          "default_body": null
+        },
+        "update_sortable_menu": {
+          "path": "/visualdata/update_sortable_menu",
+          "method": "POST",
+          "default_body": null
+        },
+        "add_new_menu_item": {
+          "path": "/visualdata/add_new_menu_item",
+          "method": "POST",
+          "default_body": null
+        },
+
+        "get_teams_by_user": {
+          "path": "/visualdata/get_teams_by_user",
+          "method": "GET",
+          "default_body": null
+        },
+        "get_team_note_config": {
+          "path": "/visualdata/get_team_note_config",
+          "method": "GET",
+          "default_body": null
+        },
+        "get_notes_for_user": {
+          "path": "/visualdata/get_notes_for_user",
+          "method": "GET",
+          "default_body": null
+        },
+        "add_note": {
+          "path": "/visualdata/add_note",
+          "method": "POST",
+          "default_body": null
+        },
+        "update_note": {
+          "path": "/visualdata/update_note",
+          "method": "POST",
+          "default_body": null
+        },
+
+        "get_server_usage_logistics": {
+          "path": "/visualdata/get_server_usage_logistics",
+          "method": "GET",
+          "default_body": null
+        },
+
+
+        "get_queryable_fields_operations": {
+          "path": "/visualdata/get_queryable_fields_operations",
+          "method": "GET",
+          "default_body": null
+        },
+        "query_cs_educator_posts": {
+          "path": "/visualdata/query_cs_educator_posts",
+          "method": "POST",
+          "default_body": { "logic_operator": "OR" }
+        },
+
+
+        "auth_gcp_login": {
+          "path": "/auth/gcp/login",
+          "method": "GET",
+          "default_body": null
+        },
+        "auth_gcp_logout": {
+          "path": "/gcpasset/identity_log_out",
+          "method": "GET",
+          "default_body": null
+        },
+        "get_identity_user_profile": {
+          "path": "/gcpasset/get_identity_user_profile",
+          "method": "GET",
+          "default_body": null
+        }
+
+
+      }
+    },
+    "CloudSharpServer": {
+      "url": null,
+      "api": {
+
+      }
+    },
+
+    "GoogleAPI": {
+      "url": "https://www.googleapis.com",
+      "api": {
+        "oauth2_userinfo": {
+          "path": "/oauth2/v1/userinfo",
+          "method": "GET"
+        }
+      }
+    },
+
+    "LinuxSystemTestServer": {
+      "url": "http://35.192.208.192:3300",
+      "api": {
+        "get_federated_scheduling_tasksets": {
+          "path": "/get_federated_scheduling_tasksets",
+          "method": "GET",
+          "default_body": null
+        },
+        "federated_scheduling_test": {
+          "path": "/federated_scheduling_test",
+          "method": "POST",
+          "default_body": null
+        },
+        "federated_scheduling_download": {
+          "path": "/federated_scheduling_download",
+          "method": "POST",
+          "default_body": null
+        }
+      }
+    },
+
+    "OKISGDServer": {
+      "url": "http://172.23.79.220:1212",
+      "api": {
+        "get_sgd_datasets": {
+          "path": "/get_sgd_datasets",
+          "method": "GET",
+          "default_body": null
+        },
+        "sgd_variable_selection_test": {
+          "path": "/sgd_variable_selection_test",
+          "method": "POST",
+          "default_body": null
+        }
+      }
+    },
+
+    "CloudSharpDashboardGCPStorage": {
+      "url": "https://storage.googleapis.com/visual_data_dashboard_site",
+      "api": {
+        "Links": { "path": "/SORTABLE_LINK_MENU" },
+        "Charts": { "path": "/SORTABLE_CHART_MENU" },
+        "Tables": { "path": "/DATA_TABLE_MENU" }
+      }
+
+    }
+  },
+
+
+  "DataTableViewConfig": {
+
+    "CS Educator Posts": {
+      "QuerySelectorAPI": {
+        "endpoint": "CloudSharpMicroService",
+        "api": "get_queryable_fields_operations",
+        "url_query": "queryID=GetCSEducatorPostsByQuery"
+      }
+    }
+
+  }
+
+
+}

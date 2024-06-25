@@ -1,0 +1,21 @@
+
+{
+    "region" : "us-east-2",
+    "profile" : "default",
+    "configuration" : "Release",
+    "framework"     : "net6.0",
+    "function-name" : "CloudSharpSystemsAPI",
+    "function-description" : "",
+    "package-type"         : "Zip",
+    "function-handler"     : "CloudSharpSystemsWeb",
+    "function-memory-size" : 512,
+    "function-role"        : "arn:aws:iam::427248268587:role/service-role/CloudSharpSystemsAPI-role-o9j6tykv",
+    "function-timeout"     : 15,
+    "function-runtime"     : "dotnet6",
+    "function-architecture" : "x86_64",
+    "function-subnets"      : "",
+    "function-security-groups" : "",
+    "tracing-mode"             : "PassThrough",
+    "environment-variables"    : "",
+    "image-tag"                : ""
+}

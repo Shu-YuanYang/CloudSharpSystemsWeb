@@ -1,0 +1,49 @@
+
+
+.handle-wrapper {
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    /*opacity: 0.5;*/
+    position: absolute;
+    overflow: clip;
+    z-index: 50;
+}
+
+
+
+
+.sortable-box {
+    position: relative;
+    /*background: white;*/
+    min-height: 20px;
+    /*border: solid;
+    border-width: 1px;
+    border-color: gray;*/
+}
+
+
+.sortable-box:first-of-type {
+    /*min-width: 20ch;*/
+}
+
+.sink {
+    opacity: 0.0;
+}
+
+
+
+
+.static-drag-box {
+    position: relative;
+    /*background: white;*/
+    min-height: 70px;
+    background-color: rgba(255, 255, 255, 0.0);
+    /*border: solid;
+    border-width: 1px;
+    border-color: gray;*/
+}
+
+.static-drag-box:first-of-type {
+    /*min-width: 20ch;*/
+}

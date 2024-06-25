@@ -1,0 +1,22 @@
+
+{
+    "region" : "us-west-1",
+    "configuration" : "Debug",
+    "framework"     : "net6.0",
+    "self-contained" : false,
+    "application"    : "CloudSharpSystemsWeb",
+    "environment"    : "CloudSharpSystemsWeb-dev",
+    "app-path"       : "/",
+    "iis-website"    : "Default Web Site",
+    "enable-xray"    : false,
+    "enhanced-health-type" : "basic",
+    "additional-options"   : "",
+    "solution-stack"       : "64bit Amazon Linux 2 v2.6.1 running .NET Core",
+    "environment-type"     : "SingleInstance",
+    "cname"                : "cloudsharpsystemswebca-dev",
+    "instance-type"        : "t2.micro",
+    "key-pair"             : "CloudSharpCAKeyPair",
+    "instance-profile"     : "aws-elasticbeanstalk-ec2-role",
+    "service-role"         : "aws-elasticbeanstalk-service-role",
+    "proxy-server"         : "none"
+}

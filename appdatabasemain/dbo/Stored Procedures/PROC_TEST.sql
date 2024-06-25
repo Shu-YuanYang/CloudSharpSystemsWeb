@@ -1,0 +1,15 @@
+﻿
+
+CREATE PROCEDURE [dbo].[PROC_TEST] 
+	@MESG AS VARCHAR(100),
+	@ID AS VARCHAR(100) OUTPUT
+AS
+BEGIN
+	-- debug
+	-- DECLARE @MESG VARCHAR(100) = 'test before create';
+	-- DECLARE @ID VARCHAR(5) = 'TEST1';
+
+	PRINT @MESG;
+	-- PRINT @ID;
+	SET @ID = NEWID();
+END;

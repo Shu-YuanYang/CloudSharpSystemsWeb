@@ -1,0 +1,7 @@
+﻿CREATE TABLE [PRODUCTS].[TB_TEST_GRAPH_EDGE] (
+    [i]    INT            NOT NULL,
+    [j]    INT            NOT NULL,
+    [NOTE] VARCHAR (1000) NULL,
+    CONSTRAINT [PK_TEST_GRAPH_EDGE] PRIMARY KEY CLUSTERED ([i] ASC, [j] ASC)
+);
+

@@ -1,0 +1,16 @@
+[Unit]
+Description=IP Monitoring Task
+ConditionPathExists=/home/syang/syang_test/IPMonitoringTask/IPMonitoringTask
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=500
+StartLimitBurst=5
+[Service]
+Type=simple
+User=syang
+Restart=always
+RestartSec=5s
+WorkingDirectory=/home/syang/syang_test/IPMonitoringTask
+ExecStart=/home/syang/syang_test/IPMonitoringTask/IPMonitoringTask
+[Install]
+WantedBy=multi-user.target
