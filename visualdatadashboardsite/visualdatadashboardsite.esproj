@@ -9,9 +9,10 @@
     <ProductionBuildCommand>npm run build</ProductionBuildCommand>
     <!-- Folder where production build objects will be placed -->
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
+    <BuildCommand>
+    </BuildCommand>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="dist\" />
     <Folder Include="src\auxiliary\files\" />
     <Folder Include="src\auxiliary\math\" />
     <Folder Include="src\auxiliary\time\" />
@@ -19,5 +20,11 @@
     <Folder Include="src\auxiliary\objects\" />
     <Folder Include="src\endpoints\local_asset_load\" />
     <Folder Include="src\pages\" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptConfiguration Remove="dist\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="dist\**" />
   </ItemGroup>
 </Project>

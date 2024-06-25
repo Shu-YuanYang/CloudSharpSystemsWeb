@@ -1,24 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	<!--<SelfContained>false</SelfContained>-->
+    <!--<SelfContained>false</SelfContained>-->
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Remove="Program.cs" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Google.Apis.Auth" Version="1.65.0" />
     <PackageReference Include="Google.Cloud.Storage.V1" Version="4.7.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\AuxiliaryClassLibrary\AuxiliaryClassLibrary.csproj" />
   </ItemGroup>
-
 </Project>

@@ -1,21 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Geolocation" Version="1.2.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\APIConnector\APIConnector.csproj" />
     <ProjectReference Include="..\AuxiliaryClassLibrary\AuxiliaryClassLibrary.csproj" />
     <ProjectReference Include="..\CloudSharpSystemsCoreLibrary\CloudSharpSystemsCoreLibrary.csproj" />
     <ProjectReference Include="..\DBConnectionLibrary\DBConnectionLibrary.csproj" />
   </ItemGroup>
-
 </Project>
