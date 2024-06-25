@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [NETWORK].[TB_USER_SESSION] (
     [SESSION_ID]      VARCHAR (100) DEFAULT ((format(getdate(),'yyyyMMddHHmmss')+'_')+CONVERT([nvarchar](50),newid())) NOT NULL,
-    [CLIENT_IP]       VARCHAR (20)  NOT NULL,
+    [CLIENT_IP]       VARCHAR (150) NOT NULL,
     [THREAD_ID]       VARCHAR (100) NOT NULL,
     [HOST_IP]         VARCHAR (20)  NULL,
     [RESOURCE_UNIT]   INT           NOT NULL,
@@ -14,6 +14,8 @@
     CHECK ([IS_VALID]='N' OR [IS_VALID]='Y'),
     UNIQUE NONCLUSTERED ([CLIENT_IP] ASC, [THREAD_ID] ASC, [HOST_IP] ASC)
 );
+
+
 
 
 

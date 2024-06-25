@@ -78,6 +78,11 @@
     <Folder Include="INTERFACES\Functions\" />
     <Folder Include="EXTERNAL_STACKEXCHANGE\" />
     <Folder Include="EXTERNAL_STACKEXCHANGE\Tables\" />
+    <Folder Include="AUTH\" />
+    <Folder Include="AUTH\Tables\" />
+    <Folder Include="AUTH\Functions\" />
+    <Folder Include="INTERFACES\Stored Procedures\" />
+    <Folder Include="AUTH\Stored Procedures\" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="APPLICATIONS\Tables\TB_CENTRAL_SYSTEM_LOG.sql" />
@@ -126,5 +131,20 @@
     <Build Include="INTERFACES\Functions\GET_SUBMENU_ITEMS_BY_MENU.sql" />
     <Build Include="Security\EXTERNAL_STACKEXCHANGE.sql" />
     <Build Include="PRODUCTS\Tables\TB_TEST_GRAPH_EDGE.sql" />
+    <Build Include="NETWORK\Tables\TB_USER_SESSION_ITEM_HISTORY_LOG.sql" />
+    <Build Include="NETWORK\Tables\TB_USER_SESSION_ITEM.sql" />
+    <Build Include="AUTH\Tables\TB_APP_USER_TEAM.sql" />
+    <Build Include="AUTH\Tables\TB_APP_TEAM.sql" />
+    <Build Include="AUTH\Tables\TB_APP_USER_IDENTITY_DELETE_LOG.sql" />
+    <Build Include="AUTH\Tables\TB_APP_USER_IDENTITY.sql" />
+    <Build Include="AUTH\Tables\TB_APP_USER.sql" />
+    <Build Include="NETWORK\Functions\GET_DB_HOST_LATENCY_STATISTICS_TEST.sql" />
+    <Build Include="AUTH\Functions\GET_TEAMS_BY_USER.sql" />
+    <Build Include="AUTH\Functions\GET_APP_IDENTITY_USER_PROFILE_HEADER.sql" />
+    <Build Include="NETWORK\Stored Procedures\INVALIDATE_USER_SESSIONS.sql" />
+    <Build Include="INTERFACES\Stored Procedures\VALIDATE_WEBSITE_MENU_ROUTE.sql" />
+    <Build Include="INTERFACES\Stored Procedures\ADD_WEBSITE_MENU_ITEM.sql" />
+    <Build Include="AUTH\Stored Procedures\ADD_APP_USER.sql" />
+    <Build Include="Security\AUTH.sql" />
   </ItemGroup>
 </Project>
