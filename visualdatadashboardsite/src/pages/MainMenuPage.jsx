@@ -1,7 +1,7 @@
 import { useMemo, useCallback } from "react";
 
 import useAuthorizedFetch from "../endpoints/api/useAuthorizedFetch";
-import { api_full_path, get_api, api_authorized_post } from "../endpoints/api/api_helper";
+import { api_full_path, get_api, api_authorized_post, api_authorized_post_form_data } from "../endpoints/api/api_helper";
 import { APIEndpoints } from "../site_config.json";
 import { useContext } from 'react';
 import IdentityContext from "../auxiliary/wrappers/IdentityContext";
@@ -35,6 +35,11 @@ const MainMenuPage = () => {
 
     const sortableMenuListData = useMemo(() => menuListData ? menuListData.map(menu => ({...menu, menu_items: menu.menu_items.sort(charts_comp_func) })) : [], [menuListData]);
 
+    const addNewMenuItem = async (formData) => {
+        for (let entry of formData.entries()) console.log(entry);
+        return await api_authorized_post_form_data(api_full_path(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "add_new_menu_item").path), userIdentity.session_id, formData);
+    };
+
     const saveMenuData = useCallback(async (newSortableData, newSelectableData) => {
         //console.log(newSortableData);
         //console.log(newSelectableData);
@@ -55,6 +60,7 @@ const MainMenuPage = () => {
                 sortableDataArray: sortableMenuListData[i].menu_items,
                 selectableDataArray: [],
                 refreshData: refreshMenuListData,
+                addItem: addNewMenuItem,
                 saveData: saveMenuData,
                 isDataPending: isMenuListDataPending,
                 isSelectable: false,
