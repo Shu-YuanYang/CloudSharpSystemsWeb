@@ -189,6 +189,7 @@ const DashboardModalConfigureMenuItem = ({ title, actionButtons, configurationTy
                 <div>
                     <span>Icon: </span>
                     <input type="file" onChange={handleIconFileChange} />
+                    <span>(Upload png/jpg/jpeg/pdf below 2 MB.)</span>
                     <div className="card-img">
                         <img className="icon-img" src={iconPreview} alt="preview image" />
                     </div>

@@ -21,6 +21,7 @@ using CloudSharpSystemsCoreLibrary.Messaging;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text.Json;
 using Microsoft.Net.Http.Headers;
+using System.IO;
 
 namespace CloudSharpSystemsWeb.Controllers
 {
@@ -183,6 +184,11 @@ namespace CloudSharpSystemsWeb.Controllers
                         iconMemoryStream = new MemoryStream();
                         await section!.Body.CopyToAsync(iconMemoryStream, Request.HttpContext.RequestAborted);
                         //binaryData = memoryStream.ToArray();
+
+                        // Do not upload the file if more than 2 MB: Shu-Yuan Yang added limitation 20240702
+                        if (2097152 < iconMemoryStream.Length) {
+                            throw new FileLoadException($"Selected file is too large ({iconMemoryStream.Length / (1024 * 1024)} MB)!");
+                        }
                     }
                 }
             };
