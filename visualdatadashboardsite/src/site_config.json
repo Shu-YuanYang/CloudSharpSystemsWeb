@@ -125,8 +125,12 @@
           "path": "/gcpasset/get_identity_user_profile",
           "method": "GET",
           "default_body": null
+        },
+        "query_app_user_activities": {
+          "path": "/appuser/query_app_user_activities",
+          "method": "POST",
+          "default_body": { "logic_operator": "OR" }
         }
-
 
       }
     },

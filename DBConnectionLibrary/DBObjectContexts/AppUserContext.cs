@@ -1,4 +1,5 @@
-﻿using DBConnectionLibrary.Models;
+﻿using DBConnectionLibrary.DBQueryContexts;
+using DBConnectionLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -44,5 +45,17 @@ namespace DBConnectionLibrary.DBObjectContexts
             return await query.ToListAsync();
         }
 
+
+        public static async Task<List<TB_CENTRAL_SYSTEM_LOG>> GetAppUserActivitiesByQuery(AppDBMainContext DBContext, QueryList? queryList)
+        {
+            if (queryList == null) queryList = new QueryList { logic_operator = QueryLogicOperator.OR.ToString() };
+            var query = DBContext.CentralSystemLogs.AsQueryable()
+                .Where(log => log.RECORD_VALUE3 != null && log.RECORD_VALUE3.Contains("Identity Username"))
+                // Dynamic query goes here
+                .Where(queryList, DBContext.Validator[nameof(GetAppUserActivitiesByQuery)])
+                .OrderByDescending(log => log.EDIT_TIME).Take(50);
+            var result_lst = await query.ToListAsync();
+            return result_lst;
+        }
     }
 }

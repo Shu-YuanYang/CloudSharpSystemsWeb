@@ -41,6 +41,48 @@
         "QueryableField": "LAST_ACTIVITY_DATE",
         "FieldType": "DateTime"
       }
+    ],
+    "GetAppUserActivitiesByQuery": [
+      {
+        "QueryableField": "APP_ID",
+        "FieldType": "String"
+      },
+      {
+        "QueryableField": "SYSTEM_NAME",
+        "FieldType": "String"
+      },
+      {
+        "QueryableField": "RECORD_TYPE",
+        "FieldType": "String"
+      },
+      {
+        "QueryableField": "RECORD_KEY",
+        "FieldType": "String"
+      },
+      {
+        "QueryableField": "RECORD_VALUE1",
+        "FieldType": "String"
+      },
+      {
+        "QueryableField": "RECORD_VALUE2",
+        "FieldType": "String"
+      },
+      {
+        "QueryableField": "RECORD_VALUE3",
+        "FieldType": "String"
+      },
+      {
+        "QueryableField": "RECORD_VALUE4",
+        "FieldType": "String"
+      },
+      {
+        "QueryableField": "RECORD_VALUE5",
+        "FieldType": "String"
+      },
+      {
+        "QueryableField": "EDIT_TIME",
+        "FieldType": "DateTime"
+      }
     ]
     // Function
 

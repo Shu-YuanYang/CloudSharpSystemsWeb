@@ -284,7 +284,7 @@ namespace CloudSharpSystemsWeb.Controllers
             return posts;
         }
 
-
+        /*
         //GetCSEducatorPostByID
         [HttpPost("query_str")]
         [Produces("application/json")]
@@ -297,7 +297,7 @@ namespace CloudSharpSystemsWeb.Controllers
             var query_strs = AppDataContext.GetQueryStr(this._app_db_main_context, queryID, query_lst);
             return query_strs;
         }
-
+        */
 
 
 
