@@ -208,6 +208,13 @@
         "api": "get_queryable_fields_operations",
         "url_query": "queryID=GetCSEducatorPostsByQuery"
       }
+    },
+    "App User Activities": {
+      "QuerySelectorAPI": {
+        "endpoint": "CloudSharpMicroService",
+        "api": "get_queryable_fields_operations",
+        "url_query": "queryID=GetAppUserActivitiesByQuery"
+      }
     }
 
   }

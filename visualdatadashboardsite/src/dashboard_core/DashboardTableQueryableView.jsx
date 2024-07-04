@@ -1,16 +1,20 @@
 import TableWithSummary from "../tables/TableWithSummary";
 import LoadingComponentWrapper from "../auxiliary/wrappers/LoadingComponentWrapper";
 
-import { useMemo, useState, useEffect } from "react";
-import { QueryListBuilder } from "../endpoints/api/query_helper";
+import { useMemo, useState } from "react";
+//import { QueryListBuilder } from "../endpoints/api/query_helper";
 import { api_full_path_with_query, get_api } from "../endpoints/api/api_helper";
+import useAuthorizedFetch from "../endpoints/api/useAuthorizedFetch";
 import useFetch from "../endpoints/api/useFetch";
+import { useContext } from 'react';
+import IdentityContext from "../auxiliary/wrappers/IdentityContext";
 import { APIEndpoints, DataTableViewConfig } from "../site_config.json";
-
 import TableQueryInterface from "../tables/TableQueryInterface";
 
 
 const DashboardTableQueryableView = ({ title, dataSourceAPIEndpoint, dataSourceAPIName }) => {
+
+    const userIdentity = useContext(IdentityContext);
 
     // Load queryable fields config:
     const queryConfig = DataTableViewConfig[title].QuerySelectorAPI;
@@ -30,7 +34,7 @@ const DashboardTableQueryableView = ({ title, dataSourceAPIEndpoint, dataSourceA
     }, [dataSourceAPIEndpoint, dataSourceAPIName]);
 
     const [requestBody, setRequestBody] = useState(data_source_api.default_body);
-    const { data, refreshData, isPending, error } = useFetch(api_full_path_with_query(APIEndpoints[dataSourceAPIEndpoint].url, data_source_api.path, ""), data_source_api.method, requestBody);
+    const { data, refreshData, isPending, error } = useAuthorizedFetch(api_full_path_with_query(APIEndpoints[dataSourceAPIEndpoint].url, data_source_api.path, ""), userIdentity ? userIdentity.session_id : null, data_source_api.method, requestBody);
 
 
 
