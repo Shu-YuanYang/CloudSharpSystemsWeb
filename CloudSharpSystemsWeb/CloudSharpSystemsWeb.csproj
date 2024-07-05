@@ -17,4 +17,7 @@
     <ProjectReference Include="..\CloudSharpSystemsCoreLibrary\CloudSharpSystemsCoreLibrary.csproj" />
     <ProjectReference Include="..\DBConnectionLibrary\DBConnectionLibrary.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CustomMiddleWares\" />
+  </ItemGroup>
 </Project>
