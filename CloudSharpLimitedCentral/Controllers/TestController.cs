@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net.NetworkInformation;
 using System.Text.Json;
 
-namespace CloudSharpSystemsWeb.Controllers
+namespace CloudSharpLimitedCentral.Controllers
 {
     [Route("[controller]")]
     [ApiController]

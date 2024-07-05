@@ -1,10 +1,16 @@
+using APIConnector.Model;
 using AuxiliaryClassLibrary.ExceptionHelper;
+using CloudSharpLimitedCentral.CustomMiddleWares;
 using CustomMiddleWares;
 using DBConnectionLibrary;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration
+    .AddJsonFile("gcp_credentials_client_secrets.json", optional: true, reloadOnChange: false)
+    .AddJsonFile($"gcp_credentials_client_secrets.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: false);
+
 
 // Add services to the container.
 // Add controller service
@@ -15,6 +21,7 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = null;
     });
+
 
 // Use forwarded headers
 // Reference: https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-5.0
@@ -31,6 +38,8 @@ builder.Services.AddSwaggerGen();
 // add service for global exception handling middleware:
 builder.Services.AddTransient<ExceptionMiddleware>();
 
+
+builder.Services.Configure<GCPOAuth2ClientSecretKeyObject>(builder.Configuration); // get Google credentials client secret config
 // Link Entity Framework Core DB Context to establish reference to the App database:
 builder.Services.AddDbContext<AppDBMainContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseAppMainConnectionString")));
 
@@ -38,6 +47,15 @@ builder.Services.AddDbContext<AppDBMainContext>(options => options.UseSqlServer(
 // Reference: https://www.yogihosting.com/aspnet-core-enable-cors/
 builder.Services.AddCors();
 
+
+// 20240705 Enable Session Management:
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(60);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 
 var app = builder.Build();
@@ -64,6 +82,11 @@ app.UseCors(builder =>
            .AllowAnyMethod()
            .AllowAnyHeader();
 });
+
+app.UseSession();
+
+// Shu-Yuan Yang 20240513 redirect middleware:
+app.UseMiddleware<RedirectMiddleWare>();
 
 app.UseMiddleware<ReverseProxyMiddleware>();
 
