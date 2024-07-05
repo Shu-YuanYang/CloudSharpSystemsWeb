@@ -2,6 +2,16 @@
 
 
   "APIEndpoints": {
+    "CloudSharpLimitedCentral": {
+      "url": "https://cloudsharplimitedcentral.azurewebsites.net",
+      "api": {
+        "auth_gcp_login": {
+          "path": "/auth/gcp/login",
+          "method": "GET",
+          "default_body": null
+        }
+      }
+    },
     "CloudSharpMicroService": {
       "url": "https://cloudsharpsystemswebmicro.azurewebsites.net",
       "api": {
@@ -111,11 +121,6 @@
         },
 
 
-        "auth_gcp_login": {
-          "path": "/auth/gcp/login",
-          "method": "GET",
-          "default_body": null
-        },
         "auth_gcp_logout": {
           "path": "/gcpasset/identity_log_out",
           "method": "GET",
@@ -131,12 +136,6 @@
           "method": "POST",
           "default_body": { "logic_operator": "OR" }
         }
-
-      }
-    },
-    "CloudSharpServer": {
-      "url": null,
-      "api": {
 
       }
     },

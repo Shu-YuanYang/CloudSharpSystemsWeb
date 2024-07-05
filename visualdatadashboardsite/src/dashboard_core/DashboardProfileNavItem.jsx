@@ -60,8 +60,8 @@ function DashboardProfileNavItem() {
         let encoded_return_url = encodeURIComponent(`${window.origin}/auth/login_success`);
 
         let login_path = api_full_path_with_query(
-            APIEndpoints.CloudSharpMicroService.url,
-            get_api(APIEndpoints.CloudSharpMicroService, "auth_gcp_login").path,
+            APIEndpoints.CloudSharpLimitedCentral.url,
+            get_api(APIEndpoints.CloudSharpLimitedCentral, "auth_gcp_login").path,
             `return_redirect_uri=${encoded_return_url}&state=${rand_str}`
             //`return_redirect_uri=https%3A%2F%2Fwonderful-forest-09421e010.5.azurestaticapps.net%2Fauth%2Flogin_success&state=${rand_str}`
         );
