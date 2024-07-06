@@ -8,6 +8,7 @@ using DBConnectionLibrary.Models;
 using DBConnectionLibrary.DBObjectContexts;
 using CloudSharpSystemsCoreLibrary.Models;
 using System.Security.Authentication;
+using System.Text.Json;
 
 namespace CloudSharpSystemsWeb.Controllers
 {
@@ -16,11 +17,11 @@ namespace CloudSharpSystemsWeb.Controllers
     [ApiController]
     public class GCPAssetController : TemplateController
     {
-        
+        private readonly GCPOAuth2ClientSecretKeyObject _gcp_client_secrets;
 
-        public GCPAssetController(ILogger<TemplateController> logger, IConfiguration config, AppDBMainContext appDBMainContext, AppDBMongoContext appDBMongoContext, IOptions<GCPServiceAccountSecretKeyObject> GCPServiceAccountKeyAccessor) : base(logger, config, appDBMainContext, appDBMongoContext, GCPServiceAccountKeyAccessor)
+        public GCPAssetController(ILogger<TemplateController> logger, IConfiguration config, AppDBMainContext appDBMainContext, AppDBMongoContext appDBMongoContext, IOptions<GCPServiceAccountSecretKeyObject> GCPServiceAccountKeyAccessor, IOptions<GCPOAuth2ClientSecretKeyObject> GCPOAuth2CredentialsClientSecretAccessor) : base(logger, config, appDBMainContext, appDBMongoContext, GCPServiceAccountKeyAccessor)
         {
-            
+            this._gcp_client_secrets = GCPOAuth2CredentialsClientSecretAccessor.Value;
         }
 
         [HttpGet("get_storage_object_url")]
@@ -65,6 +66,29 @@ namespace CloudSharpSystemsWeb.Controllers
             return profile_header;
         }
 
+
+
+
+
+        [HttpGet("identity_refresh_token")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        public async Task<GeneralAPIResponse> GCPIdentityRefreshToken()
+        {
+            var session = await this._session_manager.GetSessionByAuthorizationHeader(Request, true, GCPCredentialsHelper.IDENTITY_PROVIDER);
+            var GCP_session_item = session.SESSION_ITEMS!.First();
+
+            var token_info = JsonSerializer.Deserialize<Google.Apis.Auth.OAuth2.Responses.TokenResponse>(GCP_session_item.ITEM_DESCRIPTION!);
+            
+            // Revoke access token and refresh token: Doc at https://developers.google.com/identity/protocols/oauth2/web-server#httprest_8 - Revoking a Token
+            string refresh_result = await this._gcp_credentials_helper.RefreshOAuth2AccessToken(this._gcp_client_secrets, token_info!.RefreshToken);
+
+            // Write system log to record token revoking:
+            var client_info = HttpRequestHeaderHelper.GetClientHttpInfoFromHttpContext(Request.HttpContext);
+            await this._session_manager.WriteLogOutSystemLog(this.MY_PUBLIC_IP, client_info, session, GCP_session_item, this.APP_ID, refresh_result);
+
+            return new GeneralAPIResponse { Status = "OK", Message = "Token refreshed." };
+        }
 
 
         [HttpGet("identity_log_out")]

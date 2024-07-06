@@ -9,10 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add json for query validator:
 builder.Configuration.AddJsonFile("dynamic-query-config.json", optional: false, reloadOnChange: false);
 builder.Configuration.AddJsonFile("gcp_service_account_secrets.json", optional: true, reloadOnChange: false);
-/*builder.Configuration
+builder.Configuration
     .AddJsonFile("gcp_credentials_client_secrets.json", optional: true, reloadOnChange: false)
     .AddJsonFile($"gcp_credentials_client_secrets.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: false);
-*/
+
 
 
 
@@ -50,7 +50,7 @@ builder.Services.AddTransient<ExceptionMiddleware>();
 
 // Link Entity Framework Core DB Context to establish reference to the App database and storage:
 builder.Services.Configure<GCPServiceAccountSecretKeyObject>(builder.Configuration); // get storage service account credential config
-//builder.Services.Configure<GCPOAuth2ClientSecretKeyObject>(builder.Configuration); // get Google credentials client secret config
+builder.Services.Configure<GCPOAuth2ClientSecretKeyObject>(builder.Configuration); // get Google credentials client secret config
 builder.Services.Configure<DynamicQueryConfig>(builder.Configuration); // get queryable fields config
 builder.Services.AddDbContext<AppDBMainContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseAppMainConnectionString")));
 

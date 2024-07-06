@@ -20,6 +20,7 @@ namespace APIConnector.GoogleCloud
 
 
         public const string OAUTH2_LOGIN_URL = "https://accounts.google.com/o/oauth2/v2/auth";
+        public const string OAUTH2_REFRESH_URL = "https://oauth2.googleapis.com/token";
         public const string OAUTH2_REVOKE_URL = "https://oauth2.googleapis.com/revoke";
 
 
@@ -113,6 +114,24 @@ namespace APIConnector.GoogleCloud
             if (key_obj.web!.client_id != token_info.aud) throw new InvalidCredentialException("Invalid token audience!");
         }
 
+        public async Task<string> RefreshOAuth2AccessToken(GCPOAuth2ClientSecretKeyObject key_obj, string refresh_token)
+        {
+            RESTAPIInputModel model = new RESTAPIInputModel
+            {
+                URL = GCPCredentialsHelper.OAUTH2_REFRESH_URL,
+                ContentType = "application/json",
+                APIType = RESTAPIType.POST,
+                InputObject = new {
+                    client_id = key_obj.web!.client_id,
+                    client_secret = key_obj.web!.client_secret,
+                    refresh_token = refresh_token,
+                    grant_type = "refresh_token"
+                } 
+            };
+
+            string response = await RESTAPIConnector.CallRestAPIAsync(model);
+            return response;
+        }
 
         public async Task<string> RevokeOAuth2AccessToken(string access_token) {
 
