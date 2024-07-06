@@ -9,6 +9,11 @@ using DBConnectionLibrary.DBObjectContexts;
 using CloudSharpSystemsCoreLibrary.Models;
 using System.Security.Authentication;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+using CloudSharpSystemsCoreLibrary.Sessions;
+using Google.Apis.Auth.OAuth2.Responses;
+using Microsoft.Extensions.Hosting;
+using CloudSharpLimitedCentralWeb.Models;
 
 namespace CloudSharpSystemsWeb.Controllers
 {
@@ -73,21 +78,37 @@ namespace CloudSharpSystemsWeb.Controllers
         [HttpGet("identity_refresh_token")]
         [Produces("application/json")]
         [Consumes("application/json")]
-        public async Task<GeneralAPIResponse> GCPIdentityRefreshToken()
+        public async Task<TB_USER_SESSION> GCPIdentityRefreshToken()
         {
             var session = await this._session_manager.GetSessionByAuthorizationHeader(Request, true, GCPCredentialsHelper.IDENTITY_PROVIDER);
             var GCP_session_item = session.SESSION_ITEMS!.First();
 
-            var token_info = JsonSerializer.Deserialize<Google.Apis.Auth.OAuth2.Responses.TokenResponse>(GCP_session_item.ITEM_DESCRIPTION!);
-            
+            var token_info = JsonSerializer.Deserialize<GoogleAPIOauth2TokenResponse>(GCP_session_item.ITEM_DESCRIPTION!);
+            string refresh_token = token_info!.refresh_token!;
+
             // Revoke access token and refresh token: Doc at https://developers.google.com/identity/protocols/oauth2/web-server#httprest_8 - Revoking a Token
-            string refresh_result = await this._gcp_credentials_helper.RefreshOAuth2AccessToken(this._gcp_client_secrets, token_info!.RefreshToken);
+            string refresh_result = await this._gcp_credentials_helper.RefreshOAuth2AccessToken(this._gcp_client_secrets, refresh_token);
 
-            // Write system log to record token revoking:
+            // parse new token info:
+            token_info = JsonSerializer.Deserialize<GoogleAPIOauth2TokenResponse>(refresh_result);
+            token_info!.issued_utc = DateTime.UtcNow;
+            token_info!.refresh_token = refresh_token;
+
+            // update session
             var client_info = HttpRequestHeaderHelper.GetClientHttpInfoFromHttpContext(Request.HttpContext);
-            await this._session_manager.WriteLogOutSystemLog(this.MY_PUBLIC_IP, client_info, session, GCP_session_item, this.APP_ID, refresh_result);
-
-            return new GeneralAPIResponse { Status = "OK", Message = "Token refreshed." };
+            var user_info = await GoogleAPIHelper.GetUserInfo(_external_api_map.GoogleAPI!.url!, _external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_userinfo")!, token_info.access_token!);
+            SessionManager session_manager = new SessionManager(this._app_db_main_context);
+            var session_data = await session_manager.UpdateSession(this.MY_PUBLIC_IP, client_info, token_info, user_info, this.APP_ID, "TOKEN_REFRESHED");
+            
+            return new TB_USER_SESSION { 
+                SESSION_ID = session_data.SESSION_ID,
+                CLIENT_IP = session_data.CLIENT_IP,
+                HOST_IP = session_data.HOST_IP,
+                RESOURCE_UNIT = session_data.RESOURCE_UNIT,
+                CLIENT_LOCATION = session_data.CLIENT_LOCATION,
+                REQUESTED_TIME = session_data.REQUESTED_TIME,
+                RESOURCE_SIZE = session_data.RESOURCE_SIZE
+            };
         }
 
 

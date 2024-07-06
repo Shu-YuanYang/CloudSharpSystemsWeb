@@ -53,7 +53,7 @@ namespace CloudSharpSystemsCoreLibrary.Sessions
             return session;
         }
 
-        public async Task<TB_USER_SESSION> UpdateSession(string hostIP, ClientHttpContextInfo client_info, GoogleAPIOauth2TokenResponse token_response, GoogleAPIOAuth2UserInfo user_info, string appID)
+        public async Task<TB_USER_SESSION> UpdateSession(string hostIP, ClientHttpContextInfo client_info, GoogleAPIOauth2TokenResponse token_response, GoogleAPIOAuth2UserInfo user_info, string appID, string updateType = "SIGNED_IN")
         {
             // Search for existing session and identity
             // by user_info.email
@@ -111,7 +111,7 @@ namespace CloudSharpSystemsCoreLibrary.Sessions
                     TRACE_ID = client_info.trace_ID,
                     RECORD_TYPE = "GOOD",
                     RECORD_KEY = "OAUTH2",
-                    RECORD_VALUE1 = "SIGNED_IN",
+                    RECORD_VALUE1 = updateType,
                     RECORD_VALUE2 = $"CloudSharp UID: {identity.USERID}",
                     RECORD_VALUE3 = $"Identity Username: {identity.USERNAME}",
                     RECORD_VALUE4 = $"Session ID: {session_id}",
