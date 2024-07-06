@@ -53,7 +53,7 @@ namespace CloudSharpSystemsCoreLibrary.Sessions
             return session;
         }
 
-        public async Task<TB_USER_SESSION> UpdateSession(string hostIP, ClientHttpContextInfo client_info, Google.Apis.Auth.OAuth2.Responses.TokenResponse token_info, GoogleAPIOAuth2UserInfo user_info, string appID)
+        public async Task<TB_USER_SESSION> UpdateSession(string hostIP, ClientHttpContextInfo client_info, GoogleAPIOauth2TokenResponse token_response, GoogleAPIOAuth2UserInfo user_info, string appID)
         {
             // Search for existing session and identity
             // by user_info.email
@@ -82,11 +82,11 @@ namespace CloudSharpSystemsCoreLibrary.Sessions
                         new TB_USER_SESSION_ITEM {
                             SESSION_ID = session_id,
                             ITEM_NAME = "IDENTITY/GOOGLE",
-                            ITEM_DESCRIPTION = JsonSerializer.Serialize(token_info),
+                            ITEM_DESCRIPTION = JsonSerializer.Serialize(token_response),
                             ITEM_SIZE = 0,
                             ITEM_ROUTE = "GOOGLE",
-                            ITEM_POLICY = token_info.AccessToken,
-                            EXPIRATION_TIME = token_info.IssuedUtc.AddSeconds((double)token_info.ExpiresInSeconds!).ToLocalTime(),
+                            ITEM_POLICY = token_response.access_token,
+                            EXPIRATION_TIME = token_response.issued_utc!.Value.AddSeconds((double)token_response.expires_in!),
                             EDIT_BY = appID //identity.USERID,
                             //EDIT_TIME = DateTime.Now
                         }

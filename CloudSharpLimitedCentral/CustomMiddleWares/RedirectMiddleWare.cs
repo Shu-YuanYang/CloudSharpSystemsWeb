@@ -53,7 +53,7 @@ namespace CloudSharpLimitedCentral.CustomMiddleWares
 
             if (url!.Contains("/auth/gcp/authenticate")) {
                 var token_info = await this.GCPAuthenticate(context, gcp_client_secrets, gcp_credentials_helper);
-                var user_info = await GoogleAPIHelper.GetUserInfo(_external_api_map.GoogleAPI!.url!, _external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_userinfo")!, token_info.AccessToken);
+                var user_info = await GoogleAPIHelper.GetUserInfo(_external_api_map.GoogleAPI!.url!, _external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_userinfo")!, token_info.access_token!);
                 var session_data = await this.SaveSession(context, config["HostConfig"]!, token_info, user_info, db_context, _app_id);
                 this.RedirectBackToOrigin(context, gcp_client_secrets, session_data.SESSION_ID!);
                 return;
@@ -99,7 +99,7 @@ namespace CloudSharpLimitedCentral.CustomMiddleWares
         }
 
 
-        private async Task<Google.Apis.Auth.OAuth2.Responses.TokenResponse> GCPAuthenticate(HttpContext context, GCPOAuth2ClientSecretKeyObject client_secrets, GCPCredentialsHelper gcp_credentials_helper) {
+        private async Task<GoogleAPIOauth2TokenResponse> GCPAuthenticate(HttpContext context, GCPOAuth2ClientSecretKeyObject client_secrets, GCPCredentialsHelper gcp_credentials_helper) {
             string? gcp_preset_login_state = context.Session.GetString(LOGIN_STATE);
             var url_query = context.Request.Query;
 
@@ -120,13 +120,22 @@ namespace CloudSharpLimitedCentral.CustomMiddleWares
 
             await gcp_credentials_helper.VerifyOauth2TokenAccessToken(client_secrets, response.AccessToken);
 
-            return response;
+            return new GoogleAPIOauth2TokenResponse
+            {
+                access_token = response.AccessToken,
+                token_type = response.TokenType,
+                expires_in = response.ExpiresInSeconds!.Value,
+                refresh_token = response.RefreshToken,
+                scope = response.Scope,
+                id_token = response.IdToken,
+                issued_utc = response.IssuedUtc
+            };
         }
 
-        private async Task<TB_USER_SESSION> SaveSession(HttpContext context, string hostIP, Google.Apis.Auth.OAuth2.Responses.TokenResponse token_info, GoogleAPIOAuth2UserInfo user_info, AppDBMainContext db_context, string appID) {
+        private async Task<TB_USER_SESSION> SaveSession(HttpContext context, string hostIP, GoogleAPIOauth2TokenResponse token_response, GoogleAPIOAuth2UserInfo user_info, AppDBMainContext db_context, string appID) {
             var client_info = HttpRequestHeaderHelper.GetClientHttpInfoFromHttpContext(context);
             SessionManager session_manager = new SessionManager(db_context);
-            var session_data = await session_manager.UpdateSession(hostIP, client_info, token_info, user_info, appID);
+            var session_data = await session_manager.UpdateSession(hostIP, client_info, token_response, user_info, appID);
             return session_data;
         }
 
