@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 //import { useNavigate } from 'react-router-dom';
 //import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import { get_api, api_full_path_with_query } from "../endpoints/api/api_helper";
@@ -26,7 +26,7 @@ function DashboardProfileNavItem() {
         window.onmessage = (e) => {
             if (e.origin !== window.origin) {
                 console.log("ORIGIN MISTACH!");
-                //return;
+                return;
             }
 
             if (loginWindow == null) return; // most likely spam message

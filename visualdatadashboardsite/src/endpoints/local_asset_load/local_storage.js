@@ -1,4 +1,5 @@
 export const LOCAL_STORE = {
     AUTH: "auth",
-    IDENTITY: "identity"
+    IDENTITY: "identity",
+    LOGGED_IN_TIME: "loggedInTime"
 };

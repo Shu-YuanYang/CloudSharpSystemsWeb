@@ -121,6 +121,11 @@
         },
 
 
+        "auth_gcp_refresh_token": {
+          "path": "/gcpasset/identity_refresh_token",
+          "method": "GET",
+          "default_body": null
+        },
         "auth_gcp_logout": {
           "path": "/gcpasset/identity_log_out",
           "method": "GET",
