@@ -120,7 +120,7 @@ namespace CloudSharpSystemsWeb.Controllers
             var session = await this._session_manager.GetSessionByAuthorizationHeader(Request, true, GCPCredentialsHelper.IDENTITY_PROVIDER);
             var GCP_session_item = session.SESSION_ITEMS!.First();
 
-            // Revoke access token and refresh token: Doc at https://developers.google.com/identity/protocols/oauth2/web-server#httprest_8 - Revoking a Token
+            
             string logout_result = await this._gcp_credentials_helper.RevokeOAuth2AccessToken(GCP_session_item.ITEM_POLICY!);
             
             // Write system log to record token revoking:

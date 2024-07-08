@@ -91,9 +91,9 @@ const useIdentity = () => {
         const check_interval = setInterval(() => {
             
             let loggedInTime = localStorage.getItem(LOCAL_STORE.LOGGED_IN_TIME);
-            if (loggedInTime && 60000 < Date.now() - JSON.parse(loggedInTime).timestamp) {
-                console.log("Current session ID: ", userIdentity.session_id);
-                console.log("REFRESH LOGIN TOKEN!");
+            if (loggedInTime && 2400000 < Date.now() - JSON.parse(loggedInTime).timestamp) {
+                //console.log("Current session ID: ", userIdentity.session_id);
+                //console.log("REFRESH LOGIN TOKEN!");
                 localStorage.setItem(LOCAL_STORE.LOGGED_IN_TIME, JSON.stringify({ timestamp: Date.now() }));
                 api_authorized_get(api_full_path(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "auth_gcp_refresh_token").path), userIdentity.session_id)
                     .then((data) => {

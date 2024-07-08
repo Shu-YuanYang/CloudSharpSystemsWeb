@@ -16,6 +16,7 @@ using System.Security.Authentication;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static System.Collections.Specialized.BitVector32;
 
 namespace CloudSharpSystemsCoreLibrary.Sessions
 {
@@ -58,12 +59,31 @@ namespace CloudSharpSystemsCoreLibrary.Sessions
             // Search for existing session and identity
             // by user_info.email
             var identity_lst = await AppUserContext.GetUserIdentities(this._app_db_main_context, new TB_APP_USER_IDENTITY { 
-                IDENTITY_PROVIDER = "GOOGLE",
+                IDENTITY_PROVIDER = GCPCredentialsHelper.IDENTITY_PROVIDER,
                 USERNAME = user_info.email
             });
             if (!identity_lst.Any()) throw new InvalidCredentialException($"Identity not found with provider/username {"GOOGLE"}/{user_info.email} in CloudSharp Systems!");
             var identity = identity_lst.First();
 
+
+            // Find current session, and recover refresh token if necessary:
+            IEnumerable<TB_USER_SESSION> current_sessions = await NetworkUserSessionContext.GetUserSessions(this._app_db_main_context, new TB_USER_SESSION { THREAD_ID = identity.USERID, HOST_IP = hostIP, IS_VALID = 'Y' });
+            string item_name = $"IDENTITY/{identity.IDENTITY_PROVIDER}";
+            var current_session_items_raw = current_sessions.Select(session => {
+                var session_items = session.SESSION_ITEMS?.Where(item => item.ITEM_NAME == item_name);
+                if (session_items == null) session_items = new List<TB_USER_SESSION_ITEM>();
+                return session_items;
+            });
+            IEnumerable<TB_USER_SESSION_ITEM> current_session_items = new List<TB_USER_SESSION_ITEM>();
+            if (current_session_items_raw.Any()) current_session_items = current_session_items_raw.Aggregate((lst1, lst2) => lst1.Concat(lst2));
+
+            if (String.IsNullOrEmpty(token_response.refresh_token) && current_session_items.Any()) {
+                var token_info = JsonSerializer.Deserialize<GoogleAPIOauth2TokenResponse>(current_session_items.First().ITEM_DESCRIPTION!);
+                token_response.refresh_token = token_info!.refresh_token!;
+            }
+
+
+            // Generate new session object:
             string session_id = SecurityStateGenerator.GenerateRandomState(SecurityStateGenerator.Salt.Byte64Base64);
             var new_session = new TB_USER_SESSION
             {
@@ -81,10 +101,10 @@ namespace CloudSharpSystemsCoreLibrary.Sessions
                 SESSION_ITEMS = new List<TB_USER_SESSION_ITEM> {
                         new TB_USER_SESSION_ITEM {
                             SESSION_ID = session_id,
-                            ITEM_NAME = "IDENTITY/GOOGLE",
+                            ITEM_NAME = item_name, //"IDENTITY/GOOGLE",
                             ITEM_DESCRIPTION = JsonSerializer.Serialize(token_response),
                             ITEM_SIZE = 0,
-                            ITEM_ROUTE = "GOOGLE",
+                            ITEM_ROUTE = identity.IDENTITY_PROVIDER, //"GOOGLE",
                             ITEM_POLICY = token_response.access_token,
                             EXPIRATION_TIME = token_response.issued_utc!.Value.AddSeconds((double)token_response.expires_in!),
                             EDIT_BY = appID //identity.USERID,

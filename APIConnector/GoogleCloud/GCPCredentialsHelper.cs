@@ -133,6 +133,7 @@ namespace APIConnector.GoogleCloud
             return response;
         }
 
+        // Revoke access token and refresh token: Doc at https://developers.google.com/identity/protocols/oauth2/web-server#httprest_8 - Revoking a Token
         public async Task<string> RevokeOAuth2AccessToken(string access_token) {
 
             RESTAPIInputModel model = new RESTAPIInputModel { 
