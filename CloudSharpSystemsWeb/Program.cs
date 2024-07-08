@@ -1,5 +1,6 @@
 using APIConnector.Model;
 using AuxiliaryClassLibrary.ExceptionHelper;
+using AuxiliaryClassLibrary.Network;
 using DBConnectionLibrary;
 using DBConnectionLibrary.DBQueryContexts;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -103,9 +104,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+var javascript_origins = builder.Configuration.GetSection("javascript_origins").Get<string[]>()!;
 app.UseCors(builder =>
 {
-    builder.AllowAnyOrigin()
+    builder.WithOrigins(javascript_origins)
+            //.AllowAnyOrigin()
             .AllowAnyMethod()
             .AllowAnyHeader();
 });

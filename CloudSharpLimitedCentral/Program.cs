@@ -76,11 +76,13 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 // Shows UseCors with CorsPolicyBuilder.
+var javascript_origins = builder.Configuration.GetSection("javascript_origins").Get<string[]>()!;
 app.UseCors(builder =>
 {
-    builder.AllowAnyOrigin()
-           .AllowAnyMethod()
-           .AllowAnyHeader();
+    builder.WithOrigins(javascript_origins)
+            //.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
 });
 
 app.UseSession();
