@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import DashboardItemMenuSelectArea from "./DashboardItemMenuSelectArea";
 import { __MakeSortableListData } from "../drag_and_drop/drag_and_drop_helper";
 import PaddedComponentWrapper from "../auxiliary/wrappers/PaddedComponentWrapper";
+import DashboardItemMenuHeader from "./DashboardItemMenuHeader";
 import DashboardModalBase from "./DashboardModalBase";
 import DashboardModalConfigureNote from "./DashboardModalConfigureNote";
 import DashboardTagCard from "./DashboardTagCard";
@@ -183,6 +184,29 @@ const DashboardNoteArea = ({ title, data_obj, itemElement, isVerticalDisplay = t
             {actionItem && actionItem.action === "ADD" && <DashboardModalConfigureNote title="New Note" actionButtons={() => actionItemButtons(actionItem)} teamNoteConfig={data_obj.teamNoteConfig} configurationType="Add" configureItem={add_item} />}
             <div className={isVerticalDisplay ? "selectable-menu container full-width" : "selectable-menu-horizontal"}>
                 <div className={isVerticalDisplay ? "dashboard-note-section scroll-control-y" : "dashboard-note-section-horizontal scroll-control-x"}>
+                    <DashboardItemMenuHeader title={title} className={`${isVerticalDisplay ? "menu-header-square" : "menu-header-square"} sticky`}>
+                        {/*!data_obj.isDataPending &&
+                            <div className="card-editor">
+                                <div className="card-button">
+                                    {isDataSaving ?
+                                        (
+                                            <div>
+                                                <span>Saving...</span>
+                                            </div>
+                                        )
+                                        :
+                                        data_obj.sortableDataArray && (
+                                            <div>
+                                                <button className="button-small" onClick={ChangeOnClick}>{isInEditMode ? "Save" : "Edit"}</button>
+                                                <button className={`button-small ${""}`} onClick={hard_refresh}>{isInEditMode ? "Cancel" : "Refresh"}</button>
+                                            </div>
+                                        )
+                                    }
+                                </div>
+                            </div>
+                        */}
+                    </DashboardItemMenuHeader>
+
                     <DashboardItemMenuSelectArea data={identifiableSelectData} setData={setIdentifiableSelectData} isDataPending={data_obj.isDataPending} itemElement={selectableItemElementMap} addItemElement={userIdentity ? addItemElementMap : undefined} isVerticalDisplay={isVerticalDisplay} />
                 </div>
             </div>
