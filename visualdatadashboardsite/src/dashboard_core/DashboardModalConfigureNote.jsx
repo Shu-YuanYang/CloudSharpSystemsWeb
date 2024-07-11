@@ -3,8 +3,10 @@ import { APIEndpoints } from "../site_config.json";
 import { api_full_path_with_query, get_api } from "../endpoints/api/api_helper";
 import useAuthorizedFetch from "../endpoints/api/useAuthorizedFetch";
 import DashboardModalBase from "./DashboardModalBase";
+import UserProfileSimple from "../profiles/UserProfileSimple";
 import { useContext } from 'react';
 import IdentityContext from "../auxiliary/wrappers/IdentityContext";
+import DragScrollable from "../drag_and_drop/DragScrollable";
 
 
 
@@ -39,30 +41,7 @@ const DashboardModalConfigureNote = ({ title, actionButtons, teamNoteConfig, con
         REMOVE: { TEAM_OWNER: true, SENDER: true, EVERYONE_IN_TEAM: false },
         COMPLETE: { TEAM_OWNER: true, SENDER: true, EVERYONE_IN_TEAM: true }
     });
-    /*
-    const [note, setNote] = useState({
-        note_id: "",
-        team_name: "",
-        sender_name: "",
-        priority: "",
-        title: "",
-        message: "",
-        last_edited_by: "",
-        last_edited_time: "2024-06-05T08:01:54.869+00:00",
-        note_hash: "",
-        permissions: {
-            "EDIT": [],
-            "REMOVE": [],
-            "COMPLETE": []
-        },
-        user_permissions: {
-            can_edit: true,
-            can_remove: true,
-            can_complete: true
-        },
-        status_code: ""
-    });
-    */
+    
     const [isUpdating, setIsUpdating] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -122,7 +101,7 @@ const DashboardModalConfigureNote = ({ title, actionButtons, teamNoteConfig, con
 
 
     const editorContent = () => (
-        <>
+        <div className="container full-height card-editor frame-wrap">
             <div>
                 <span>Team: </span>
                 <select className="query-field-input select" value={team} onChange={(e) => { setTeam(e.target.value); }}>
@@ -165,7 +144,20 @@ const DashboardModalConfigureNote = ({ title, actionButtons, teamNoteConfig, con
             <div>
                 <span className="text-error">{errorMessage}</span>
             </div>
-        </>
+
+            {/* Team member list */}
+            <div className="dashboard-subsection">
+                <div className="subsection title-small"><span>In this Team: ({team})</span></div>
+                <DragScrollable className="scroll-control-x">
+                    <div className="nav-item no-pad">
+                        <UserProfileSimple username={"veritaatlastic@gmail.com"} name={"Verita Atlastik"} />
+                        <UserProfileSimple username={"test2@gmail.com"} name={"Test 2"} />
+                        <UserProfileSimple username={"march7@gmail.com"} name={"March 7"} />
+                        <UserProfileSimple username={"Jonny590@gmail.com"} name={"Jonny 590"} />
+                    </div>
+                </DragScrollable>
+            </div>
+        </div>
     );
 
 

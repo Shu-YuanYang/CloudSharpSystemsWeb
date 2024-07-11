@@ -16,7 +16,6 @@
     <Folder Include="src\auxiliary\files\" />
     <Folder Include="src\auxiliary\math\" />
     <Folder Include="src\auxiliary\time\" />
-    <Folder Include="src\auxiliary\wrappers\" />
     <Folder Include="src\auxiliary\objects\" />
     <Folder Include="src\endpoints\local_asset_load\" />
     <Folder Include="src\pages\" />

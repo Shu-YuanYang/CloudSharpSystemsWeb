@@ -47,3 +47,14 @@
 .static-drag-box:first-of-type {
     /*min-width: 20ch;*/
 }
+
+
+
+.drag-scrollable {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+    .drag-scrollable::-webkit-scrollbar {
+        display: none;
+    }
