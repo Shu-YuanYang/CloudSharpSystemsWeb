@@ -74,6 +74,12 @@ namespace DBConnectionLibrary
                 .HasDbFunction(typeof(AppDBMainContext).GetMethod(nameof(GET_APP_IDENTITY_USER_PROFILE_HEADER), new[] { typeof(string), typeof(string) })!)
                 .HasSchema(DB_SCHEMA.AUTH);
 
+            // Configure AUTH.GET_APP_IDENTITY_USER_PROFILE_HEADERS_BY_TEAM function
+            modelBuilder.Entity<T_APP_IDENTITY_USER_PROFILE_HEADER>().ToTable("T_APP_IDENTITY_USER_PROFILE_HEADER");
+            modelBuilder
+                .HasDbFunction(typeof(AppDBMainContext).GetMethod(nameof(GET_APP_IDENTITY_USER_PROFILE_HEADERS_BY_TEAM), new[] { typeof(string), typeof(string) })!)
+                .HasSchema(DB_SCHEMA.AUTH);
+
             // Configure AUTH.GET_TEAMS_BY_USER function
             modelBuilder
                 .HasDbFunction(typeof(AppDBMainContext).GetMethod(nameof(GET_TEAMS_BY_USER), new[] { typeof(string), typeof(string), typeof(char) })!)
@@ -123,6 +129,9 @@ namespace DBConnectionLibrary
 
         public IQueryable<T_APP_IDENTITY_USER_PROFILE_HEADER> GET_APP_IDENTITY_USER_PROFILE_HEADER(string IDENTITY_PROVIDER, string USERID)
             => FromExpression(() => GET_APP_IDENTITY_USER_PROFILE_HEADER(IDENTITY_PROVIDER, USERID));
+
+        public IQueryable<T_APP_IDENTITY_USER_PROFILE_HEADER> GET_APP_IDENTITY_USER_PROFILE_HEADERS_BY_TEAM(string IDENTITY_PROVIDER, string TEAM_ID)
+            => FromExpression(() => GET_APP_IDENTITY_USER_PROFILE_HEADERS_BY_TEAM(IDENTITY_PROVIDER, TEAM_ID));
 
         public IQueryable<TB_APP_TEAM> GET_TEAMS_BY_USER(string APP_ID, string USERID, char WITH_DEFAULT_ACCOUNT)
             => FromExpression(() => GET_TEAMS_BY_USER(APP_ID, USERID, WITH_DEFAULT_ACCOUNT));

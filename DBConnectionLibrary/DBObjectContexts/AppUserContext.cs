@@ -40,6 +40,14 @@ namespace DBConnectionLibrary.DBObjectContexts
             return profile_head_result;
         }
 
+        public static async Task<IEnumerable<T_APP_IDENTITY_USER_PROFILE_HEADER>> GetUserIdentityProfileHeadersByTeam(AppDBMainContext DBContext, string IdentityProvider, string TeamID) {
+            var query = from profile_header in DBContext.GET_APP_IDENTITY_USER_PROFILE_HEADERS_BY_TEAM(IdentityProvider, TeamID)
+                        select profile_header;
+
+            var profile_head_results = await query.ToListAsync();
+            return profile_head_results;
+        }
+
         public static async Task<IEnumerable<TB_APP_USER>> GetUsersByIDs(AppDBMainContext DBContext, IEnumerable<string> userIDs) {
             var query = DBContext.AppUsers.Where(u => userIDs.Contains(u.USERID));
             return await query.ToListAsync();
