@@ -106,7 +106,7 @@ const DashboardItemMenu = ({ title, data_obj, itemElement, isVerticalDisplay = t
                 {isInEditMode && data_obj.isSelectable && 
                     <div className="card-editor">
                         <div className="card-button">
-                            <button className="button-small remove-icon" onClick={() => { remove_item(item); }}>x</button>
+                            <button className="button-small remove-icon" onClick={() => { remove_item(item); }}>{"x"}</button>
                         </div>
                     </div>
                 }
@@ -125,7 +125,8 @@ const DashboardItemMenu = ({ title, data_obj, itemElement, isVerticalDisplay = t
             {itemElement({ item: item })}
             <div className="card-editor">
                 <div className="card-button">
-                    <button className="button-small add-icon" onClick={() => { include_item(item); }}>+</button>
+                    {<button className="button-small remove-icon" onClick={() => { }}>{"delete"}</button>}
+                    <button className="button-small add-icon" onClick={() => { include_item(item); }}>{"+"}</button>
                 </div>
             </div>
         </PaddedComponentWrapper>
