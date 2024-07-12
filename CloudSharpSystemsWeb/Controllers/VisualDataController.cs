@@ -124,7 +124,7 @@ namespace CloudSharpSystemsWeb.Controllers
         {
             var session_info = await this._session_manager.GetSessionByAuthorizationHeader(Request, false, "");
 
-            var response_obj = new GeneralAPIResponse { Status = "Success", Message = "Chart menu updated!" };
+            var response_obj = new GeneralAPIResponse { Status = "Success", Message = "Sortable menu updated!" };
             if (!menu_items.Any()) return response_obj;
             var menu_header = await InterfacesMenuContext.GetWebsiteMenuHeader(this._app_db_main_context, session_info.THREAD_ID!, "", menu_items.First().MENU_DISPLAY_NAME!);
             await InterfacesMenuContext.UpdateWebsiteMenuItemsByMenu(this._app_db_main_context, this.SITE_ID, menu_header.MENU_NAME!, session_info.THREAD_ID!, menu_items);

@@ -61,12 +61,16 @@ namespace DBConnectionLibrary.DBObjectContexts
             changedItemList.ForEach(item => {
                 var inputItem = menu_items.Single(input => input.ITEM_NAME == item.ITEM_NAME);
                 item.RANKING = inputItem.RANKING;
+                if (inputItem.ROUTE == "DELETED") { // Shu-Yuan Yang 20240712 added disabling logic.
+                    item.RANKING = -1;
+                    item.IS_ENABLED = 'N';
+                }
                 item.EDIT_BY = user_id;
                 item.EDIT_TIME = current_time;
             });
 
             await DBContext.BulkUpdateAsync(changedItemList, options =>
-                options.ColumnInputExpression = item => new { item.RANKING, item.EDIT_BY, item.EDIT_TIME }
+                options.ColumnInputExpression = item => new { item.RANKING, item.IS_ENABLED, item.EDIT_BY, item.EDIT_TIME }
             );
         }
 
