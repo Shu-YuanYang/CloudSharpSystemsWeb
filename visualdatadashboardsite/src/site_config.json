@@ -131,8 +131,15 @@
           "method": "GET",
           "default_body": null
         },
+
+
         "get_identity_user_profile": {
-          "path": "/gcpasset/get_identity_user_profile",
+          "path": "/appuser/get_identity_user_profile",
+          "method": "GET",
+          "default_body": null
+        },
+        "get_identity_users_by_team": {
+          "path": "/appuser/get_identity_users_by_team",
           "method": "GET",
           "default_body": null
         },

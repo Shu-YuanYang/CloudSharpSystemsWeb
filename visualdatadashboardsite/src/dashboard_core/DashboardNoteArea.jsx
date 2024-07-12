@@ -5,11 +5,10 @@ import PaddedComponentWrapper from "../auxiliary/wrappers/PaddedComponentWrapper
 import DashboardItemMenuHeader from "./DashboardItemMenuHeader";
 import DashboardModalBase from "./DashboardModalBase";
 import DashboardModalConfigureNote from "./DashboardModalConfigureNote";
-import UserProfileSimple from "../profiles/UserProfileSimple";
+import TeamUserProfilesSimpleSubsection from "../profiles/TeamUserProfilesSimpleSubsection";
 import DashboardTagCard from "./DashboardTagCard";
 import { useContext } from 'react';
 import IdentityContext from "../auxiliary/wrappers/IdentityContext";
-import DragScrollable from "../drag_and_drop/DragScrollable";
 
 
 
@@ -134,17 +133,7 @@ const DashboardNoteArea = ({ title, data_obj, itemElement, isVerticalDisplay = t
             }
 
             {/* Team member list */}
-            <div className="dashboard-subsection">
-                <div className="subsection title-small"><span>In this Team: ({item.team_name})</span></div>
-                <DragScrollable className="scroll-control-x">
-                    <div className="nav-item no-pad">
-                        <UserProfileSimple username={"veritaatlastic@gmail.com"} name={"Verita Atlastik"} />
-                        <UserProfileSimple username={"test2@gmail.com"} name={"Test 2"} />
-                        <UserProfileSimple username={"march7@gmail.com"} name={"March 7"} />
-                        <UserProfileSimple username={"Jonny590@gmail.com"} name={"Jonny 590"} />
-                    </div>
-                </DragScrollable>
-            </div>
+            <TeamUserProfilesSimpleSubsection teamName={item.team_name} />
         </div>
     );
 

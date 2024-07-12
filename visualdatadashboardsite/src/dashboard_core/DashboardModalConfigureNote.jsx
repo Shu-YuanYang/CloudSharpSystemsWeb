@@ -3,11 +3,9 @@ import { APIEndpoints } from "../site_config.json";
 import { api_full_path_with_query, get_api } from "../endpoints/api/api_helper";
 import useAuthorizedFetch from "../endpoints/api/useAuthorizedFetch";
 import DashboardModalBase from "./DashboardModalBase";
-import UserProfileSimple from "../profiles/UserProfileSimple";
+import TeamUserProfilesSimpleSubsection from "../profiles/TeamUserProfilesSimpleSubsection";
 import { useContext } from 'react';
 import IdentityContext from "../auxiliary/wrappers/IdentityContext";
-import DragScrollable from "../drag_and_drop/DragScrollable";
-
 
 
 const DashboardModalConfigureNote = ({ title, actionButtons, teamNoteConfig, configurationType, configureItem }) => {
@@ -146,17 +144,7 @@ const DashboardModalConfigureNote = ({ title, actionButtons, teamNoteConfig, con
             </div>
 
             {/* Team member list */}
-            <div className="dashboard-subsection">
-                <div className="subsection title-small"><span>In this Team: ({team})</span></div>
-                <DragScrollable className="scroll-control-x">
-                    <div className="nav-item no-pad">
-                        <UserProfileSimple username={"veritaatlastic@gmail.com"} name={"Verita Atlastik"} />
-                        <UserProfileSimple username={"test2@gmail.com"} name={"Test 2"} />
-                        <UserProfileSimple username={"march7@gmail.com"} name={"March 7"} />
-                        <UserProfileSimple username={"Jonny590@gmail.com"} name={"Jonny 590"} />
-                    </div>
-                </DragScrollable>
-            </div>
+            <TeamUserProfilesSimpleSubsection teamName={team} />
         </div>
     );
 

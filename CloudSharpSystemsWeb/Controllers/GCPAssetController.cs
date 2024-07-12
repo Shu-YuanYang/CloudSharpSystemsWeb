@@ -40,7 +40,7 @@ namespace CloudSharpSystemsWeb.Controllers
 
 
 
-
+        // TODO: Deprecate this function. Move to AppUserController.cs
         [HttpGet("get_identity_user_profile")]
         [Produces("application/json")]
         [Consumes("application/json")]

@@ -37,6 +37,38 @@ namespace CloudSharpSystemsWeb.Controllers
 
 
 
+        [HttpGet("get_identity_user_profile")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        public async Task<T_APP_IDENTITY_USER_PROFILE_HEADER> GetGCPIdentityUserProfile()
+        {
+            var session = await this._session_manager.GetSessionByAuthorizationHeader(Request, true, GCPCredentialsHelper.IDENTITY_PROVIDER);
+
+            // query for aliased profile:
+            T_APP_IDENTITY_USER_PROFILE_HEADER profile_header = await AppUserContext.GetUserIdentityProfileHeader(this._app_db_main_context, GCPCredentialsHelper.IDENTITY_PROVIDER, session.THREAD_ID!);
+
+            // fetch identity data from Google:
+            GoogleAPIOAuth2UserInfo user_info_data;
+            try
+            {
+                user_info_data = await GoogleAPIHelper.GetUserInfo(this._external_api_map.GoogleAPI!.url!, this._external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_userinfo")!, session.SESSION_ITEMS!.First().ITEM_POLICY!);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidCredentialException(ex.Message);
+            }
+
+            profile_header.FIRST_NAME = ""; // TO REWRITE AFTER PUBLIC TESTING
+            profile_header.LAST_NAME = ""; // TO REWRITE AFTER PUBLIC TESTING
+            profile_header.PHONE_NUMBER = ""; // TO REWRITE AFTER PUBLIC TESTING
+            profile_header.PROFILE_PICTURE = user_info_data.picture;
+
+            return profile_header;
+        }
+
+
+
+
         [HttpGet("get_identity_users_by_team")]
         [Produces("application/json")]
         [Consumes("application/json")]
