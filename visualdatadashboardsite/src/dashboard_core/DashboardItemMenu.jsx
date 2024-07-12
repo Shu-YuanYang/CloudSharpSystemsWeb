@@ -32,6 +32,7 @@ const DashboardItemMenu = ({ title, data_obj, itemElement, isVerticalDisplay = t
     const [isInAddMode, setIsInAddMode] = useState(false);
     const [identifiableSortableData, setIdentifiableSortablData] = useState([]);
     const [identifiableSelectData, setIdentifiableSelectData] = useState([]);
+    const [identifiableDeletedData, setIdentifiableDeletedData] = useState([]);
     const [isDataSaving, setIsDataSaving] = useState(false);
 
     useEffect(() => {
@@ -39,10 +40,12 @@ const DashboardItemMenu = ({ title, data_obj, itemElement, isVerticalDisplay = t
             const comp_func = (a, b) => { return (data_obj.dataIdentifier(a) < data_obj.dataIdentifier(b)) ? -1 : 1; };
             setIdentifiableSortablData(__MakeSortableListData(data_obj.sortableDataArray, data_obj.dataIdentifier));
             setIdentifiableSelectData(__MakeSortableListData(data_obj.selectableDataArray, data_obj.dataIdentifier).sort(comp_func));
+            setIdentifiableDeletedData(__MakeSortableListData([], null));
         }
         else {
             setIdentifiableSortablData(__MakeSortableListData([], null));
             setIdentifiableSelectData(__MakeSortableListData([], null));
+            setIdentifiableDeletedData(__MakeSortableListData([], null));
         }
 
     }, [data_obj]);
@@ -65,6 +68,15 @@ const DashboardItemMenu = ({ title, data_obj, itemElement, isVerticalDisplay = t
         setIdentifiableSortablData(__RemoveItemFromSortableListData(identifiableSortableData, item, data_obj.dataIdentifier));
     };
 
+    const delete_item = (item) => {
+        let copied_item = { ...item };
+        const comp_func = (a, b) => { return (data_obj.dataIdentifier(a) < data_obj.dataIdentifier(b)) ? -1 : 1; };
+        let new_arr = __AddItemToSortableListData(identifiableDeletedData, copied_item, data_obj.dataIdentifier);
+        if (data_obj.dataIdentifier) new_arr.sort(comp_func);
+        setIdentifiableDeletedData(new_arr);
+        setIdentifiableSelectData(__RemoveItemFromSortableListData(identifiableSelectData, item, data_obj.dataIdentifier));
+    }
+
     const include_item = (item) => {
         let copied_item = { ...item };
         setIdentifiableSortablData(__AddItemToSortableListData(identifiableSortableData, copied_item, data_obj.dataIdentifier));
@@ -75,7 +87,7 @@ const DashboardItemMenu = ({ title, data_obj, itemElement, isVerticalDisplay = t
     const ChangeOnClick = () => {
         if (isInEditMode) {
             setIsDataSaving(true);
-            data_obj.saveData(identifiableSortableData, identifiableSelectData)
+            data_obj.saveData(identifiableSortableData, identifiableSelectData, identifiableDeletedData)
                 .catch((err) => {
                     console.log("Data saving failed!");
                     console.log(err);
@@ -125,7 +137,7 @@ const DashboardItemMenu = ({ title, data_obj, itemElement, isVerticalDisplay = t
             {itemElement({ item: item })}
             <div className="card-editor">
                 <div className="card-button">
-                    {<button className="button-small remove-icon" onClick={() => { }}>{"delete"}</button>}
+                    {<button className="button-small remove-icon" onClick={() => { delete_item(item); }}>{"delete"}</button>}
                     <button className="button-small add-icon" onClick={() => { include_item(item); }}>{"+"}</button>
                 </div>
             </div>

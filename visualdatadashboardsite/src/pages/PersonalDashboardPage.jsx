@@ -36,12 +36,16 @@ const PersonalDashboardPage = () => {
         return await api_authorized_post_form_data(api_full_path(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "add_new_menu_item").path), userIdentity.session_id, formData);
     };
 
-    const saveMenuData = async (newSortableData, newSelectableData) => {
+    const saveMenuData = async (newSortableData, newSelectableData, newDeletedData) => {
         //console.log(newSortableData);
         //console.log(newSelectableData);
         for (let i = 0; i < newSortableData.length; ++i) newSortableData[i].RANKING = i + 1;
         for (let i = 0; i < newSelectableData.length; ++i) newSelectableData[i].RANKING = -1;
-        let changedItemsArray = [...newSortableData, ...newSelectableData];
+        for (let i = 0; i < newDeletedData.length; ++i) {
+            newDeletedData[i].RANKING = -1;
+            newDeletedData[i].ROUTE = "DELETED"; // mark as deleted for backend
+        }
+        let changedItemsArray = [...newSortableData, ...newSelectableData, ...newDeletedData];
         changedItemsArray.forEach((item) => { delete item.ICON });  // remove the icon url path to save bytes transmitted to backend 
         console.log(changedItemsArray);
         await api_authorized_post(api_full_path(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "update_sortable_menu").path), userIdentity.session_id, changedItemsArray);
