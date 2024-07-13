@@ -25,10 +25,6 @@ const PersonalDashboardPage = () => {
 
     const userIdentity = useContext(IdentityContext);
 
-
-    const [isChartMenuExpanded, setIsChartMenuExpanded] = useState(true);
-    const switchChartsMenuMode = () => { setIsChartMenuExpanded(!isChartMenuExpanded); }
-
     const dataIdentifier = (row) => { return row.DISPLAY_NAME; };
 
     const addNewMenuItem = async (formData) => {
@@ -91,6 +87,10 @@ const PersonalDashboardPage = () => {
 
 
     // Download and organise chart menu data:
+    const [isChartMenuExpanded, setIsChartMenuExpanded] = useState(true);
+    const [isChartMenuInSelectMode, setIsChartMenuInSelectMode] = useState(false);
+    const switchChartsMenuMode = () => { setIsChartMenuExpanded(!isChartMenuExpanded); }
+
     const [currentChartItem, setCurrentChartItem] = useState(null);
 
     //const [chartsData, setChartsData] = useState(makeSortableChartData());
@@ -178,13 +178,13 @@ const PersonalDashboardPage = () => {
 
 
     const ExpandableChartsMenuMap = () => (
-        <div>
+        <div style={{ maxHeight: "100%", height: "100%" }}>
             <div className="card-editor">
                 <div className="card-button-center">
                     <button className="button-small" onClick={switchChartsMenuMode}>{isChartMenuExpanded ? "Collapse" : "Expand"}</button>
                 </div>
             </div>
-            {isChartMenuExpanded && !chartsDataFetchError && <DashboardItemMenu title={"Charts"} data_obj={chart_menu_data_obj} itemElement={chartItemElement} isVerticalDisplay={false} allowNewItemAdding={userIdentity != null} />}
+            {isChartMenuExpanded && !chartsDataFetchError && <DashboardItemMenu title={"Charts"} data_obj={chart_menu_data_obj} itemElement={chartItemElement} isVerticalDisplay={false} allowNewItemAdding={userIdentity != null} selectModeControl={{ isInSelectMode: isChartMenuInSelectMode, setIsInSelectMode: setIsChartMenuInSelectMode }} />}
         </div>
     );
 
@@ -200,7 +200,9 @@ const PersonalDashboardPage = () => {
         </div>
     );
 
-    
+
+    const chartMenuHeight = isChartMenuExpanded? (isChartMenuInSelectMode ? "48%" : "24%") : "0%";
+    const monitorHeight = isChartMenuExpanded? (isChartMenuInSelectMode ? "52%" : "76%") : "100%";
 
     return (
         <div className="board main">
@@ -212,11 +214,11 @@ const PersonalDashboardPage = () => {
                     <div className="container full-height">
                         <div className="column c70">
                             <div className="board component">
-                                <div className="row-flex-box">
-                                    <div className="rauto rmax77">
+                                <div className={""/*"row-flex-box"*/} style={{position: "relative", height: "100%", maxHeight: "100%"}}>
+                                    <div className={""/*"rauto rmax77"*/} style={{ display: "block", maxHeight: monitorHeight, height: monitorHeight, overflow: "clip" }}>
                                         <DashboardMonitor title="Monitor" currentComponentData={currentChartItem} />
                                     </div>
-                                    <div>
+                                    <div style={{ position: "absolute", bottom: 0, height: chartMenuHeight, maxHeight: chartMenuHeight, width: "100%" }}>
                                         <ExpandableChartsMenuMap />
                                     </div>
                                 </div>

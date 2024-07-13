@@ -26,7 +26,7 @@ import DashboardModalConfigureMenuItem from "./DashboardModalConfigureMenuItem";
  *      itemElement: component function
  * @returns DashboardItemMenu component
  */
-const DashboardItemMenu = ({ title, data_obj, itemElement, isVerticalDisplay = true, allowNewItemAdding = true }) => {
+const DashboardItemMenu = ({ title, data_obj, itemElement, isVerticalDisplay = true, allowNewItemAdding = true, selectModeControl = null }) => {
 
     const [isInEditMode, setIsInEditMode] = useState(false);
     const [isInAddMode, setIsInAddMode] = useState(false);
@@ -51,10 +51,18 @@ const DashboardItemMenu = ({ title, data_obj, itemElement, isVerticalDisplay = t
     }, [data_obj]);
 
 
+    // Shu-Yuan Yang 20240713 added to conveniently track edit mode from parent
+    useEffect(() => {
+        if (selectModeControl && selectModeControl.isInSelectMode) setIsInEditMode(selectModeControl.isInSelectMode);
+    }, [selectModeControl]);
+
+
     // function to refresh and restore the UI to static state:  
     const hard_refresh = () => {
         data_obj.refreshData();
-        setIsInEditMode(false);
+        //setIsInEditMode(false);
+        if (selectModeControl && selectModeControl.setIsInSelectMode) selectModeControl.setIsInSelectMode(false);
+        else setIsInEditMode(false);
     };
 
     // function to remove an item from the local data list:
@@ -98,7 +106,9 @@ const DashboardItemMenu = ({ title, data_obj, itemElement, isVerticalDisplay = t
         }
         else
         {
-            setIsInEditMode(!isInEditMode);
+            //setIsInEditMode(!isInEditMode);
+            if (selectModeControl && selectModeControl.setIsInSelectMode) selectModeControl.setIsInSelectMode(!selectModeControl.isInSelectMode);
+            else setIsInEditMode(!isInEditMode);
         }
         
     };
@@ -159,7 +169,7 @@ const DashboardItemMenu = ({ title, data_obj, itemElement, isVerticalDisplay = t
     
     const MenuComponenet = (
         <div className={`container ${isVerticalDisplay ? "full-height" : "full-width"}`}>
-            <div className={isVerticalDisplay ? "selectable-menu c50" : `${isInEditMode ? "selectable-menu-horizontal" : "menu-horitontal"}`}>
+            <div className={isVerticalDisplay ? "selectable-menu c50" : `${isInEditMode ? "selectable-menu-horizontal" : "menu-horizontal"}`}>
                 <div className={`${isVerticalDisplay ? "dashboard scroll-control-y" : "dashboard-square scroll-control-x"}`}>
                     <DashboardItemMenuHeader title={title} className={`${isVerticalDisplay ? "menu-header" : "menu-header-square"} sticky`}>
                         {!data_obj.isDataPending &&
