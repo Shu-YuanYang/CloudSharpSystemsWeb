@@ -363,9 +363,11 @@ namespace CloudSharpSystemsWeb.Controllers
             
             var teams_lst = await AppTeamContext.GetTeamsByUser(this._app_db_main_context, app_id, session_info.THREAD_ID!, true);
             
-            var notes = await TeamNoteContext.GetTeamNotesByTeams(this._app_db_mongo_context, teams_lst.Select(t => t.TEAM_ID)!);
+            var teamNotes = await TeamNoteContext.GetTeamNotesByTeams(this._app_db_mongo_context, teams_lst.Where(t => t.TEAM_NAME != "My Notes").Select(t => t.TEAM_ID)!);
+            var userOwnNotes = await TeamNoteContext.GetTeamNotes(this._app_db_mongo_context, new CL_TEAM_NOTE { TEAM_ID = teams_lst.First(t => t.TEAM_NAME == "My Notes").TEAM_ID!, SENDER_ID = session_info.THREAD_ID! });
             //var priority_map = await MongoAppDataContext.GetTeamNotePriorityMap(this._app_db_mongo_context);
             //var status_map = await MongoAppDataContext.GetTeamNoteStatusMap(this._app_db_mongo_context);
+            var notes = teamNotes.Concat(userOwnNotes);
 
             var note_user_ids = notes.Select(n => n.SENDER_ID).Concat(notes.Select(n => n.EDIT_BY)).Distinct();
             var note_users = await AppUserContext.GetUsersByIDs(this._app_db_main_context, note_user_ids!);

@@ -21,6 +21,13 @@ namespace DBConnectionLibrary.DBObjectContexts.Mongo
             return team_notes;
         }
 
+        /*
+        public static async Task<IEnumerable<CL_TEAM_NOTE>> GetTeamNotesBySender(AppDBMongoContext DBContext, string senderID)
+        {
+            var team_notes = await DBContext.TeamNotes.Find(note => note.SENDER_ID == senderID).ToListAsync();
+            return team_notes;
+        }
+        */
 
         // The following fields can be used to query the note records: _id, TEAM_ID, SENDER_ID, PRIORITY, STATUS
         // Empty fields will not be used to query.
