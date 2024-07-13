@@ -61,6 +61,10 @@ canvas {
     -webkit-transform-origin: 0 0;
 }
 
+.container.position-relative {
+    position: relative;
+}
+
 .container.full-width {
     width: 100%;
     height: 100%;
@@ -194,12 +198,26 @@ canvas {
     flex: 1 1 auto;
 }
 
+.r0 {
+    height: 0;
+}
+
 .r25 {
-    flex: 0 1 25%;
+    /*flex: 0 1 25%;*/
+    height: 25%;
 }
 
 .r40 {
-    flex: 0 1 40%;
+    /*flex: 0 1 40%;*/
+    height: 40%;
+}
+
+.r50 {
+    height: 50%;
+}
+
+.r75 {
+    height: 75%;
 }
 
 .r95 {
@@ -383,6 +401,7 @@ canvas {
     height: 100%;
 }
 
+
 .dashboard.scroll-control-y {
     overflow-y: scroll;
 }
@@ -421,7 +440,6 @@ canvas {
     border-width: 1px 0 0 0; 
     border-color: lightgray;
     width: 100%;
-    height: 75px;
     bottom: 0;
     position: absolute;
     background-color: white;
@@ -665,6 +683,10 @@ canvas {
 
 .subsection.title-small {
     text-align: center;
+}
+
+.subsection.small-height {
+    height: 75px;
 }
 
 /************************************************************************************/

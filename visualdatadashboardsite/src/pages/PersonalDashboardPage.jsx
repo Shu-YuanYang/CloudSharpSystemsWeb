@@ -178,7 +178,7 @@ const PersonalDashboardPage = () => {
 
 
     const ExpandableChartsMenuMap = () => (
-        <div style={{ maxHeight: "100%", height: "100%" }}>
+        <div className="container full-height">
             <div className="card-editor">
                 <div className="card-button-center">
                     <button className="button-small" onClick={switchChartsMenuMode}>{isChartMenuExpanded ? "Collapse" : "Expand"}</button>
@@ -201,8 +201,8 @@ const PersonalDashboardPage = () => {
     );
 
 
-    const chartMenuHeight = isChartMenuExpanded? (isChartMenuInSelectMode ? "48%" : "24%") : "0%";
-    const monitorHeight = isChartMenuExpanded? (isChartMenuInSelectMode ? "52%" : "76%") : "100%";
+    const chartMenuHeightStyle = isChartMenuExpanded ? (isChartMenuInSelectMode ? "r50" : "r25") : "r0";
+    const monitorHeightStyle = isChartMenuExpanded? (isChartMenuInSelectMode ? "r50" : "r75") : "container full-height";
 
     return (
         <div className="board main">
@@ -214,11 +214,11 @@ const PersonalDashboardPage = () => {
                     <div className="container full-height">
                         <div className="column c70">
                             <div className="board component">
-                                <div className={""/*"row-flex-box"*/} style={{position: "relative", height: "100%", maxHeight: "100%"}}>
-                                    <div className={""/*"rauto rmax77"*/} style={{ display: "block", maxHeight: monitorHeight, height: monitorHeight, overflow: "clip" }}>
+                                <div className={"container position-relative full-height"} >
+                                    <div className={monitorHeightStyle/*"rauto rmax77"*/}>
                                         <DashboardMonitor title="Monitor" currentComponentData={currentChartItem} />
                                     </div>
-                                    <div style={{ position: "absolute", bottom: 0, height: chartMenuHeight, maxHeight: chartMenuHeight, width: "100%" }}>
+                                    <div className={`${chartMenuHeightStyle} dashboard-subsection`}>
                                         <ExpandableChartsMenuMap />
                                     </div>
                                 </div>

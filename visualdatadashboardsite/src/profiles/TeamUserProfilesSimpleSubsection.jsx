@@ -23,7 +23,7 @@ const TeamUserProfilesSimpleSubsection = ({ teamName }) => {
 
 
     return (
-        <div className="dashboard-subsection">
+        <div className="dashboard-subsection subsection small-height">
             <div className="subsection title-small"><span>In this Team: ({teamName})</span></div>
             <DragScrollable className="scroll-control-x">
                 <div className="nav-item no-pad">
