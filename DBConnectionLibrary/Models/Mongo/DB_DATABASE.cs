@@ -10,7 +10,8 @@ namespace DBConnectionLibrary.Models.Mongo
     {
         private DB_DATABASE() { /* no instance implementation */ }
 
-        public const string CLOUDSHARP_USERDOC = "CloudSharpUserDocDB";
+        public const string CLOUDSHARP_USERDOC_DB = "CloudSharpUserDocDB";
+        public const string GCP_DOC_DB = "GCPDocDB";
         
     }
 }

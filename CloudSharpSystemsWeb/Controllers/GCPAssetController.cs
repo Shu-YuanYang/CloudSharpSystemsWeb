@@ -14,6 +14,8 @@ using CloudSharpSystemsCoreLibrary.Sessions;
 using Google.Apis.Auth.OAuth2.Responses;
 using Microsoft.Extensions.Hosting;
 using CloudSharpLimitedCentralWeb.Models;
+using DBConnectionLibrary.DBObjectContexts.Mongo;
+using DBConnectionLibrary.Models.Mongo;
 
 namespace CloudSharpSystemsWeb.Controllers
 {
@@ -135,6 +137,13 @@ namespace CloudSharpSystemsWeb.Controllers
 
 
 
+        [HttpGet("get_google_daily_trends")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        public async Task<CL_GOOGLE_DAILY_TREND> GetGoogleDailyTrends() {
+            var results = await GoogleTrendsContext.GetLatestTrendSearches(this._app_db_mongo_context);
+            return results;
+        }
 
     }
 
