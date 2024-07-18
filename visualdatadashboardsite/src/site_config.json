@@ -147,6 +147,12 @@
           "path": "/appuser/query_app_user_activities",
           "method": "POST",
           "default_body": { "logic_operator": "OR" }
+        },
+
+        "get_google_daily_trends": {
+          "path": "gcpasset/get_google_daily_trends",
+          "method": "GET",
+          "default_body": null
         }
 
       }

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import DragScrollable from "../drag_and_drop/DragScrollable";
-import logo from "../assets/unnamed_icon.png";
 
 const TableList = ({ contentList, refreshDisplay, hasBorder = false }) => {
 
@@ -28,26 +27,28 @@ const TableList = ({ contentList, refreshDisplay, hasBorder = false }) => {
                 contentList.map((item, index) => (
                     <div key={index} className="container full-height" style={{ paddingBottom: "10px" }}>
                         <div className="" style={{ display: "flex", alignItems: "center", borderStyle: "solid", borderWidth: "1px 0 0 0", borderColor: "gray" }}>
-                            <div className="column c05" style={{ textAlign: "right" }}>
-                                <img src={logo} alt="" className="icon-img-extra-small"></img>
+                            <div className="column c05" style={{ textAlign: "center" }}>
+                                <span>{index} </span>
+                                <img src={item.imgUrl} alt="" className="icon-img-extra-small"></img>
                             </div>
                             <div className="column c80">
                                 <div style={{ marginBottom: "2px" }}>
                                     <span className="subsection title">{item.title}</span>
-                                    <span>  </span>
+                                    <span> from </span>
                                     <span className="button-custom">{item.source}</span>
                                 </div>
-                                {!item.subLists && (
+                                {!item.subList && (
                                     <div>
-                                        <span>Source Link: {item.link}</span>
+                                        <span style={{ whiteSpace: "nowrap", overflow: "clip" }}>Source Link: {item.url}</span>
                                         <br />
                                     </div>
                                 )}
 
-                                {item.subLists &&
+                                {item.subList &&
                                     <div className="card-editor frame-wrap">
                                         <DragScrollable className="scroll-control-x">
                                             <div className="nav-item no-pad">
+                                                {"Search: "}
                                                 {item.keyTerms.map((term, index) => <div key={index} className="button-medium nav-item-account">{term}</div> )}
                                             </div>
                                         </DragScrollable>
@@ -55,14 +56,14 @@ const TableList = ({ contentList, refreshDisplay, hasBorder = false }) => {
                                 }
                             </div>
                             {
-                                item.subLists && <div className="column c15">
+                                item.subList && <div className="column c15">
                                     <button onClick={() => { setIsExpanded(index, !isExpandedLst[index]); }}>{isExpandedLst[index] ? "collapse" : item.expansionAction.text}</button>
                                 </div>
                             }
                         </div>
-                        {item.subLists && isExpandedLst[index] &&
-                            <div className={"sub-query-fields c95"}>
-                                <TableList contentList={item.subLists} refreshDisplay={refreshDisplay} hasBorder={true} />
+                        {item.subList && isExpandedLst[index] &&
+                            <div className={"sub-query-fields c95"} style={{ marginLeft: "2%" }}>
+                                <TableList contentList={item.subList} refreshDisplay={refreshDisplay} hasBorder={true} />
                             </div>
                         }
                     </div>
