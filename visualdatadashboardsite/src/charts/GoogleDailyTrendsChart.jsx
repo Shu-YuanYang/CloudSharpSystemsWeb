@@ -12,7 +12,8 @@ const GoogleDailyTrendsChart = ({ title, refreshTriggered, updateRefreshStatus =
     const [formattedTrends, setFormattedTrends] = useState([
         {
             title: "Bob Menendez", source: "ABC News", link: "https://abcnews.go.com/US/sen-bob-menendez-federal-corruption-trial-verdict/story?id=111295557",
-            expansion_action: { text: "Relevant Searches" },
+            keyTerms: ["Menendez", "senator menendez"],
+            expansionAction: { text: "Relevant Searches" },
             subLists: [
                 { title: "Sen. Bob Menendez found guilty on all counts, including acting as ...", source: "ABC News", link: "https://abcnews.go.com/US/sen-bob-menendez-federal-corruption-trial-verdict/story?id=111295557" },
                 { title: "Democratic Sen. Bob Menendez found guilty on all counts in ...", source: "NBC News", link: "https://www.nbcnews.com/politics/congress/democratic-sen-bob-menendez-found-guilty-counts-corruption-charges-rcna159955" },
@@ -21,7 +22,8 @@ const GoogleDailyTrendsChart = ({ title, refreshTriggered, updateRefreshStatus =
         },
         {
             title: "Joe Bryant", source: "La Salle University Athletics", link: "https://goexplorers.com/news/2024/7/16/la-salle-mourns-the-passing-of-former-mens-basketball-star-joe-bryant.aspx",
-            expansion_action: { text: "Relevant Searches" },
+            keyTerms: ["Kobe Bryant", "kobe bryant dad"],
+            expansionAction: { text: "Relevant Searches" },
             subLists: [
                 { title: "La Salle Mourns the Passing of Former Men&#39;s Basketball Star Joe ...", source: "La Salle University Athletics", link: "https://goexplorers.com/news/2024/7/16/la-salle-mourns-the-passing-of-former-mens-basketball-star-joe-bryant.aspx" },
                 { title: "Democratic Sen. Bob Menendez found guilty on all counts in ...", source: "NBC News", link: "https://www.nbcnews.com/politics/congress/democratic-sen-bob-menendez-found-guilty-counts-corruption-charges-rcna159955" },
@@ -29,7 +31,8 @@ const GoogleDailyTrendsChart = ({ title, refreshTriggered, updateRefreshStatus =
         },
         {
             title: "Elon Musk", source: "CNNMoney", link: "https://www.cnn.com/2024/07/16/business/elon-musk-spacex-x-texas/index.html",
-            expansion_action: { text: "Relevant Searches" },
+            keyTerms: [],
+            expansionAction: { text: "Relevant Searches" },
             subLists: [
                 { title: "Elon Musk says he&#39;s moving SpaceX and X out of California", source: "CNNMoney", link: "https://www.cnn.com/2024/07/16/business/elon-musk-spacex-x-texas/index.html" },
                 { title: "Elon Musk says he&#39;s moving SpaceX, X headquarters from ...", source: "ABC News", link: "https://abcnews.go.com/Business/wireStory/elon-musk-moving-spacex-headquarters-california-texas-112002570" },
