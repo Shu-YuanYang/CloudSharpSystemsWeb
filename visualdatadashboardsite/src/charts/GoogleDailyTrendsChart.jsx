@@ -36,14 +36,14 @@ const GoogleDailyTrendsChart = ({ title, refreshTriggered, updateRefreshStatus =
     return (
         <div className="container full-height">
             <div className="container full-height scroll-control-y">
-                <div style={{ alignContent: "center" }}>
+                <div className="container align-center">
                     <TableList contentList={formattedTrends} refreshDisplay={refreshTrendsData} />
                 </div>
                 <div style={{ whiteSpace: "pre-line" }}>{
-                    isTrendsDataPending ? "..." : ""
+                    isTrendsDataPending ? "Loading..." : ""
                 }</div>
             </div>
-
+            
         </div>
     );
 };

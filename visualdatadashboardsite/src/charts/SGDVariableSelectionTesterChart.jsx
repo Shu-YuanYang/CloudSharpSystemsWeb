@@ -70,7 +70,7 @@ const SGDVariableSelectionTesterChart = ({ title, refreshTriggered, updateRefres
     return (
         <div className="container full-height">
             <div className="container full-height scroll-control-y">
-                <div style={{ alignContent: "center" }}>
+                <div className="container align-center">
                     <span>Dataset: </span>
                     <select className="query-field-input select" value={fileSelectInput} onChange={(e) => { setFileSelectInput(e.target.value); }}>
                         {/*<option disabled value=""> -- select an option -- </option>*/}

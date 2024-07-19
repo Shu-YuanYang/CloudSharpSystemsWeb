@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import DragScrollable from "../drag_and_drop/DragScrollable";
 import { LOCAL_STORE } from "../endpoints/local_asset_load/local_storage";
 
@@ -34,9 +33,9 @@ const TableList = ({ contentList, refreshDisplay, hasBorder = false }) => {
             {
                 contentList &&
                 contentList.map((item, index) => (
-                    <div key={index} className="container full-height" style={{ paddingBottom: "5px" }}>
-                        <div className="" style={{ display: "flex", alignItems: "center", borderStyle: "solid", borderWidth: "1px", borderColor: "rgba(200, 200, 200, 0.5)", borderRadius: "5px", padding: "5px 0" }} >
-                            <div className="column c05" style={{ textAlign: "center" }}>
+                    <div key={index} className="container full-height column-header-filter">
+                        <div className="table-list">
+                            <div className="column c05 subsection title-small">
                                 <span>{index + 1} </span>
                                 <img src={item.imgUrl} alt="" className="icon-img-extra-small"></img>
                             </div>
