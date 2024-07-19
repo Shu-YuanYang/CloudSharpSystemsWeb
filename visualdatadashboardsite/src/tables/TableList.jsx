@@ -40,22 +40,21 @@ const TableList = ({ contentList, refreshDisplay, hasBorder = false }) => {
                                 <img src={item.imgUrl} alt="" className="icon-img-extra-small"></img>
                             </div>
                             <div className="column c80">
-                                <div style={{ marginBottom: "2px" }}>
+                                <div className="summary">
                                     <span className="subsection title">{item.title}</span>
                                     <span> from </span>
                                     <span className="button-custom">{item.source}</span>
                                 </div>
                                 {!item.subList && (
                                     <div>
-                                        <span style={{ whiteSpace: "nowrap", overflow: "clip" }}>Source Link: </span>
-                                        <a style={{ whiteSpace: "nowrap", overflow: "clip" }} onClick={(e) => { e.preventDefault(); navigateToItem(item); }} href={""}>{item.url}</a>
-                                        {/*<Link style={{ whiteSpace: "nowrap", overflow: "clip" }} target="_blank" to={item.url}>{item.url}</Link>*/}
-                                        <br />
+                                        <span className="table-list-cell">Source Link: </span>
+                                        <span>  </span>
+                                        <a className="table-list-cell c85" onClick={(e) => { e.preventDefault(); navigateToItem(item); }} href={""}>{item.url && (item.url.length > 140? `${item.url.substring(0, 140)}...` : item.url)}</a>
                                     </div>
                                 )}
 
                                 {item.subList &&
-                                    <div className="card-editor frame-wrap">
+                                    <div className="card-editor frame-wrap c95">
                                         <DragScrollable className="scroll-control-x">
                                             <div className="nav-item no-pad">
                                                 {"Search: "}
@@ -72,7 +71,7 @@ const TableList = ({ contentList, refreshDisplay, hasBorder = false }) => {
                             }
                         </div>
                         {item.subList && isExpandedLst[index] &&
-                            <div className={"sub-query-fields c95"} style={{ marginLeft: "2%" }}>
+                            <div className={"sub-query-fields c95"}>
                                 <TableList contentList={item.subList} refreshDisplay={refreshDisplay} hasBorder={true} />
                             </div>
                         }
