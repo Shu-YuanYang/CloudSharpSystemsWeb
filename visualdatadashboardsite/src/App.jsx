@@ -7,6 +7,7 @@ import DataDetailPage from "./pages/DataDetailPage";
 import MainMenuPage from "./pages/MainMenuPage";
 import ChartDisplayPage from "./pages/ChartDisplayPage";
 import OAuth2LoginSuccessPage from "./pages/OAuth2LoginSuccessPage";
+import ExternalURLProectionPage from "./pages/ExternalURLProectionPage";
 //import CSEducatorPostsTestDataPage from "./pages/CSEducatorPostsTestDataPage";
 import IdentityContext from "./auxiliary/wrappers/IdentityContext";
 import useIdentityState from "./endpoints/local_asset_load/useIdentityState";
@@ -39,7 +40,7 @@ function App() {
                             } />
                             */
                         }
-                    
+                        <Route exact path="/external_site" element={<ExternalURLProectionPage />} />
                     </Routes>
                 </Router>
 

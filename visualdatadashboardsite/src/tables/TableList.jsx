@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import DragScrollable from "../drag_and_drop/DragScrollable";
+import { LOCAL_STORE } from "../endpoints/local_asset_load/local_storage";
 
 const TableList = ({ contentList, refreshDisplay, hasBorder = false }) => {
 
@@ -20,15 +22,22 @@ const TableList = ({ contentList, refreshDisplay, hasBorder = false }) => {
     };
 
 
+    const navigateToItem = (item) => {
+        localStorage.setItem(LOCAL_STORE.REQUESTED_EXTERNAL_LINK, JSON.stringify({ info: item.title, url: item.url }));
+        //window.location.href = "/external_site";
+        let external_site_protection_page = `${window.origin}/external_site`;
+        window.open(external_site_protection_page, "ExternalSiteProtection");
+    }
+
     const comp = (
         <div className={`table large ${hasBorder ? "table-sub-entry-block" : "table-entry-block"}`}>
             {
                 contentList &&
                 contentList.map((item, index) => (
-                    <div key={index} className="container full-height" style={{ paddingBottom: "10px" }}>
-                        <div className="" style={{ display: "flex", alignItems: "center", borderStyle: "solid", borderWidth: "1px 0 0 0", borderColor: "gray" }}>
+                    <div key={index} className="container full-height" style={{ paddingBottom: "5px" }}>
+                        <div className="" style={{ display: "flex", alignItems: "center", borderStyle: "solid", borderWidth: "1px", borderColor: "rgba(200, 200, 200, 0.5)", borderRadius: "5px", padding: "5px 0" }} >
                             <div className="column c05" style={{ textAlign: "center" }}>
-                                <span>{index} </span>
+                                <span>{index + 1} </span>
                                 <img src={item.imgUrl} alt="" className="icon-img-extra-small"></img>
                             </div>
                             <div className="column c80">
@@ -39,7 +48,9 @@ const TableList = ({ contentList, refreshDisplay, hasBorder = false }) => {
                                 </div>
                                 {!item.subList && (
                                     <div>
-                                        <span style={{ whiteSpace: "nowrap", overflow: "clip" }}>Source Link: {item.url}</span>
+                                        <span style={{ whiteSpace: "nowrap", overflow: "clip" }}>Source Link: </span>
+                                        <a style={{ whiteSpace: "nowrap", overflow: "clip" }} onClick={(e) => { e.preventDefault(); navigateToItem(item); }} href={""}>{item.url}</a>
+                                        {/*<Link style={{ whiteSpace: "nowrap", overflow: "clip" }} target="_blank" to={item.url}>{item.url}</Link>*/}
                                         <br />
                                     </div>
                                 )}
