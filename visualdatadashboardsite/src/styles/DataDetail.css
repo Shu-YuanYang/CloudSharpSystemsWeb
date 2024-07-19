@@ -423,14 +423,14 @@ td {
 
 /* Table List */
 .table-entry-block {
-    display: grid;
+    /*display: grid;*/
     /*border-style: solid;
     border-width: 1px;
     border-color: rgba(170, 170, 170, 0.5);*/
 }
 
 .table-sub-entry-block {
-    display: grid;
+    /*display: grid;*/
     /*border-style: solid;
     border-width: 1px;
     border-color: rgba(170, 170, 170, 0.5);*/
