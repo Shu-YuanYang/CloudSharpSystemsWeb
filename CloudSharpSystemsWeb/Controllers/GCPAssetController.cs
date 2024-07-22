@@ -140,8 +140,9 @@ namespace CloudSharpSystemsWeb.Controllers
         [HttpGet("get_google_daily_trends")]
         [Produces("application/json")]
         [Consumes("application/json")]
-        public async Task<CL_GOOGLE_DAILY_TREND> GetGoogleDailyTrends() {
-            var results = await GoogleTrendsContext.GetLatestTrendSearches(this._app_db_mongo_context);
+        public async Task<List<CL_GOOGLE_DAILY_TREND>> GetGoogleDailyTrends() {
+            var results = await GoogleTrendsContext.GetLatestTrendSearches(this._app_db_mongo_context, 2, 4);
+            if (1 < results.Count() && results[0].FEED_TIME.Date.Equals(results[1].FEED_TIME.Date)) return new List<CL_GOOGLE_DAILY_TREND>{ results.First() }; // Data from the same day
             return results;
         }
 
