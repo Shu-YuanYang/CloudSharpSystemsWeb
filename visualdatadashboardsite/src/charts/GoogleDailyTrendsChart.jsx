@@ -27,8 +27,12 @@ const GoogleDailyTrendsChart = ({ title, refreshTriggered, updateRefreshStatus }
     }, []);
 
     const formattedTrends = useMemo(() => {
-        if (!trendsData || !trendsData.trendingSearches) return;
-        const trend_searches = trendsData.trendingSearches;
+        if (!trendsData) return;
+        const trend_searches = trendsData.map(data => data.trendingSearches).reduce((acc, lst) => {
+            //console.log("news: ", lst);
+            acc = [...acc, ...lst];
+            return acc;
+        }, []);
         const formatted_searches = trend_searches.map(format_trend);
         return formatted_searches;
     }, [trendsData, format_trend]);
@@ -44,7 +48,7 @@ const GoogleDailyTrendsChart = ({ title, refreshTriggered, updateRefreshStatus }
                     <Link target="_blank" to={"https://trends.google.com/trends/trendingsearches/daily"}>https://trends.google.com/trends/trendingsearches/daily</Link>
                     <span>  </span>
                     {!isTrendsDataPending && trendsData &&
-                        <span>at ({trendsData.FEED_TIME})</span>
+                        <span>at ({trendsData[0].FEED_TIME})</span>
                     }
                 </div>
                 {!isTrendsDataPending && 
