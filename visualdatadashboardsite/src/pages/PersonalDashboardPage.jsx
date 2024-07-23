@@ -147,7 +147,7 @@ const PersonalDashboardPage = () => {
         return (a.status_code === "COMPLETED")? -1 : 1; // view completed items first, and then the ones removed
     };
     
-    const selectableNotesData = useMemo(() => notesData && notesConfig ? notesData.map(note => ({ ...note, priority_number: notesConfig.priority_config[note.priority], status: notesConfig.status_config[note.status_code] })).sort(notes_comp_func) : [], [notesData, notesConfig]);
+    const selectableNotesData = useMemo(() => notesData && notesConfig ? notesData.map(note => ({ ...note, priority_number: notesConfig.priority_config[note.priority], status: notesConfig.status_config[note.status_code] })).sort(notes_comp_func) : null, [notesData, notesConfig]);
 
     const noteItemElement = ({ item }) => {
         return (
