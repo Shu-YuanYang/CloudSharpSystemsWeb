@@ -74,7 +74,7 @@ namespace CloudSharpSystemsWeb.Controllers
             var result_lst = await InterfacesMenuContext.GetWebsiteMenuItemsByMenu(this._app_db_main_context, this.SITE_ID, "SORTABLE_LINK_MENU", session_info.THREAD_ID!);
             var urlSigner = GCPCredentialsHelper.GetURLSigner(this._external_api_map.GoogleAPI!.url!, this._external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_scope_storage_read")!, this._gcp_service_account_key_obj);
             result_lst.ForEach(item => {
-                item.ICON = GCPCredentialsHelper.GenerateV4SignedReadUrl(urlSigner, this._GCP_BUCKET_NAME, item.ICON!).Result;
+                item.ICON = GoogleAPIHelper.GenerateV4SignedReadUrl(urlSigner, this._GCP_BUCKET_NAME, item.ICON!).Result;
             });
             return result_lst;
         }
@@ -102,7 +102,7 @@ namespace CloudSharpSystemsWeb.Controllers
             var result_lst = await InterfacesMenuContext.GetWebsiteMenuItemsByMenu(this._app_db_main_context, this.SITE_ID, "SORTABLE_CHART_MENU", session_info.THREAD_ID!);
             var urlSigner = GCPCredentialsHelper.GetURLSigner(this._external_api_map.GoogleAPI!.url!, this._external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_scope_storage_read")!, this._gcp_service_account_key_obj);
             result_lst.ForEach(item => {
-                item.ICON = GCPCredentialsHelper.GenerateV4SignedReadUrl(urlSigner, this._GCP_BUCKET_NAME, item.ICON!).Result;
+                item.ICON = GoogleAPIHelper.GenerateV4SignedReadUrl(urlSigner, this._GCP_BUCKET_NAME, item.ICON!).Result;
             });
             return result_lst;
         }
@@ -152,7 +152,7 @@ namespace CloudSharpSystemsWeb.Controllers
             foreach (var menu in result_lst) 
             {
                 menu.menu_items.ForEach(item => {
-                    item.ICON = GCPCredentialsHelper.GenerateV4SignedReadUrl(urlSigner, this._GCP_BUCKET_NAME, item.ICON!).Result;
+                    item.ICON = GoogleAPIHelper.GenerateV4SignedReadUrl(urlSigner, this._GCP_BUCKET_NAME, item.ICON!).Result;
                 });
             }
             return result_lst;
@@ -227,23 +227,14 @@ namespace CloudSharpSystemsWeb.Controllers
                 await InterfacesMenuContext.InsertNewMenuItemProcedure(this._app_db_main_context, menu_header.HEADER_ID!, itemData!, session_info.THREAD_ID!);
 
                 // Add icon file to cloud storage:
+                var storageClient = GCPCredentialsHelper.GetStorageClient(this._external_api_map.GoogleAPI!.url!, this._external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_scope_storage_write")!, this._gcp_service_account_key_obj);
                 if (to_upload_new_file && iconMemoryStream != null)
                 {
-                    await GCPCredentialsHelper.UploadFileToStorage(this._external_api_map.GoogleAPI!.url!, this._external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_scope_storage_write")!, this._gcp_service_account_key_obj, this._GCP_BUCKET_NAME, itemData.ICON, iconMemoryStream);
+                    await GoogleAPIHelper.UploadFileToStorage(storageClient, this._GCP_BUCKET_NAME, itemData.ICON!, iconMemoryStream);
                 }
 
                 //await db_transact;
             });
-
-            //}
-            //catch (Exception ex)
-            //{ 
-            //    return new GeneralAPIResponse
-            //    {
-            //        Status = "Failed",
-            //        Message = ex.Message
-            //    };
-            //}
 
             return new GeneralAPIResponse
             {
@@ -252,9 +243,38 @@ namespace CloudSharpSystemsWeb.Controllers
             };
         }
 
-        
 
 
+        [HttpGet("get_common_icons")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        public async Task<Object> GetCommonIcons(string app_id) {
+            var storageClient = GCPCredentialsHelper.GetStorageClient(this._external_api_map.GoogleAPI!.url!, this._external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_scope_storage_read")!, this._gcp_service_account_key_obj);
+            var objects = GoogleAPIHelper.ListFilesFromStorage(storageClient, this._GCP_BUCKET_NAME, "COMMON_ICONS/BRANDS/");
+            var urlSigner = GCPCredentialsHelper.GetURLSigner(this._external_api_map.GoogleAPI!.url!, this._external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_scope_storage_read")!, this._gcp_service_account_key_obj);
+
+            var items = objects.Select(obj => {
+                //string signed_obj_name = GoogleAPIHelper.GenerateV4SignedReadUrl(urlSigner, this._GCP_BUCKET_NAME, obj.Name).Result;
+                //return signed_obj_name;
+                return new { 
+                    PATH = obj.Name,
+                    NAME = obj.Name.Substring(obj.Name.LastIndexOf("/") + 1)
+                };
+            });
+
+            var common_icon_controls = await AppDataContext.GetAppDataControlViews(this._app_db_main_context, new V_APP_DATA_CONTROL { APP_ID = app_id, CONTROL_NAME = "WEBSITE_ASSET_CONFIG", CONTROL_TYPE = "COMMON_ICON" });
+            var noted_items = from item in items 
+                         join control in common_icon_controls 
+                         on item.NAME equals control.CONTROL_VALUE into joinGroups
+                         from subgroup in joinGroups.DefaultIfEmpty()
+                         select new
+                         {
+                             icon_note = subgroup?.CONTROL_LEVEL ?? item.NAME, // Left join and default to item file name if control does not exist
+                             icon_url = GoogleAPIHelper.GenerateV4SignedReadUrl(urlSigner, this._GCP_BUCKET_NAME, item.PATH).Result
+                         };
+
+            return noted_items;
+        }
 
 
 

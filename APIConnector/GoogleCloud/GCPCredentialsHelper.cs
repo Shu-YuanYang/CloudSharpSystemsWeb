@@ -29,66 +29,27 @@ namespace APIConnector.GoogleCloud
             this._external_api_map = externalAPIMap;
         }
 
-        public static UrlSigner GetURLSigner(string scope_API_url, ExternalAPIPathConfig scope_path_config, GCPServiceAccountSecretKeyObject key_obj) {
+        public static GoogleCredential GetGoogleCredential(string scope_API_url, ExternalAPIPathConfig scope_path_config, GCPServiceAccountSecretKeyObject key_obj) {
             string serialized_credential_json = JsonSerializer.Serialize(key_obj);
 
             string full_scope_url = RESTAPIConnector.ConstructRESTPathURL(scope_API_url, scope_path_config.path);
 
             var scopes = new string[] { full_scope_url /*"https://www.googleapis.com/auth/devstorage.read_only"*/ };
             GoogleCredential service_account_credential = GoogleCredential.FromJson(serialized_credential_json).CreateScoped(scopes);
-            UrlSigner urlSigner = UrlSigner.FromCredential(service_account_credential/*GoogleCredential.GetApplicationDefault()*/);
+            return service_account_credential;
+        }
 
+        public static UrlSigner GetURLSigner(string scope_API_url, ExternalAPIPathConfig scope_path_config, GCPServiceAccountSecretKeyObject key_obj) {
+            GoogleCredential service_account_credential = GCPCredentialsHelper.GetGoogleCredential(scope_API_url, scope_path_config, key_obj);
+            UrlSigner urlSigner = UrlSigner.FromCredential(service_account_credential/*GoogleCredential.GetApplicationDefault()*/);
             return urlSigner;
         }
 
-        // Code below copied and modified from: https://cloud.google.com/storage/docs/samples/storage-generate-signed-url-v4
-        public static async Task<string> GenerateV4SignedReadUrl(UrlSigner urlSigner, string bucketName, string objectName, int duration_in_seconds = 300)
-        {
-            /*
-            string serialized_credential_json = JsonSerializer.Serialize(key_obj);
-
-            string full_scope_url = RESTAPIConnector.ConstructRESTPathURL(scope_API_url, scope_path_config.path);
-
-            var scopes = new string[] { full_scope_url };
-            GoogleCredential service_account_credential = GoogleCredential.FromJson(serialized_credential_json).CreateScoped(scopes);
-            UrlSigner urlSigner = UrlSigner.FromCredential(service_account_credential);
-            */
-
-            // V4 is the default signing version.
-            string url = await urlSigner.SignAsync(bucketName, objectName, TimeSpan.FromSeconds(duration_in_seconds), HttpMethod.Get, SigningVersion.V4);
-            //Console.WriteLine("Generated GET signed URL:");
-            //Console.WriteLine(url);
-            //Console.WriteLine("You can use this URL with any user agent, for example:");
-            //Console.WriteLine($"curl '{url}'");
-            return url;
-        }
-
-
-        public static async Task UploadFileToStorage(string scope_API_url, ExternalAPIPathConfig scope_path_config, GCPServiceAccountSecretKeyObject key_obj, string bucketName, string objectName, MemoryStream memoryStream)
-        {
-            string serialized_credential_json = JsonSerializer.Serialize(key_obj);
-
-            string full_scope_url = RESTAPIConnector.ConstructRESTPathURL(scope_API_url, scope_path_config.path);
-
-            var scopes = new string[] { full_scope_url /*"https://www.googleapis.com/auth/devstorage.read_write"*/ };
-            GoogleCredential service_account_credential = GoogleCredential.FromJson(serialized_credential_json).CreateScoped(scopes);
-            var storage = await StorageClient.CreateAsync(service_account_credential);
-            /*
-            try
-            {
-                if (overwrite)
-                {
-                    var existing_obj = await storage.GetObjectAsync(bucketName, objectName);
-                    throw 
-                }
-            }
-            catch (GoogleApiException ex) {
-                if (ex.Error.Code != 404) throw ex;
-            }
-            */
-            var obj = await storage.UploadObjectAsync(bucketName, objectName, "application/octet-stream", memoryStream);
-        }
-
+        public static StorageClient GetStorageClient(string scope_API_url, ExternalAPIPathConfig scope_path_config, GCPServiceAccountSecretKeyObject key_obj) {
+            GoogleCredential service_account_credential = GCPCredentialsHelper.GetGoogleCredential(scope_API_url, scope_path_config, key_obj);
+            var storage = StorageClient.Create(service_account_credential);
+            return storage;
+        } 
 
         public async Task<TokenResponse> GetOAuth2TokenByCode(GCPOAuth2ClientSecretKeyObject key_obj, GoogleAPIOAuth2LoginCodeObject authorization_code_obj)
         {
