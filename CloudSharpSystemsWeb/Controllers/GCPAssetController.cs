@@ -36,7 +36,8 @@ namespace CloudSharpSystemsWeb.Controllers
         [Consumes("application/json")]
         public async Task<Object> GetGCPStorageObjectURL(string bucket, string directory, string object_name)
         {
-            string signed_url = await GCPCredentialsHelper.GenerateV4SignedReadUrl(this._external_api_map.GoogleAPI!.url!, this._external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_scope_storage_read")!, this._gcp_service_account_key_obj, bucket, $"{directory}/{object_name}"/*"DATA_TABLE_MENU/cs-educator-posts-table.png"*/);
+            var urlSigner = GCPCredentialsHelper.GetURLSigner(this._external_api_map.GoogleAPI!.url!, this._external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_scope_storage_read")!, this._gcp_service_account_key_obj);
+            string signed_url = await GCPCredentialsHelper.GenerateV4SignedReadUrl(urlSigner, bucket, $"{directory}/{object_name}"/*"DATA_TABLE_MENU/cs-educator-posts-table.png"*/);
             return new { status = "OK", signed_url = signed_url };
         }
 

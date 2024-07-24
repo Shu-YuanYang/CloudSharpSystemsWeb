@@ -72,8 +72,9 @@ namespace CloudSharpSystemsWeb.Controllers
             var session_info = await this._session_manager.GetSessionByAuthorizationHeader(Request, false, "");
 
             var result_lst = await InterfacesMenuContext.GetWebsiteMenuItemsByMenu(this._app_db_main_context, this.SITE_ID, "SORTABLE_LINK_MENU", session_info.THREAD_ID!);
+            var urlSigner = GCPCredentialsHelper.GetURLSigner(this._external_api_map.GoogleAPI!.url!, this._external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_scope_storage_read")!, this._gcp_service_account_key_obj);
             result_lst.ForEach(item => {
-                item.ICON = GCPCredentialsHelper.GenerateV4SignedReadUrl(this._external_api_map.GoogleAPI!.url!, this._external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_scope_storage_read")!, this._gcp_service_account_key_obj, this._GCP_BUCKET_NAME, item.ICON!).Result;
+                item.ICON = GCPCredentialsHelper.GenerateV4SignedReadUrl(urlSigner, this._GCP_BUCKET_NAME, item.ICON!).Result;
             });
             return result_lst;
         }
@@ -99,8 +100,9 @@ namespace CloudSharpSystemsWeb.Controllers
             var session_info = await this._session_manager.GetSessionByAuthorizationHeader(Request, false, "");
 
             var result_lst = await InterfacesMenuContext.GetWebsiteMenuItemsByMenu(this._app_db_main_context, this.SITE_ID, "SORTABLE_CHART_MENU", session_info.THREAD_ID!);
+            var urlSigner = GCPCredentialsHelper.GetURLSigner(this._external_api_map.GoogleAPI!.url!, this._external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_scope_storage_read")!, this._gcp_service_account_key_obj);
             result_lst.ForEach(item => {
-                item.ICON = GCPCredentialsHelper.GenerateV4SignedReadUrl(this._external_api_map.GoogleAPI!.url!, this._external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_scope_storage_read")!, this._gcp_service_account_key_obj, this._GCP_BUCKET_NAME, item.ICON!).Result;
+                item.ICON = GCPCredentialsHelper.GenerateV4SignedReadUrl(urlSigner, this._GCP_BUCKET_NAME, item.ICON!).Result;
             });
             return result_lst;
         }
@@ -146,10 +148,11 @@ namespace CloudSharpSystemsWeb.Controllers
                 .GroupBy(g => g.MENU_DISPLAY_NAME)
                 .Select(g => new { menu_display_name = g.Key, menu_items = g.Where(item => !String.IsNullOrEmpty(item.ITEM_NAME)).ToList() });
                 //.ToList();
+            var urlSigner = GCPCredentialsHelper.GetURLSigner(this._external_api_map.GoogleAPI!.url!, this._external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_scope_storage_read")!, this._gcp_service_account_key_obj);
             foreach (var menu in result_lst) 
             {
                 menu.menu_items.ForEach(item => {
-                    item.ICON = GCPCredentialsHelper.GenerateV4SignedReadUrl(this._external_api_map.GoogleAPI!.url!, this._external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_scope_storage_read")!, this._gcp_service_account_key_obj, this._GCP_BUCKET_NAME, item.ICON!).Result;
+                    item.ICON = GCPCredentialsHelper.GenerateV4SignedReadUrl(urlSigner, this._GCP_BUCKET_NAME, item.ICON!).Result;
                 });
             }
             return result_lst;

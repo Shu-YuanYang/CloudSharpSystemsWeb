@@ -29,9 +29,7 @@ namespace APIConnector.GoogleCloud
             this._external_api_map = externalAPIMap;
         }
 
-        // Code below copied and modified from: https://cloud.google.com/storage/docs/samples/storage-generate-signed-url-v4
-        public static async Task<string> GenerateV4SignedReadUrl(string scope_API_url, ExternalAPIPathConfig scope_path_config, GCPServiceAccountSecretKeyObject key_obj, string bucketName, string objectName, int duration_in_seconds = 300)
-        {
+        public static UrlSigner GetURLSigner(string scope_API_url, ExternalAPIPathConfig scope_path_config, GCPServiceAccountSecretKeyObject key_obj) {
             string serialized_credential_json = JsonSerializer.Serialize(key_obj);
 
             string full_scope_url = RESTAPIConnector.ConstructRESTPathURL(scope_API_url, scope_path_config.path);
@@ -39,7 +37,23 @@ namespace APIConnector.GoogleCloud
             var scopes = new string[] { full_scope_url /*"https://www.googleapis.com/auth/devstorage.read_only"*/ };
             GoogleCredential service_account_credential = GoogleCredential.FromJson(serialized_credential_json).CreateScoped(scopes);
             UrlSigner urlSigner = UrlSigner.FromCredential(service_account_credential/*GoogleCredential.GetApplicationDefault()*/);
-            
+
+            return urlSigner;
+        }
+
+        // Code below copied and modified from: https://cloud.google.com/storage/docs/samples/storage-generate-signed-url-v4
+        public static async Task<string> GenerateV4SignedReadUrl(UrlSigner urlSigner, string bucketName, string objectName, int duration_in_seconds = 300)
+        {
+            /*
+            string serialized_credential_json = JsonSerializer.Serialize(key_obj);
+
+            string full_scope_url = RESTAPIConnector.ConstructRESTPathURL(scope_API_url, scope_path_config.path);
+
+            var scopes = new string[] { full_scope_url };
+            GoogleCredential service_account_credential = GoogleCredential.FromJson(serialized_credential_json).CreateScoped(scopes);
+            UrlSigner urlSigner = UrlSigner.FromCredential(service_account_credential);
+            */
+
             // V4 is the default signing version.
             string url = await urlSigner.SignAsync(bucketName, objectName, TimeSpan.FromSeconds(duration_in_seconds), HttpMethod.Get, SigningVersion.V4);
             //Console.WriteLine("Generated GET signed URL:");
