@@ -280,6 +280,7 @@ namespace CloudSharpSystemsWeb.Controllers
                          from subgroup in joinGroups.DefaultIfEmpty()
                          select new
                          {
+                             icon_name = item.NAME,
                              icon_note = subgroup?.CONTROL_LEVEL ?? item.NAME, // Left join and default to item file name if control does not exist
                              icon_url = GoogleAPIHelper.GenerateV4SignedReadUrl(urlSigner, this._GCP_BUCKET_NAME, item.PATH).Result
                          };
