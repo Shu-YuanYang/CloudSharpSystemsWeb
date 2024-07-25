@@ -42,6 +42,7 @@ const DashboardModalConfigureMenuItem = ({ title, actionButtons, configurationTy
     const [itemName, setItemName] = useState("");
     const [routeType, setRouteType] = useState("PAGE");
     const [route, setRoute] = useState("");
+    const [iconName, setIconName] = useState("");
     const [iconFile, setIconFile] = useState(null);
     const [iconPreview, setIconPreview] = useState(null);
 
@@ -68,11 +69,18 @@ const DashboardModalConfigureMenuItem = ({ title, actionButtons, configurationTy
         setItemName(item_display_name.toUpperCase().replace(/ /g, "_"));
     };
 
-    const handle_icon_select = (icon_url) => {
-        if (icon_url) setIconPreview(icon_url);
+    const handle_icon_select = (icon_name, icon_url) => {
+        setIconFile(null);
+        setIconPreview(null);
+        if (icon_url) {
+            setIconName(icon_name);
+            setIconPreview(icon_url);
+        } else
+            setIconName("");        
     }
 
     const handleIconFileChange = (event) => {
+        setIconName("");
         if (!event.target.files || !event.target.files[0]) {
             setIconFile(null);
             setIconPreview(null);
@@ -81,7 +89,6 @@ const DashboardModalConfigureMenuItem = ({ title, actionButtons, configurationTy
 
         setIconFile(event.target.files[0]);
         setIconPreview(URL.createObjectURL(event.target.files[0]));
-        
     };
 
     const configureItemSafe = async () => {
@@ -90,7 +97,7 @@ const DashboardModalConfigureMenuItem = ({ title, actionButtons, configurationTy
         let has_error = false;
         setErrorLocation(null);
         setErrorMessage(null);
-        if (!iconFile) { setErrorLocation("other"); setErrorMessage("Icon file not selected!"); has_error = true; }
+        if (!iconPreview) { setErrorLocation("other"); setErrorMessage("Icon file not selected!"); has_error = true; }
         if (!route || route === "") { setErrorLocation("route"); setErrorMessage("Address/Path cannot be empty!"); has_error = true; }
         if (!itemName || itemName === "") { setErrorLocation("item"); setErrorMessage("Item ID cannot be empty!"); has_error = true; }
         if (!itemDisplayName || itemDisplayName === "") { setErrorLocation("item"); setErrorMessage("Item name cannot be empty!"); has_error = true; }
@@ -106,13 +113,13 @@ const DashboardModalConfigureMenuItem = ({ title, actionButtons, configurationTy
             DISPLAY_NAME: itemDisplayName,
             ROUTE_TYPE: routeType,
             ROUTE: route,
-            ICON: "",
+            ICON: iconName,
             RANKING: -2
         });
         console.log("Json Content: ", jsonContent);
         const blob = new Blob([jsonContent], { type: "application/json" });
         formData.set("jsonData", blob);
-        formData.set("iconFile", iconFile);
+        if (iconFile) formData.set("iconFile", iconFile);
 
         try {
             await configureItem(formData);
@@ -180,7 +187,7 @@ const DashboardModalConfigureMenuItem = ({ title, actionButtons, configurationTy
                     </div>
                     <div className="column c70 container full-height scroll-control-y">
                         {commonIconData && commonIconData.map(iconData => (
-                            <div key={iconData.icon_note} className="icon-img-width button button-extra-large" onClick={() => { handle_icon_select(iconData.icon_url); } }>
+                            <div key={iconData.icon_note} className="icon-img-width button button-extra-large" onClick={() => { handle_icon_select(iconData.icon_name, iconData.icon_url); } }>
                                 <img className="icon-img icon-img-width" src={iconData.icon_url} alt="preview image" />
                                 <br />
                                 <div className="card-img-element icon note-small-font">{iconData.icon_note}</div> 
