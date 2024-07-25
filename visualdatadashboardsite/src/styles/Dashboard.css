@@ -14,7 +14,7 @@
 
 
 body {
-    /* Need to remove margins */
+    /* Need to remove margins
     margin: 0;
     /* Full Height */
     min-height: 100vh;
@@ -90,7 +90,7 @@ canvas {
 }
 
 .container.message-box {
-    height: 350px;
+    height: 56vh;
     background-color: white;
     font-size: 20px;
 }
@@ -226,6 +226,10 @@ canvas {
 
 .r50 {
     height: 50%;
+}
+
+.r60 {
+    height: 60%;
 }
 
 .r75 {
@@ -469,6 +473,11 @@ canvas {
     flex-direction: column;
 }
 
+
+.note-small-font {
+    font-size: 16px;
+}
+
 .card.highlighted {
     border-color: blue;
 }
@@ -597,6 +606,13 @@ canvas {
     margin-left: 2px;
 }
 
+.button-extra-large {
+    max-width: fit-content;
+    /*height: 80px;*/
+    max-height: 110px;
+    margin: 10px;
+}
+
 .button-custom {
     background-color: whitesmoke;
     border-color: lightgray;
@@ -613,6 +629,10 @@ canvas {
         background-color: lightgray;
         cursor: default;
     }
+
+.button:hover {
+    cursor: pointer;
+}
 
 
 .icon {
@@ -641,6 +661,11 @@ canvas {
     border-radius: 6px;
 }
 
+
+.icon-img-width {
+    max-width: 80px;
+    display: inline-block;
+}
 
 
 .remove-icon {

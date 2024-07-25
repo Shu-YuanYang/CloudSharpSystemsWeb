@@ -77,6 +77,13 @@ namespace APIConnector.GoogleCloud
             return storageObjects;
         }
 
+        public static async Task CopyFileInStorage(StorageClient storageClient, string sourceBucketName, string sourceObjectName, string destinationBucketName, string destinationObjectName)
+        {
+            //MemoryStream stream = new MemoryStream();
+            await storageClient.CopyObjectAsync(sourceBucketName, sourceObjectName, destinationBucketName, destinationObjectName);
+            //return stream;
+        }
+
         public static async Task UploadFileToStorage(StorageClient storageClient, string bucketName, string objectName, MemoryStream memoryStream)
         {
             /*

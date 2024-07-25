@@ -13,30 +13,7 @@ const DashboardModalConfigureMenuItem = ({ title, actionButtons, configurationTy
     const userIdentity = useContext(IdentityContext);
 
     const { data: menuConfigData, refreshData: refreshMenuConfigData, isPending: isMenuConfigDataPending, error: menuConfigDataFetchError } = useFetch(api_full_path_with_query(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "get_menu_config").path, "app_id=CloudSharpVisualDashboard"));
-    /*const [menuConfigData, setMenuConfigData] = useState({
-        menu_list: [
-            {
-                menu_display_name: "Links",
-                menu_name: "SORTABLE_LINK_MENU",
-                route_type: "HTTP",
-            },
-            {
-                menu_display_name: "Charts",
-                menu_name: "SORTABLE_CHART_MENU",
-                route_type: "ASSET"
-            },
-            {
-                menu_display_name: "Tables",
-                menu_name: "DATA_TABLE_MENU",
-                route_type: "PAGE"
-            }
-        ],
-        route_types: [
-            { route_type: "HTTP", description: "External URL", validation_function: null },
-            { route_type: "ASSET", description: "Asset", validation_function: null },
-            { route_type: "PAGE", description: "Page", validation_function: null }
-        ]
-    });*/
+    const { data: commonIconData, refreshData: refreshCommonIconData, isPending: isCommonIconDataPending, error: commonIconDataFetchError } = useFetch(api_full_path_with_query(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "get_common_icons").path, "app_id=CloudSharpVisualDashboard"));
 
 
     const menuList = useMemo(() => {
@@ -90,6 +67,10 @@ const DashboardModalConfigureMenuItem = ({ title, actionButtons, configurationTy
         setItemDisplayName(item_display_name);
         setItemName(item_display_name.toUpperCase().replace(/ /g, "_"));
     };
+
+    const handle_icon_select = (icon_url) => {
+        if (icon_url) setIconPreview(icon_url);
+    }
 
     const handleIconFileChange = (event) => {
         if (!event.target.files || !event.target.files[0]) {
@@ -148,7 +129,7 @@ const DashboardModalConfigureMenuItem = ({ title, actionButtons, configurationTy
 
     const editorContent = () => (
         <>
-            <div>
+            <div className="container full-height">
                 <div style={{ display: "flow-root" }}>
                     <div className="column c45">
                         <span>Menu: </span>
@@ -190,8 +171,21 @@ const DashboardModalConfigureMenuItem = ({ title, actionButtons, configurationTy
                     <span>Icon: </span>
                     <input type="file" onChange={handleIconFileChange} />
                     <span>(Upload png/jpg/jpeg/pdf below 2 MB.)</span>
-                    <div className="card-img">
-                        <img className="icon-img" src={iconPreview} alt="preview image" />
+                </div>
+                <div className="r60">
+                    <div className="column c30">
+                        <div className="card-img">
+                            <img className="icon-img" src={iconPreview} alt="preview image" />
+                        </div>
+                    </div>
+                    <div className="column c70 container full-height scroll-control-y">
+                        {commonIconData && commonIconData.map(iconData => (
+                            <div key={iconData.icon_note} className="icon-img-width button button-extra-large" onClick={() => { handle_icon_select(iconData.icon_url); } }>
+                                <img className="icon-img icon-img-width" src={iconData.icon_url} alt="preview image" />
+                                <br />
+                                <div className="card-img-element icon note-small-font">{iconData.icon_note}</div> 
+                            </div>
+                        ))}
                     </div>
                 </div>
 

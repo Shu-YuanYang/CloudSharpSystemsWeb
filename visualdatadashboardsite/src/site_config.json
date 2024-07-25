@@ -76,6 +76,12 @@
           "default_body": null
         },
 
+        "get_common_icons": {
+          "path": "visualdata/get_common_icons",
+          "method": "GET",
+          "default_body": null
+        },
+
         "get_teams_by_user": {
           "path": "/visualdata/get_teams_by_user",
           "method": "GET",

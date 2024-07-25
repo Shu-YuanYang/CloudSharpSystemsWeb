@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Text.Json;
 using Microsoft.Net.Http.Headers;
 using System.IO;
+using SharpCompress.Common;
 
 namespace CloudSharpSystemsWeb.Controllers
 {
@@ -176,6 +177,8 @@ namespace CloudSharpSystemsWeb.Controllers
                 { 
                     "application/json", async (MultipartSection? section) => {
                         itemData = await JsonSerializer.DeserializeAsync<T_WEBSITE_MENU_ITEM>(section!.Body);
+                        if (!string.IsNullOrEmpty(itemData!.ICON)) iconFileName = Path.GetFileName(itemData.ICON);
+                        //iconMemoryStream = await GoogleAPIHelper.DownloadFileFromStorageIntoMemory(storageClient, this._GCP_BUCKET_NAME, $"COMMON_ICONS/BRANDS/{itemData.ICON}");
                     } 
                 },
                 {
@@ -208,29 +211,37 @@ namespace CloudSharpSystemsWeb.Controllers
                 };
             }
 
-            bool to_upload_new_file = String.IsNullOrEmpty(itemData!.ICON);
-            string extension = "";
-            if (to_upload_new_file)
-            {
-                DirectoryInfo dir_info = new DirectoryInfo(iconFileName);
-                extension = dir_info.Extension;
+            if (String.IsNullOrEmpty(iconFileName)) {
+                return new GeneralAPIResponse
+                {
+                    Status = "BAD_INPUT",
+                    Message = "An error occurred when parsing the file format!"
+                };
             }
 
+            bool to_upload_new_file = String.IsNullOrEmpty(itemData!.ICON);
+            DirectoryInfo dir_info = new DirectoryInfo(iconFileName);
+            string extension = dir_info.Extension;
+            
             //try
             //{
             await DBTransactionContext.DBTransact(this._app_db_main_context, async (context, transaction) =>
             {
                 // Add menu item data to database:
                 var menu_header = await InterfacesMenuContext.GetWebsiteMenuHeader(this._app_db_main_context, session_info.THREAD_ID!, "", itemData!.MENU_DISPLAY_NAME!);
-                if (to_upload_new_file) itemData.ICON = $"{menu_header.MENU_NAME}/{session_info.THREAD_ID!}/{itemData.ITEM_NAME!.ToLower()}{extension}";
+                itemData.ICON = $"{menu_header.MENU_NAME}/{session_info.THREAD_ID!}/{itemData.ITEM_NAME!.ToLower()}{extension}";
                 //Task db_transact = InterfacesMenuContext.InsertNewMenuItemProcedure(this._app_db_main_context, menu_header.HEADER_ID!, itemData!, session_info.THREAD_ID!);
                 await InterfacesMenuContext.InsertNewMenuItemProcedure(this._app_db_main_context, menu_header.HEADER_ID!, itemData!, session_info.THREAD_ID!);
 
                 // Add icon file to cloud storage:
                 var storageClient = GCPCredentialsHelper.GetStorageClient(this._external_api_map.GoogleAPI!.url!, this._external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_scope_storage_write")!, this._gcp_service_account_key_obj);
-                if (to_upload_new_file && iconMemoryStream != null)
+                if (to_upload_new_file /*&& iconMemoryStream != null*/)
                 {
-                    await GoogleAPIHelper.UploadFileToStorage(storageClient, this._GCP_BUCKET_NAME, itemData.ICON!, iconMemoryStream);
+                    await GoogleAPIHelper.UploadFileToStorage(storageClient, this._GCP_BUCKET_NAME, itemData.ICON!, iconMemoryStream!);
+                }
+                else
+                {
+                    await GoogleAPIHelper.CopyFileInStorage(storageClient, this._GCP_BUCKET_NAME, $"COMMON_ICONS/BRANDS/{iconFileName}", this._GCP_BUCKET_NAME, itemData.ICON!);
                 }
 
                 //await db_transact;
