@@ -12,6 +12,7 @@ using System.Data;
 using System.Linq.Dynamic.Core;
 using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Expressions;
+using static Azure.Core.HttpHeader;
 
 namespace DBConnectionLibrary
 {
@@ -214,6 +215,55 @@ namespace DBConnectionLibrary
 
             var lst = await query.ToListAsync();
             return lst;
+        }
+
+        public static async Task<TB_PROGRAM_STATUS> UpdateProgramStatus(AppDBMainContext DBContext, TB_PROGRAM_STATUS statusRecord) {
+            DateTime current_time = await DBTransactionContext.DBGetDateTime(DBContext);
+            statusRecord.EDIT_TIME = current_time;
+
+            // reference on how to use the Update function in EF Core: https://learn.microsoft.com/en-us/ef/core/what-is-new/ef-core-7.0/whatsnew
+            await DBContext.ProgramStatuses
+                .Where(rec => rec.PROGRAM_ID == statusRecord.PROGRAM_ID && rec.APP_ID == statusRecord.APP_ID)
+                .ExecuteUpdateAsync(s => s.SetProperty(rec => rec.LAST_TRACE_ID, rec => statusRecord.LAST_TRACE_ID)
+                    .SetProperty(rec => rec.PROGRAM_STATUS, rec => statusRecord.PROGRAM_STATUS)
+                    .SetProperty(rec => rec.LAST_LOG_TIME, rec => statusRecord.LAST_LOG_TIME)
+                    .SetProperty(rec => rec.NOTES, rec => statusRecord.NOTES)
+                    .SetProperty(rec => rec.EDIT_BY, rec => statusRecord.EDIT_BY)
+                    .SetProperty(rec => rec.EDIT_TIME, rec => statusRecord.EDIT_TIME)
+                );
+            await DBContext.SaveChangesAsync();
+
+            return statusRecord;
+        }
+
+        public static async Task UpdateTaskStatuses(AppDBMainContext DBContext, string app_ID, string program_type, string edit_by)
+        {
+            var app_id_param = new SqlParameter
+            {
+                ParameterName = "APP_ID",
+                DbType = System.Data.DbType.String,
+                Direction = System.Data.ParameterDirection.Input,
+                Value = app_ID
+            };
+
+            var program_type_param = new SqlParameter
+            {
+                ParameterName = "PROGRAM_TYPE",
+                DbType = System.Data.DbType.String,
+                Direction = System.Data.ParameterDirection.Input,
+                Value = program_type
+            };
+
+            var edit_by_param = new SqlParameter
+            {
+                ParameterName = "EDIT_BY",
+                DbType = System.Data.DbType.String,
+                Direction = System.Data.ParameterDirection.Input,
+                Value = edit_by
+            };
+
+            var parameters = new object[] { app_id_param, program_type_param, edit_by_param };
+            await DBContext.Database.ExecuteSqlRawAsync("EXEC APPLICATIONS.UPDATE_TASK_STATUSES @APP_ID, @PROGRAM_TYPE, @EDIT_BY", parameters);
         }
 
 

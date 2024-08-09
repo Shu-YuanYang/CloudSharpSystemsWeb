@@ -13,6 +13,7 @@ namespace DBConnectionLibrary
         public DbSet<TB_APP> Apps { get; set; }
         public DbSet<TB_APP_DATA_CONTROL> AppDataControls { get; set; }
         public DbSet<TB_CENTRAL_SYSTEM_LOG> CentralSystemLogs { get; set; }
+        public DbSet<TB_PROGRAM_STATUS> ProgramStatuses { get; set; }
 
         public DbSet<TB_APP_USER> AppUsers { get; set; }
         public DbSet<TB_APP_USER_IDENTITY> AppUserIdentities { get; set; }
@@ -58,7 +59,7 @@ namespace DBConnectionLibrary
             modelBuilder.Entity<TB_USER_SESSION_ITEM>().HasKey(table => new { table.SESSION_ID, table.ITEM_NAME });
             modelBuilder.Entity<TB_WEBSITE_MENU_ITEM>().HasKey(table => new { table.HEADER_ID, table.ITEM_NAME });
             modelBuilder.Entity<TB_APP_DATA_CONTROL>().HasKey(table => new { table.APP_ID, table.CONTROL_NAME, table.CONTROL_TYPE, table.CONTROL_LEVEL, table.CONTROL_VALUE, table.CONTROL_NOTE });
-
+            modelBuilder.Entity<TB_PROGRAM_STATUS>().HasKey(table => new { table.PROGRAM_ID, table.APP_ID });
 
 
             modelBuilder.Entity<V_APP_DATA_CONTROL>().ToView("V_APP_DATA_CONTROL", DB_SCHEMA.APPLICATIONS);
