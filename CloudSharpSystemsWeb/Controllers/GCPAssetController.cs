@@ -147,6 +147,16 @@ namespace CloudSharpSystemsWeb.Controllers
             return results;
         }
 
+
+        [HttpGet("get_gcp_task_logs")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        public async Task<Object> GetGCPTaskLogs() {
+            var loggingClient = GCPCredentialsHelper.GetLoggingClient(this._external_api_map.GoogleAPI!.url!, this._external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_scope_logging_read")!, this._gcp_service_account_key_obj);
+            var result = await GoogleAPIHelper.ListTaskLogs(loggingClient, new List<string> { "cloudsharpsystems" });
+            return result;
+        }
+
     }
 
 }

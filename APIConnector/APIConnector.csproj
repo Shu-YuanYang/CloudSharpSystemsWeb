@@ -10,8 +10,9 @@
     <Compile Remove="Program.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Google.Apis.Auth" Version="1.65.0" />
-    <PackageReference Include="Google.Cloud.Storage.V1" Version="4.7.0" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.68.0" />
+    <PackageReference Include="Google.Cloud.Logging.V2" Version="4.4.0" />
+    <PackageReference Include="Google.Cloud.Storage.V1" Version="4.10.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AuxiliaryClassLibrary\AuxiliaryClassLibrary.csproj" />

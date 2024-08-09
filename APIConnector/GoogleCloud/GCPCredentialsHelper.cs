@@ -1,13 +1,13 @@
 ﻿using APIConnector.Model;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
+using Google.Cloud.Logging.V2;
 using System.Text.Json;
 using Google.Apis.Auth.OAuth2.Flows;
 using Google.Apis.Auth.OAuth2.Responses;
 using System.Security.Authentication;
-using Google.Cloud.Storage.V1;
-using Microsoft.VisualBasic;
-using Google;
+using System.Net;
+using Grpc.Auth;
 
 namespace APIConnector.GoogleCloud
 {
@@ -49,7 +49,13 @@ namespace APIConnector.GoogleCloud
             GoogleCredential service_account_credential = GCPCredentialsHelper.GetGoogleCredential(scope_API_url, scope_path_config, key_obj);
             var storage = StorageClient.Create(service_account_credential);
             return storage;
-        } 
+        }
+
+        public static LoggingServiceV2Client GetLoggingClient(string scope_API_url, ExternalAPIPathConfig scope_path_config, GCPServiceAccountSecretKeyObject key_obj) {
+            GoogleCredential service_account_credential = GCPCredentialsHelper.GetGoogleCredential(scope_API_url, scope_path_config, key_obj);
+            var logging = new LoggingServiceV2ClientBuilder { ChannelCredentials = service_account_credential.ToChannelCredentials() }.Build();
+            return logging;
+        }
 
         public async Task<TokenResponse> GetOAuth2TokenByCode(GCPOAuth2ClientSecretKeyObject key_obj, GoogleAPIOAuth2LoginCodeObject authorization_code_obj)
         {
