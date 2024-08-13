@@ -384,3 +384,5 @@ FodyWeavers.xsd
 /CloudSharpSystemsWeb/gcp_credentials_client_secrets.Development.json
 /CloudSharpSystemsWeb/azure_credentials_client_secrets.json
 /CloudSharpSystemsWeb/github_credentials_client_secrets.json
+/CloudSharpLimitedCentral/gcp_credentials_client_secrets.json
+/CloudSharpLimitedCentral/gcp_credentials_client_secrets.Development.json
