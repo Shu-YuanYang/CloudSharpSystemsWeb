@@ -217,6 +217,20 @@ namespace DBConnectionLibrary
             return lst;
         }
 
+        // The following fields can be used to query for TB_PROGRAM_STATUS records in conjunction: APP_ID, PROGRAM_TYPE, PROGRAM_STATUS, RESOURCE_SEP, RESOURCE
+        // Empty fields in the search_criteria will not be used to query.
+        public static async Task<IEnumerable<TB_PROGRAM_STATUS>> GetProgramStatuses(AppDBMainContext DBContext, TB_PROGRAM_STATUS search_criteria)
+        {
+            var query = DBContext.ProgramStatuses.AsQueryable();
+            if (!string.IsNullOrEmpty(search_criteria.APP_ID)) query = query.Where(t => t.APP_ID == search_criteria.APP_ID);
+            if (!string.IsNullOrEmpty(search_criteria.PROGRAM_TYPE)) query = query.Where(t => t.PROGRAM_TYPE == search_criteria.PROGRAM_TYPE);
+            if (!string.IsNullOrEmpty(search_criteria.PROGRAM_STATUS)) query = query.Where(t => t.PROGRAM_STATUS == search_criteria.PROGRAM_STATUS);
+            if (!string.IsNullOrEmpty(search_criteria.RESOURCE_SEP)) query = query.Where(t => t.RESOURCE_SEP == search_criteria.RESOURCE_SEP);
+            if (!string.IsNullOrEmpty(search_criteria.RESOURCE)) query = query.Where(t => t.RESOURCE == search_criteria.RESOURCE);
+
+            return await query.ToListAsync();
+        }
+
         public static async Task<TB_PROGRAM_STATUS> UpdateProgramStatus(AppDBMainContext DBContext, TB_PROGRAM_STATUS statusRecord) {
             DateTime current_time = await DBTransactionContext.DBGetDateTime(DBContext);
             statusRecord.EDIT_TIME = current_time;

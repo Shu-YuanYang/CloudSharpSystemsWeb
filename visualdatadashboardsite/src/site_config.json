@@ -159,6 +159,11 @@
           "path": "gcpasset/get_google_daily_trends",
           "method": "GET",
           "default_body": null
+        },
+        "get_task_status_statistics": {
+          "path": "networkmonitor/get_task_status_statistics",
+          "method": "GET",
+          "default_body": null
         }
 
       }

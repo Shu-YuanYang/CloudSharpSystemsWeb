@@ -1,7 +1,7 @@
 import TableStandard from "./TableStandard";
 import { export_to_CSV } from "../auxiliary/files/csv_helper";
 
-const TableWithSummary = ({ title, rawData, columnConfig, refreshData }) => {
+const TablePartitions = ({ title, rawData, columnConfig, refreshData }) => {
 
 
     const data_donwload = () => {
@@ -25,4 +25,4 @@ const TableWithSummary = ({ title, rawData, columnConfig, refreshData }) => {
     );
 };
 
-export default TableWithSummary;
+export default TablePartitions;
