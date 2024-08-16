@@ -233,5 +233,14 @@ namespace CloudSharpSystemsWeb.Controllers
             return config_response;
         }
 
+        /*
+        [HttpGet("test_list_headers")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        public Object TestListHeaders() {
+            var headers = Request.Headers;
+            return headers;
+        } 
+        */
     }
 }
