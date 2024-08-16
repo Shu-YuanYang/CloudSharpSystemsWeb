@@ -1,7 +1,7 @@
 import TableStandard from "./TableStandard";
 import { export_to_CSV } from "../auxiliary/files/csv_helper";
 
-const TablePartitionsWithSummary = ({ title, rawData, columnConfig, refreshData }) => {
+const TablePartitions = ({ title, rawData, columnConfig, refreshData }) => {
 
     const data_donwload = (dataList, key) => {
         export_to_CSV(dataList, key);
@@ -10,7 +10,7 @@ const TablePartitionsWithSummary = ({ title, rawData, columnConfig, refreshData 
     return (
         <div className="r85">
             {rawData.map(group => <>
-                <div className="menu-header large">
+                <div className="table-header large">
                     <span>{group.key}</span>
                     <div className="summary-item right">
                         <button className="summary-button" onClick={() => { data_donwload(group.dataList, group.key); }}>Download CSV</button>
@@ -26,4 +26,4 @@ const TablePartitionsWithSummary = ({ title, rawData, columnConfig, refreshData 
     );
 };
 
-export default TablePartitionsWithSummary;
+export default TablePartitions;

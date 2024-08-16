@@ -143,6 +143,21 @@ canvas {
 }
 
 /* TABLE STYLES */
+.table-header {
+    background-color: rgba(215, 215, 215, 1.0);
+    padding: 6px;
+    border-style: solid;
+    border-color: rgba(170, 170, 170, 0.8);
+    border-width: 1px;
+}
+
+    .table-header.large {
+        font-weight: bold;
+        font-size: 20px;
+    }
+
+
+
 table {
     /*table-layout: fixed;*/
     width: 100%;
