@@ -6,6 +6,8 @@ import { useState, useEffect } from "react";
 //import DBLatencyMonitorChart from "../charts/DBLatencyMonitorChart";
 import DynamicComponentWrapper from "../auxiliary/wrappers/DynamicComponentWrapper";
 import { ErrorBoundary } from "../auxiliary/wrappers/ErrorBoundaryWrapper";
+import { useContext } from 'react';
+import HomeMonitorRefreshContext from "../auxiliary/wrappers/HomeMonitorRefreshContext";
 
 
 const DashboardMonitor = ({ title, currentComponentData }) => { 
@@ -14,6 +16,8 @@ const DashboardMonitor = ({ title, currentComponentData }) => {
 
     const [refreshTriggered, setRefreshTriggered] = useState(0);
     const [isRefreshing, setIsRefreshing] = useState(false);
+
+    const [refreshContext, setRefreshContext] = useContext(HomeMonitorRefreshContext);
     
     /*
     useEffect(() => {
@@ -22,9 +26,11 @@ const DashboardMonitor = ({ title, currentComponentData }) => {
     */
     
     const update_refresh_status = (is_refresh_triggered, is_refreshing) => {
-        setRefreshTriggered((count) => (count + 1) % 10); 
-        setIsRefreshing(true);
-        /*const timeout = */setTimeout(() => { setIsRefreshing(false); }, 3000);
+        //setRefreshTriggered((count) => (count + 1) % 10); 
+        //setIsRefreshing(true);
+
+        setRefreshContext((count) => count % 10 + 1);
+        /*const timeout = *///setTimeout(() => { setIsRefreshing(false); }, 3000);
     }
     
     
@@ -46,7 +52,7 @@ const DashboardMonitor = ({ title, currentComponentData }) => {
                 {currentComponentData && (
                     <div className="container content-height">
                         <ErrorBoundary fallback={<h4>Unable to display chart. An error occurred!</h4>}>
-                            <DynamicComponentWrapper directory={"charts"} component_name={currentComponentData.ROUTE} title={currentComponentData.DISPLAY_NAME} refreshTriggered={refreshTriggered} updateRefreshStatus={update_refresh_status} />
+                            <DynamicComponentWrapper directory={"charts"} component_name={currentComponentData.ROUTE} title={currentComponentData.DISPLAY_NAME} refreshTriggered={refreshContext} />
                         </ErrorBoundary>
                     </div>
                 )}

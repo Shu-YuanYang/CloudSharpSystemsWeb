@@ -5,6 +5,7 @@ import { api_full_path, api_full_path_with_query, api_authorized_post, api_autho
 import { APIEndpoints } from "../site_config.json";
 import { useContext } from 'react';
 import IdentityContext from "../auxiliary/wrappers/IdentityContext";
+import HomeMonitorRefreshContext from "../auxiliary/wrappers/HomeMonitorRefreshContext";
 
 import { usePageTitle } from "./page_title_converter";
 import DashboardMonitor from "../dashboard_core/DashboardMonitor";
@@ -76,6 +77,7 @@ const PersonalDashboardPage = () => {
         sortableDataArray: sortableLinksData,
         selectableDataArray: selectableLinksData,
         refreshData: refreshLinksData,
+        refreshEnabled: false,
         addItem: addNewMenuItem,
         saveData: saveMenuData,
         isDataPending: isLinksDataPending,
@@ -116,6 +118,7 @@ const PersonalDashboardPage = () => {
         sortableDataArray: sortableChartsData,
         selectableDataArray: selectableChartsData,
         refreshData: refreshChartsData,
+        refreshEnabled: false,
         addItem: addNewMenuItem,
         saveData: saveMenuData,
         isDataPending: isChartsDataPending,
@@ -162,6 +165,7 @@ const PersonalDashboardPage = () => {
         //sortableDataArray: sortableLinksData,
         selectableDataArray: selectableNotesData,
         refreshData: refreshNotesData,
+        refreshEnabled: false,
         addNote: async (newNote) => {
             return await api_authorized_post(api_full_path_with_query(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "add_note").path, "app_id=CloudSharpVisualDashboard"), userIdentity.session_id, newNote);
         },
@@ -204,40 +208,43 @@ const PersonalDashboardPage = () => {
     const chartMenuHeightStyle = isChartMenuExpanded ? (isChartMenuInSelectMode ? "r50" : "r25") : "r0";
     const monitorHeightStyle = isChartMenuExpanded? (isChartMenuInSelectMode ? "r50" : "r75") : "container full-height";
 
+    const [monitorRefreshCount, setMonitorRefreshCount] = useState(1);
+
     return (
         <div className="board main">
-            <div className="container full-height">
-                <div className="page title">
-                    <span>Dashboard Home</span>
-                </div>
-                <div className="r95">
-                    <div className="container full-height">
-                        <div className="column c70">
-                            <div className="board component">
-                                <div className={"container position-relative full-height"} >
-                                    <div className={monitorHeightStyle/*"rauto rmax77"*/}>
-                                        <DashboardMonitor title="Monitor" currentComponentData={currentChartItem} />
+            <HomeMonitorRefreshContext.Provider value={[monitorRefreshCount, setMonitorRefreshCount]}>
+                <div className="container full-height">
+                    <div className="page title">
+                        <span>Dashboard Home</span>
+                    </div>
+                    <div className="r95">
+                        <div className="container full-height">
+                            <div className="column c70">
+                                <div className="board component">
+                                    <div className={"container position-relative full-height"} >
+                                        <div className={monitorHeightStyle/*"rauto rmax77"*/}>
+                                            { monitorRefreshCount && <DashboardMonitor title="Monitor" currentComponentData={currentChartItem} /> }
+                                        </div>
+                                        <div className={`${chartMenuHeightStyle} dashboard-subsection`}>
+                                            <ExpandableChartsMenuMap />
+                                        </div>
                                     </div>
-                                    <div className={`${chartMenuHeightStyle} dashboard-subsection`}>
-                                        <ExpandableChartsMenuMap />
-                                    </div>
+
                                 </div>
-
                             </div>
-                        </div>
 
-                        <div className="column c30">
-                            <div className="board component">
-                                {!linksDataFetchError && <DashboardItemMenu title={"Links"} data_obj={link_menu_data_obj} itemElement={linkItemElement} isVerticalDisplay={true} allowNewItemAdding={userIdentity != null} />}
+                            <div className="column c30">
+                                <div className="board component">
+                                    {!linksDataFetchError && <DashboardItemMenu title={"Links"} data_obj={link_menu_data_obj} itemElement={linkItemElement} isVerticalDisplay={true} allowNewItemAdding={userIdentity != null} />}
+                                </div>
                             </div>
-                        </div>
 
-                        <BackPositionedNoteMap />
+                            <BackPositionedNoteMap />
                         
+                        </div>
                     </div>
                 </div>
-            </div>
-            
+            </HomeMonitorRefreshContext.Provider>
         </div>
     )
 };

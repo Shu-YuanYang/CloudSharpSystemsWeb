@@ -6,7 +6,7 @@ import { APIEndpoints } from "../site_config.json";
 import TableList from "../tables/TableList";
 
 
-const GoogleDailyTrendsChart = ({ title, refreshTriggered, updateRefreshStatus }) => {
+const GoogleDailyTrendsChart = ({ title, refreshTriggered }) => {
 
     const { data: trendsData, refreshData: refreshTrendsData, isPending: isTrendsDataPending, error: trendsDataFetchError } = useFetch(api_full_path(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "get_google_daily_trends").path));
 

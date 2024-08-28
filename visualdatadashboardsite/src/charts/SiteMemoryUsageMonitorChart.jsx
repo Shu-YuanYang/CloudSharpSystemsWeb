@@ -7,7 +7,7 @@ import LineChartStandard from "./LineChartStandard";
 
 const BYTES_PER_MBYTES = 1000000;
 
-const SiteMemoryUsageMonitorChart = ({ title, refreshTriggered, updateRefreshStatus }) => {
+const SiteMemoryUsageMonitorChart = ({ title, refreshTriggered }) => {
 
     const [performanceArr, setPerformanceArr] = useState([]);
 

@@ -7,7 +7,7 @@ import { APIEndpoints } from "../site_config.json";
 
 
 
-const FederatedSchedulingTesterChart = ({ title, refreshTriggered, updateRefreshStatus }) => {
+const FederatedSchedulingTesterChart = ({ title, refreshTriggered }) => {
 
     const [fileSelectInput, setFileSelectInput] = useState("");
     const [processorCountSelectInput, setProcessorCountSelectInput] = useState(0);

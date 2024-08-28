@@ -6,7 +6,7 @@ import { APIEndpoints } from "../site_config.json";
 import { time_to_string_HHmm, string_expression_to_time_obj } from "../auxiliary/time/timehelper";
 
 
-const DBLatencyMonitorChart = ({ title, refreshTriggered, updateRefreshStatus }) => {
+const DBLatencyMonitorChart = ({ title, refreshTriggered }) => {
 
     const { data: sampleData, refreshData: refreshSampleData, isPending, error } = useFetch(api_full_path(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "get_recent_db_status_logs").path));
     

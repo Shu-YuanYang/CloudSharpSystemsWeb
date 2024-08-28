@@ -62,7 +62,7 @@ const ChartDisplayPage = ({ title }) => {
                             </div>
                         }
                         <div className="r85" style={{ height: "85%" }}>
-                            <DynamicComponentWrapper directory={"charts"} component_name={chart} title={page_title} refreshTriggered={refreshTriggered} updateRefreshStatus={update_refresh_status} />
+                            <DynamicComponentWrapper directory={"charts"} component_name={chart} title={page_title} refreshTriggered={refreshTriggered} />
                         </div>
                     </ErrorBoundary>
                 </div>

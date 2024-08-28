@@ -7,7 +7,7 @@ import { APIEndpoints } from "../site_config.json";
 
 
 
-const SGDVariableSelectionTesterChart = ({ title, refreshTriggered, updateRefreshStatus }) => {
+const SGDVariableSelectionTesterChart = ({ title, refreshTriggered }) => {
 
     const [fileSelectInput, setFileSelectInput] = useState("");
     const [deviceSelectInput, setDeviceSelectInput] = useState("");
