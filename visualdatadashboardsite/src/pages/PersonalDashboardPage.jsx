@@ -138,11 +138,12 @@ const PersonalDashboardPage = () => {
     useEffect(() => {
         // When chart menu refreshes, use the first
         if (sortableChartsData && sortableChartsData.length > 0) {
-            setCurrentChartItem(sortableChartsData[0]);
+            let currentItemLst = sortableChartsData.filter(item => currentChartItem && currentChartItem.DISPLAY_NAME === item.DISPLAY_NAME);
+            if (currentItemLst.length === 0) setCurrentChartItem(sortableChartsData[0]);
         } else {
             setCurrentChartItem(null);
         }
-    }, [sortableChartsData]);
+    }, [sortableChartsData, currentChartItem]);
 
 
 
