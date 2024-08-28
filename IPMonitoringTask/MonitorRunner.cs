@@ -64,7 +64,7 @@ namespace IPMonitoringTask
             
 
             // Monitor the app database:
-            var dbmain_task = RunTasksForDBMain(DBOptions, DBMain_host, poll_interval * 2);
+            //var dbmain_task = RunTasksForDBMain(DBOptions, DBMain_host, poll_interval * 2); // Shu-Yuan Yang 20240827 temporarily disabled
             var dbmongo_task = RunTasksForDBMongo(dbmongo_connectionString, DBMongo_host, poll_interval * 2);
 
             // Monitor each website host:
@@ -75,7 +75,7 @@ namespace IPMonitoringTask
                 running_tasks.Add(task);
             }
 
-            await RunDBUpdateTask(DBOptions, poll_interval / 2);
+            await RunDBUpdateTask(DBOptions, poll_interval / 2); 
 
         }
 
@@ -133,11 +133,11 @@ namespace IPMonitoringTask
                 try
                 {
                     AppDBMongoContext DBContext = new AppDBMongoContext(db_connection_string);
-                    DateTime start_time = DateTime.Now;
-                    var result_doc = DBContext.PingDatabases();
-                    DateTime end_time = DateTime.Now;
+                    //DateTime start_time = DateTime.Now; // Shu-Yuan Yang 20240827 temporarily disabled pinging.
+                    //var result_doc = DBContext.PingDatabases();
+                    //DateTime end_time = DateTime.Now;
                     await TeamNoteContext.ClearOldTeamNotes(DBContext, 24, PROGRAM_NAME);
-                    latency = (end_time - start_time).TotalMilliseconds;
+                    //latency = (end_time - start_time).TotalMilliseconds;
                     is_query_successful = true;
                 }
                 catch (Exception ex)
@@ -248,7 +248,7 @@ namespace IPMonitoringTask
                         {
                             ConsoleTable.AddRow(record.host_IP!, record.port!, record.system_status!, record.trace_ID!, record.latency, record.message!);
                             //Console.WriteLine($"{record.host_IP!}\t\t{record.port!}\t\t{record.system_status!}\t\t{record.trace_ID!}\t\t{record.message!}\t\t{record.recorded_by!}");
-                            await NetworkWebsiteHostContext.UpdateHostStatus(DBContext, record.host_IP!, record.port!, record.system_status!, record.trace_ID!, record.message!, record.recorded_by!, record.latency);
+                            // await NetworkWebsiteHostContext.UpdateHostStatus(DBContext, record.host_IP!, record.port!, record.system_status!, record.trace_ID!, record.message!, record.recorded_by!, record.latency); // Shu-Yuan Yang 20240827 temporarily disabled
                         }
                         //Console.WriteLine();
                         __system_health_record_dict.Remove(IP_record_pair.Key);
