@@ -19,9 +19,6 @@ const TablePartitions = ({ title, rawData, columnConfig, refreshData }) => {
                 </div>
                 <TableStandard key={group.key} title={group.key} rawData={group.dataList} columnConfig={columnConfig} />
             </>)}
-            
-                
-            
         </div>
     );
 };
