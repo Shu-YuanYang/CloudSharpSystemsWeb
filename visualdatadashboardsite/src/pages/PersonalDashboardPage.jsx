@@ -52,14 +52,25 @@ const PersonalDashboardPage = () => {
     //const dataIdentifier = (row) => { return row.page_name; };
 
 
+    const { data: linksData, refreshData: refreshLinksData, isPending: isLinksDataPending, error: linksDataFetchError } = useAuthorizedFetch(api_full_path(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "get_sortable_links_menu").path), userIdentity ? userIdentity.session_id : null);
+    const { data: chartsData, refreshData: refreshChartsData, isPending: isChartsDataPending, error: chartsDataFetchError } = useAuthorizedFetch(api_full_path(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "get_sortable_charts_menu").path), userIdentity ? userIdentity.session_id : null);
+    const { data: notesConfig, refreshData: refreshNotesConfig, isPending: isNotesConfigPending, error: notesConfigFetchError } = useFetch(api_full_path(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "get_team_note_config").path));
+    const { data: notesData, refreshData: refreshNotesData, isPending: isNotesDataPending, error: notesDataFetchError } = useAuthorizedFetch(api_full_path_with_query(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "get_notes_for_user").path, "app_id=CloudSharpVisualDashboard"), userIdentity ? userIdentity.session_id : null);
+    const [monitorRefreshCount, setMonitorRefreshCount] = useState(1);
+
+    const pageRefreshData = useCallback(() => {
+        refreshLinksData();
+        refreshChartsData();
+        refreshNotesConfig();
+        refreshNotesData();
+        setMonitorRefreshCount((count) => count % 10 + 1);
+    }, [refreshLinksData, refreshChartsData, refreshNotesConfig, refreshNotesData]);
 
     // Download and organise links menu data:
     //const [linksData, setLinksData] = useState(makeSortablePageData());
     //const refreshLinksData = () => { setLinksData(makeSortablePageData()); };
     //const isLinksDataPending = false;
     //const linksDataFetchError = null;
-    const { data: linksData, refreshData: refreshLinksData, isPending: isLinksDataPending, error: linksDataFetchError } = useAuthorizedFetch(api_full_path(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "get_sortable_links_menu").path), userIdentity? userIdentity.session_id : null);
-    
     const links_comp_func = (a, b) => { return (a.RANKING < b.RANKING) ? -1 : 1; };
 
     const sortableLinksData = useMemo(() => linksData ? linksData.filter(row => row.RANKING > 0).sort(links_comp_func) : linksData, [linksData]);
@@ -76,7 +87,7 @@ const PersonalDashboardPage = () => {
         title: "Links",
         sortableDataArray: sortableLinksData,
         selectableDataArray: selectableLinksData,
-        refreshData: refreshLinksData,
+        refreshData: pageRefreshData/*refreshLinksData*/,
         refreshEnabled: false,
         addItem: addNewMenuItem,
         saveData: saveMenuData,
@@ -99,8 +110,6 @@ const PersonalDashboardPage = () => {
     //const refreshChartsData = () => { setChartsData(makeSortableChartData()); };
     //const isChartsDataPending = false;
     //const chartsDataFetchError = null;
-    const { data: chartsData, refreshData: refreshChartsData, isPending: isChartsDataPending, error: chartsDataFetchError } = useAuthorizedFetch(api_full_path(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "get_sortable_charts_menu").path), userIdentity ? userIdentity.session_id : null);
-
     const charts_comp_func = (a, b) => { return (a.RANKING < b.RANKING) ? -1 : 1; };
 
     const sortableChartsData = useMemo(() => chartsData ? chartsData.filter(row => row.RANKING > 0).sort(charts_comp_func) : chartsData, [chartsData]);
@@ -117,7 +126,7 @@ const PersonalDashboardPage = () => {
         title: "Charts",
         sortableDataArray: sortableChartsData,
         selectableDataArray: selectableChartsData,
-        refreshData: refreshChartsData,
+        refreshData: pageRefreshData/*refreshChartsData*/,
         refreshEnabled: false,
         addItem: addNewMenuItem,
         saveData: saveMenuData,
@@ -138,9 +147,6 @@ const PersonalDashboardPage = () => {
 
 
     // Download and organise notes data:
-    const { data: notesConfig, refreshData: refreshNotesConfig, isPending: isNotesConfigPending, error: notesConfigFetchError } = useFetch(api_full_path(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "get_team_note_config").path));
-    const { data: notesData, refreshData: refreshNotesData, isPending: isNotesDataPending, error: notesDataFetchError } = useAuthorizedFetch(api_full_path_with_query(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "get_notes_for_user").path, "app_id=CloudSharpVisualDashboard"), userIdentity ? userIdentity.session_id : null);
-    
     const notes_comp_func = (a, b) => {
         if (a.status_code === "TODO") { // TODO status always takes priority
             if (b.status_code === "TODO") return (a.priority_number > b.priority_number) ? -1 : 1;
@@ -164,8 +170,8 @@ const PersonalDashboardPage = () => {
         title: "Notes",
         //sortableDataArray: sortableLinksData,
         selectableDataArray: selectableNotesData,
-        refreshData: refreshNotesData,
-        refreshEnabled: false,
+        refreshData: pageRefreshData, //refreshNotesData,
+        refreshEnabled: true,
         addNote: async (newNote) => {
             return await api_authorized_post(api_full_path_with_query(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "add_note").path, "app_id=CloudSharpVisualDashboard"), userIdentity.session_id, newNote);
         },
@@ -176,10 +182,9 @@ const PersonalDashboardPage = () => {
         /*isSelectable: true,*/
         dataIdentifier: noteDataIdentifier,
         teamNoteConfig: notesConfig
-    }), [selectableNotesData, refreshNotesData, isNotesDataPending, noteDataIdentifier, userIdentity, notesConfig]);
+    }), [selectableNotesData, pageRefreshData/*refreshNotesData*/, isNotesDataPending, noteDataIdentifier, userIdentity, notesConfig]);
 
-
-
+    
 
     const ExpandableChartsMenuMap = () => (
         <div className="container full-height">
@@ -208,8 +213,7 @@ const PersonalDashboardPage = () => {
     const chartMenuHeightStyle = isChartMenuExpanded ? (isChartMenuInSelectMode ? "r50" : "r25") : "r0";
     const monitorHeightStyle = isChartMenuExpanded? (isChartMenuInSelectMode ? "r50" : "r75") : "container full-height";
 
-    const [monitorRefreshCount, setMonitorRefreshCount] = useState(1);
-
+    
     return (
         <div className="board main">
             <HomeMonitorRefreshContext.Provider value={[monitorRefreshCount, setMonitorRefreshCount]}>

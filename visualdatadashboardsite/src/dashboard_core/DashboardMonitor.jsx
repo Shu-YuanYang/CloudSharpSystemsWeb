@@ -13,26 +13,13 @@ import HomeMonitorRefreshContext from "../auxiliary/wrappers/HomeMonitorRefreshC
 const DashboardMonitor = ({ title, currentComponentData }) => { 
     
     // Use function to load data:
-
-    const [refreshTriggered, setRefreshTriggered] = useState(0);
-    const [isRefreshing, setIsRefreshing] = useState(false);
-
+    //const [isRefreshing, setIsRefreshing] = useState(false);
     const [refreshContext, setRefreshContext] = useContext(HomeMonitorRefreshContext);
-    
     /*
-    useEffect(() => {
-        setIsRefreshing(false);  // reset rendering cycle upon component change
-    }, [currentComponentData]);
-    */
-    
     const update_refresh_status = (is_refresh_triggered, is_refreshing) => {
-        //setRefreshTriggered((count) => (count + 1) % 10); 
-        //setIsRefreshing(true);
-
         setRefreshContext((count) => count % 10 + 1);
-        /*const timeout = *///setTimeout(() => { setIsRefreshing(false); }, 3000);
     }
-    
+    */
     
 
 
@@ -41,13 +28,13 @@ const DashboardMonitor = ({ title, currentComponentData }) => {
         <div className="container full-height">
             <div className="dashboard monitor">
                 <DashboardItemMenuHeader title={title}>
-                    { currentComponentData && 
+                    {/*currentComponentData && // Shu-Yuan Yang 20240828 commented for parent level refresh control
                         <div className="card-editor">
                             <div className="card-button">
                                 <button className="button-small" onClick={() => { update_refresh_status(true, true); }} disabled={isRefreshing}>Refresh</button>
                             </div>
                         </div>
-                    }
+                    */}
                 </DashboardItemMenuHeader>
                 {currentComponentData && (
                     <div className="container content-height">
@@ -57,7 +44,6 @@ const DashboardMonitor = ({ title, currentComponentData }) => {
                     </div>
                 )}
                 
-                {/*<DBLatencyMonitorChart title="App DB Query Latencies" isRefreshing={isRefreshing} completeRefreshing={() => { setIsRefreshing(false); }} />*/}
             </div>
         </div>
     );

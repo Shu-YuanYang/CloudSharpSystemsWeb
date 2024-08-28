@@ -35,10 +35,10 @@ const MainMenuPage = () => {
 
     const sortableMenuListData = useMemo(() => menuListData ? menuListData.map(menu => ({...menu, menu_items: menu.menu_items.sort(charts_comp_func) })) : [], [menuListData]);
 
-    const addNewMenuItem = async (formData) => {
+    const addNewMenuItem = useCallback(async (formData) => {
         for (let entry of formData.entries()) console.log(entry);
         return await api_authorized_post_form_data(api_full_path(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "add_new_menu_item").path), userIdentity.session_id, formData);
-    };
+    }, [userIdentity.session_id]);
 
     const saveMenuData = useCallback(async (newSortableData, newSelectableData, newDeletedData) => {
         //console.log(newSortableData);
@@ -64,6 +64,7 @@ const MainMenuPage = () => {
                 sortableDataArray: sortableMenuListData[i].menu_items,
                 selectableDataArray: [],
                 refreshData: refreshMenuListData,
+                refreshEnabled: (i === 0),
                 addItem: addNewMenuItem,
                 saveData: saveMenuData,
                 isDataPending: isMenuListDataPending,
@@ -73,7 +74,7 @@ const MainMenuPage = () => {
             });
         }
         return obj_lst;
-    }, [menuListData, sortableMenuListData, refreshMenuListData, isMenuListDataPending, saveMenuData]);
+    }, [menuListData, sortableMenuListData, refreshMenuListData, isMenuListDataPending, saveMenuData, addNewMenuItem]);
 
 
     

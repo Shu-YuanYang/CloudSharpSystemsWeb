@@ -185,7 +185,8 @@ const DashboardItemMenu = ({ title, data_obj, itemElement, isVerticalDisplay = t
                                         data_obj.sortableDataArray && (
                                             <div>
                                                 <button className="button-small" onClick={ChangeOnClick}>{isInEditMode ? "Save" : "Edit"}</button>
-                                                <button className={`button-small ${/*isInEditMode ? "" : "refresh-icon"*/""}`} onClick={hard_refresh}>{isInEditMode ? "Cancel" : "Refresh"}</button>
+                                                { isInEditMode && <button className={"button-small"} onClick={hard_refresh}>Cancel</button> }
+                                                { data_obj.refreshEnabled && !isInEditMode && <button className={"button-small"} onClick={hard_refresh}>Refresh</button> }
                                             </div>
                                         )
                                     }
