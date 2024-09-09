@@ -130,7 +130,7 @@ const DashboardNoteArea = ({ title, data_obj, itemElement, isVerticalDisplay = t
             {item.sender_name}:
             <br />
             {actionItem && actionItem.action === "EDIT" ?
-                <textarea className="modal-textarea" name="notemessagetext" value={editedMessage} onChange={e => setEditedMessage(e.target.value)} disabled={isUpdating || !item.user_permissions.can_edit}></textarea>
+                <textarea className="modal-textarea" name="notemessagetext" rows="10" value={editedMessage} onChange={e => setEditedMessage(e.target.value)} disabled={isUpdating || !item.user_permissions.can_edit}></textarea>
                 :
                 item.message
             }
