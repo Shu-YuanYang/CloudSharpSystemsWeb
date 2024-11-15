@@ -83,6 +83,7 @@
     <Folder Include="AUTH\Functions\" />
     <Folder Include="INTERFACES\Stored Procedures\" />
     <Folder Include="AUTH\Stored Procedures\" />
+    <Folder Include="APPLICATIONS\Stored Procedures\" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="APPLICATIONS\Tables\TB_CENTRAL_SYSTEM_LOG.sql" />
@@ -146,5 +147,8 @@
     <Build Include="INTERFACES\Stored Procedures\ADD_WEBSITE_MENU_ITEM.sql" />
     <Build Include="AUTH\Stored Procedures\ADD_APP_USER.sql" />
     <Build Include="Security\AUTH.sql" />
+    <Build Include="APPLICATIONS\Tables\TB_PROGRAM_STATUS.sql" />
+    <Build Include="AUTH\Functions\GET_APP_IDENTITY_USER_PROFILE_HEADERS_BY_TEAM.sql" />
+    <Build Include="APPLICATIONS\Stored Procedures\UPDATE_TASK_STATUSES.sql" />
   </ItemGroup>
 </Project>
