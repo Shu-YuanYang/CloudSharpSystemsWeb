@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DBConnectionLibrary.Models
 {
-    [Table("TB_HOST_STATUS_LOG", Schema = DB_SCHEMA.NETWORK)]
+    [Table(nameof(TB_HOST_STATUS_LOG), Schema = DB_SCHEMA.NETWORK)]
     public class TB_HOST_STATUS_LOG
     {
         [Key]

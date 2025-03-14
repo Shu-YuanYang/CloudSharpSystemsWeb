@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace DBConnectionLibrary.Models
 {
-    public class TB_APP_DATA_CONTROL
+	[Table(nameof(TB_APP_DATA_CONTROL), Schema = DB_SCHEMA.APPLICATIONS)]
+	public class TB_APP_DATA_CONTROL
     {
         [Key]
         public string? APP_ID { get; set; }

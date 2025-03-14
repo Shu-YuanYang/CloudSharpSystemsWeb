@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DBConnectionLibrary.Models
 {
-    [Table("TB_APP_USER_IDENTITY", Schema = DB_SCHEMA.AUTH)]
+    [Table(nameof(TB_APP_USER_IDENTITY), Schema = DB_SCHEMA.AUTH)]
     public class TB_APP_USER_IDENTITY
     {
         [Key]

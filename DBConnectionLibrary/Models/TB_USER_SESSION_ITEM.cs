@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DBConnectionLibrary.Models
 {
-    [Table("TB_USER_SESSION_ITEM", Schema = DB_SCHEMA.NETWORK)]
+    [Table(nameof(TB_USER_SESSION_ITEM), Schema = DB_SCHEMA.NETWORK)]
     public class TB_USER_SESSION_ITEM
     {
         [Key]

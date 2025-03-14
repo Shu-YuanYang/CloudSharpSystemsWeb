@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DBConnectionLibrary.Models
 {
-    [Table("TB_SERVER", Schema = DB_SCHEMA.PRODUCTS)]
+    [Table(nameof(TB_SERVER), Schema = DB_SCHEMA.PRODUCTS)]
     public class TB_SERVER
     {
         [Key]

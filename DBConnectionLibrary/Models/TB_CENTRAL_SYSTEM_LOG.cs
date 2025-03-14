@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DBConnectionLibrary.Models
 {
-    [Table("TB_CENTRAL_SYSTEM_LOG", Schema = DB_SCHEMA.APPLICATIONS)]
+    [Table(nameof(TB_CENTRAL_SYSTEM_LOG), Schema = DB_SCHEMA.APPLICATIONS)]
     public class TB_CENTRAL_SYSTEM_LOG
     {
         [Key]

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DBConnectionLibrary.Models
 {
-    [Table("TB_APP", Schema = DB_SCHEMA.APPLICATIONS)]
+    [Table(nameof(TB_APP), Schema = DB_SCHEMA.APPLICATIONS)]
     public class TB_APP
     {
         [Key]

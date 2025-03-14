@@ -11,7 +11,7 @@ using static System.Net.WebRequestMethods;
 
 namespace DBConnectionLibrary.Models
 {
-    [Table("TB_WEBSITE_MENU_ITEM", Schema = DB_SCHEMA.INTERFACES)]
+    [Table(nameof(TB_WEBSITE_MENU_ITEM), Schema = DB_SCHEMA.INTERFACES)]
     public class TB_WEBSITE_MENU_ITEM
     {
         [Key]

@@ -9,7 +9,7 @@ using static System.Formats.Asn1.AsnWriter;
 
 namespace DBConnectionLibrary.Models
 {
-    [Table("TB_CS_EDUCATOR_POSTS", Schema = DB_SCHEMA.EXTERNAL_STACKEXCHANGE)]
+    [Table(nameof(TB_CS_EDUCATOR_POSTS), Schema = DB_SCHEMA.EXTERNAL_STACKEXCHANGE)]
     public class TB_CS_EDUCATOR_POSTS
     {
         [Key]

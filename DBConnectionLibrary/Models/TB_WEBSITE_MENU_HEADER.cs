@@ -16,7 +16,7 @@ namespace DBConnectionLibrary.Models
         
     }
      */
-    [Table("TB_WEBSITE_MENU_HEADER", Schema = DB_SCHEMA.INTERFACES)]
+    [Table(nameof(TB_WEBSITE_MENU_HEADER), Schema = DB_SCHEMA.INTERFACES)]
     public class TB_WEBSITE_MENU_HEADER
     {
         [Key]
