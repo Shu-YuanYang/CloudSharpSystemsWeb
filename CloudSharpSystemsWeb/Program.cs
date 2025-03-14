@@ -53,7 +53,11 @@ builder.Services.AddTransient<ExceptionMiddleware>();
 builder.Services.Configure<GCPServiceAccountSecretKeyObject>(builder.Configuration); // get storage service account credential config
 builder.Services.Configure<GCPOAuth2ClientSecretKeyObject>(builder.Configuration); // get Google credentials client secret config
 builder.Services.Configure<DynamicQueryConfig>(builder.Configuration); // get queryable fields config
-builder.Services.AddDbContext<AppDBMainContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseAppMainConnectionString")));
+//builder.Services.AddDbContext<AppDBMainContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseAppMainConnectionString")));
+
+builder.Services.AddDbContext<AppDBMainContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DatabaseAppMainConnectionString")));
+
+
 
 // Link Mongo DB Context to establish reference to the App Mongo database and:
 builder.Services.AddSingleton<AppDBMongoContext, AppDBMongoContext>(s => new AppDBMongoContext(builder.Configuration.GetConnectionString("DatabaseMongoConnectionString")!));

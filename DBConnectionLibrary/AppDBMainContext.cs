@@ -3,6 +3,7 @@ using DBConnectionLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Client;
+using System.Reflection;
 
 
 namespace DBConnectionLibrary
@@ -40,6 +41,8 @@ namespace DBConnectionLibrary
 
         private readonly QueryListValidator __query_list_validator;
 
+        private Func<String, String> __db_name = (String name) => name;
+
         public AppDBMainContext(DbContextOptions<AppDBMainContext> options, IOptions<DynamicQueryConfig>? QueryableOptionsAccessor) : base(options)
         {
             DynamicQueryConfig dynamic_qeury_config = (QueryableOptionsAccessor == null) ? new DynamicQueryConfig() : QueryableOptionsAccessor.Value;
@@ -49,35 +52,69 @@ namespace DBConnectionLibrary
 
 
 
+        private void DBFormatConfigure(ModelBuilder modelBuilder) {
+			// Use lowercase for Postgre based databases:
+			this.__db_name = (String name) => name.ToLower();
 
+
+			// Tidy Table & View format:
+			foreach (var entity in modelBuilder.Model.GetEntityTypes())
+			{
+				// replace table/view name
+				if (!String.IsNullOrWhiteSpace(entity.GetTableName()))
+				{
+					if (!String.IsNullOrWhiteSpace(entity.GetSchema()))
+						entity.SetSchema(this.__db_name(entity.GetSchema()!));
+					entity.SetTableName(this.__db_name(entity.GetTableName()!));
+				}
+
+				if (!String.IsNullOrWhiteSpace(entity.GetViewName()))
+				{
+					if (!String.IsNullOrWhiteSpace(entity.GetViewSchema()))
+						entity.SetViewSchema(this.__db_name(entity.GetViewSchema()!));
+					entity.SetViewName(this.__db_name(entity.GetViewName()!));
+				}
+
+				// replace column names            
+				foreach (var property in entity.GetProperties())
+				{
+					property.SetColumnName(this.__db_name(property.GetColumnName()));
+				}
+			}
+
+			// Tidy DB Functions:
+			foreach (var dbfunction in modelBuilder.Model.GetDbFunctions())
+			{
+				// replace function name
+				if (!String.IsNullOrWhiteSpace(dbfunction.Schema))
+					dbfunction.Schema = this.__db_name(dbfunction.Schema);
+				dbfunction.Name = this.__db_name(dbfunction.Name);
+			}
+		}
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configure composite primary keys:
-            modelBuilder.Entity<TB_APP_USER_IDENTITY>().HasKey(table => new { table.IDENTITY_PROVIDER, table.USERNAME });
+			// Configure composite primary keys:
+			modelBuilder.Entity<TB_APP_USER_IDENTITY>().HasKey(table => new { table.IDENTITY_PROVIDER, table.USERNAME });
             modelBuilder.Entity<TB_USER_SESSION_ITEM>().HasKey(table => new { table.SESSION_ID, table.ITEM_NAME });
             modelBuilder.Entity<TB_WEBSITE_MENU_ITEM>().HasKey(table => new { table.HEADER_ID, table.ITEM_NAME });
             modelBuilder.Entity<TB_APP_DATA_CONTROL>().HasKey(table => new { table.APP_ID, table.CONTROL_NAME, table.CONTROL_TYPE, table.CONTROL_LEVEL, table.CONTROL_VALUE, table.CONTROL_NOTE });
             modelBuilder.Entity<TB_PROGRAM_STATUS>().HasKey(table => new { table.PROGRAM_ID, table.APP_ID });
 
-
-            modelBuilder.Entity<V_APP_DATA_CONTROL>().ToView("V_APP_DATA_CONTROL", DB_SCHEMA.APPLICATIONS);
-            modelBuilder.Entity<V_SERVER_USAGE>().ToView("V_SERVER_USAGE", DB_SCHEMA.PRODUCTS);
-            //modelBuilder.Entity<TB_APP>().ToTable("APPLICATIONS.TB_APP");
-
-
-
+            modelBuilder.Entity<V_APP_DATA_CONTROL>().ToView(nameof(V_APP_DATA_CONTROL), DB_SCHEMA.APPLICATIONS);
+            modelBuilder.Entity<V_SERVER_USAGE>().ToView(nameof(V_SERVER_USAGE), DB_SCHEMA.PRODUCTS);
+            
 
             // Configure AUTH.GET_APP_IDENTITY_USER_PROFILE_HEADER function
-            modelBuilder.Entity<T_APP_IDENTITY_USER_PROFILE_HEADER>().ToTable("T_APP_IDENTITY_USER_PROFILE_HEADER");
+			modelBuilder.Entity<T_APP_IDENTITY_USER_PROFILE_HEADER>().ToTable(nameof(T_APP_IDENTITY_USER_PROFILE_HEADER));
             modelBuilder
                 .HasDbFunction(typeof(AppDBMainContext).GetMethod(nameof(GET_APP_IDENTITY_USER_PROFILE_HEADER), new[] { typeof(string), typeof(string) })!)
                 .HasSchema(DB_SCHEMA.AUTH);
 
             // Configure AUTH.GET_APP_IDENTITY_USER_PROFILE_HEADERS_BY_TEAM function
-            modelBuilder.Entity<T_APP_IDENTITY_USER_PROFILE_HEADER>().ToTable("T_APP_IDENTITY_USER_PROFILE_HEADER");
-            modelBuilder
+            modelBuilder.Entity<T_APP_IDENTITY_USER_PROFILE_HEADER>().ToTable(nameof(T_APP_IDENTITY_USER_PROFILE_HEADER));
+			modelBuilder
                 .HasDbFunction(typeof(AppDBMainContext).GetMethod(nameof(GET_APP_IDENTITY_USER_PROFILE_HEADERS_BY_TEAM), new[] { typeof(string), typeof(string) })!)
                 .HasSchema(DB_SCHEMA.AUTH);
 
@@ -88,44 +125,50 @@ namespace DBConnectionLibrary
 
 
             // Configure NETWORK.GET_SERVER_LOAD function
-            modelBuilder.Entity<T_SERVER_LOAD_DISTRIBUTION>().ToTable("T_SERVER_LOAD_DISTRIBUTION");
+            modelBuilder.Entity<T_SERVER_LOAD_DISTRIBUTION>().ToTable(nameof(T_SERVER_LOAD_DISTRIBUTION));
             modelBuilder
                 .HasDbFunction(typeof(AppDBMainContext).GetMethod(nameof(GET_SERVER_LOAD), new[] { typeof(string) })!)
                 .HasSchema(DB_SCHEMA.NETWORK);
 
             // Configure NETWORK.GET_SERVER_DETAILS function
-            modelBuilder.Entity<T_SERVER_DETAIL>().ToTable("T_SERVER_DETAIL");
+            modelBuilder.Entity<T_SERVER_DETAIL>().ToTable(nameof(T_SERVER_DETAIL));
             modelBuilder
                 .HasDbFunction(typeof(AppDBMainContext).GetMethod(nameof(GET_SERVER_DETAILS), new[] { typeof(string) })!)
                 .HasSchema(DB_SCHEMA.NETWORK);
 
             // Configure NETWORK.GET_DB_HOST_LATENCY_STATISTICS function
-            modelBuilder.Entity<T_HOST_LATENCY_STATISTICS>().ToTable("T_HOST_LATENCY_STATISTICS");
+            modelBuilder.Entity<T_HOST_LATENCY_STATISTICS>().ToTable(nameof(T_HOST_LATENCY_STATISTICS));
             modelBuilder
                 .HasDbFunction(typeof(AppDBMainContext).GetMethod(nameof(GET_DB_HOST_LATENCY_STATISTICS), new[] { typeof(int), typeof(int), typeof(string) })!)
                 .HasSchema(DB_SCHEMA.NETWORK);
+            /*
             modelBuilder
-                .HasDbFunction(typeof(AppDBMainContext).GetMethod(nameof(GET_DB_HOST_LATENCY_STATISTICS_TEST), new[] { typeof(int), typeof(int), typeof(string), typeof(DateTime) })!)
+                .HasDbFunction(typeof(AppDBMainContext).GetMethod(this.__db_name(nameof(GET_DB_HOST_LATENCY_STATISTICS_TEST)), new[] { typeof(int), typeof(int), typeof(string), typeof(DateTime) })!)
                 .HasSchema(DB_SCHEMA.NETWORK);
-
+            */
 
             // Configure APPLICATIONS.CENTRAL_SYSTEM_LOG_VOLUME function
-            modelBuilder.Entity<T_CENTRAL_SYSTEM_LOG_VOLUME>().ToTable("T_CENTRAL_SYSTEM_LOG_VOLUME");
+            modelBuilder.Entity<T_CENTRAL_SYSTEM_LOG_VOLUME>().ToTable(nameof(T_CENTRAL_SYSTEM_LOG_VOLUME));
             modelBuilder
                 .HasDbFunction(typeof(AppDBMainContext).GetMethod(nameof(CENTRAL_SYSTEM_LOG_VOLUME), new[] { typeof(int), typeof(string) })!)
                 .HasSchema(DB_SCHEMA.APPLICATIONS);
+                //.HasName(this.__db_name(DBFunctionName));
 
 
-            // Configure funciton
-            modelBuilder.Entity<T_WEBSITE_MENU_ITEM>().ToTable("T_WEBSITE_MENU_ITEM");
+			// Configure GET_MENU_ITEMS_BY_MENU & GET_SUBMENU_ITEMS_BY_MENU funcitons
+			modelBuilder.Entity<T_WEBSITE_MENU_ITEM>().ToTable(nameof(T_WEBSITE_MENU_ITEM));
             modelBuilder
                 .HasDbFunction(typeof(AppDBMainContext).GetMethod(nameof(GET_MENU_ITEMS_BY_MENU), new[] { typeof(string), typeof(string), typeof(string) })!)
                 .HasSchema(DB_SCHEMA.INTERFACES);
+
             modelBuilder
                 .HasDbFunction(typeof(AppDBMainContext).GetMethod(nameof(GET_SUBMENU_ITEMS_BY_MENU), new[] { typeof(string), typeof(string), typeof(string) })!)
                 .HasSchema(DB_SCHEMA.INTERFACES);
 
-        }
+
+			this.DBFormatConfigure(modelBuilder);
+
+		}
 
 
         public IQueryable<T_APP_IDENTITY_USER_PROFILE_HEADER> GET_APP_IDENTITY_USER_PROFILE_HEADER(string IDENTITY_PROVIDER, string USERID)

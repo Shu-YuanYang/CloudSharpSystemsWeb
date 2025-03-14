@@ -11,7 +11,7 @@ namespace DBConnectionLibrary.Models
     public class T_CENTRAL_SYSTEM_LOG_VOLUME
     {
         public string? APP_ID { get; set; }
-        public DateTime DATE { get; set; }
-        public int COUNT { get; set; }
-    }
+        public DateTime LOG_DATE { get; set; }
+        public int LOG_COUNT { get; set; }   
+	}
 }

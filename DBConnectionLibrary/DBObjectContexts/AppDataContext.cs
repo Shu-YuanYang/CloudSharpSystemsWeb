@@ -210,7 +210,7 @@ namespace DBConnectionLibrary
         public static async Task<List<T_CENTRAL_SYSTEM_LOG_VOLUME> > GetRecentSystemLogVolume(AppDBMainContext DBContext, int dateOffSet, string appID)
         {
             var query = from volume in DBContext.CENTRAL_SYSTEM_LOG_VOLUME(dateOffSet, appID)
-                        orderby volume.DATE
+                        orderby volume.LOG_DATE
                         select volume;
 
             var lst = await query.ToListAsync();
@@ -240,7 +240,7 @@ namespace DBConnectionLibrary
                 .Where(rec => rec.PROGRAM_ID == statusRecord.PROGRAM_ID && rec.APP_ID == statusRecord.APP_ID)
                 .ExecuteUpdateAsync(s => s.SetProperty(rec => rec.LAST_TRACE_ID, rec => statusRecord.LAST_TRACE_ID)
                     .SetProperty(rec => rec.PROGRAM_STATUS, rec => statusRecord.PROGRAM_STATUS)
-                    .SetProperty(rec => rec.LAST_LOG_TIME, rec => statusRecord.LAST_LOG_TIME)
+                    .SetProperty(rec => rec.LAST_TRACE_ID, rec => statusRecord.LAST_TRACE_ID)
                     .SetProperty(rec => rec.NOTES, rec => statusRecord.NOTES)
                     .SetProperty(rec => rec.EDIT_BY, rec => statusRecord.EDIT_BY)
                     .SetProperty(rec => rec.EDIT_TIME, rec => statusRecord.EDIT_TIME)

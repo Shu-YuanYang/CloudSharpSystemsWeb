@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DBConnectionLibrary.Models
 {
-    [Table("TB_PROGRAM_STATUS", Schema = DB_SCHEMA.APPLICATIONS)]
+    [Table(nameof(TB_PROGRAM_STATUS), Schema = DB_SCHEMA.APPLICATIONS)]
     public class TB_PROGRAM_STATUS
     {
         [Key]
@@ -22,5 +22,5 @@ namespace DBConnectionLibrary.Models
 	    public string? EXECUTION_COMMAND { get; set; }
         public string? EDIT_BY { get; set; }
         public DateTime EDIT_TIME { get; set; }
-    }
+	}
 }
