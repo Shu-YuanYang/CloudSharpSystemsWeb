@@ -2,8 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
+using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,15 +36,21 @@ namespace DBConnectionLibrary.DBObjectContexts
         }
 
         public static async Task<DateTime> DBGetDateTime(AppDBMainContext DBContext) {
-            var datetime = new SqlParameter
+
+            var datetime = DBContext.SQLParameterType("DATE_TIME", System.Data.DbType.DateTime, null, System.Data.ParameterDirection.Output);
+            /*
+		    var datetime = new NpgsqlParameter
             {
                 ParameterName = "DATE_TIME",
                 DbType = System.Data.DbType.DateTime,
                 //Size = 100,
                 Direction = System.Data.ParameterDirection.Output
             };
-            await DBContext.Database.ExecuteSqlRawAsync("SET @DATE_TIME = GETDATE()", new object[] { datetime });
-            DateTime value = (DateTime)datetime.Value;
+            */
+
+            string SQLCommand = DBContext.FormatSelectCurrentTimestampSQL("@DATE_TIME");
+			await DBContext.Database.ExecuteSqlRawAsync(SQLCommand, new object[] { datetime });
+            DateTime value = (DateTime) ((IDbDataParameter) datetime).Value!;
             return value;
         }
 

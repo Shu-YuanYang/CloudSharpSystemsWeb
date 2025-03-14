@@ -117,10 +117,9 @@ namespace DBConnectionLibrary
         public static async Task<string> GetAppDataControlValue(AppDBMainContext DBContext, string app_ID, string? control_name, string? control_type, string? control_level)
         {
             //Object control = await _GetAppDataControlQuery(DBContext, app_ID, control_name, control_type, control_level).SingleAsync();
+            string query_string = DBContext.FormatSelectTopSQL("SELECT @VAL = CONTROL_VALUE FROM APPLICATIONS.V_APP_DATA_CONTROL WHERE APP_ID = @ID AND CONTROL_NAME = @CNAME AND CONTROL_TYPE = @CTYPE AND CONTROL_LEVEL = @CLEVEL AND IS_APP_ENABLED = 'Y' AND IS_CONTROL_ENABLED = 'Y'", 1);
 
-            string query_string = "SELECT TOP 1 @VAL = CONTROL_VALUE FROM APPLICATIONS.V_APP_DATA_CONTROL WHERE APP_ID = @ID AND CONTROL_NAME = @CNAME AND CONTROL_TYPE = @CTYPE AND CONTROL_LEVEL = @CLEVEL AND IS_APP_ENABLED = 'Y' AND IS_CONTROL_ENABLED = 'Y'";
-
-            var param_list = new List<object> { };
+			var param_list = new List<object> { };
 
             var app_id_param = new SqlParameter { ParameterName = "ID", Value = app_ID, DbType = System.Data.DbType.String, Direction = System.Data.ParameterDirection.Input };
             param_list.Add(app_id_param);
@@ -240,7 +239,7 @@ namespace DBConnectionLibrary
                 .Where(rec => rec.PROGRAM_ID == statusRecord.PROGRAM_ID && rec.APP_ID == statusRecord.APP_ID)
                 .ExecuteUpdateAsync(s => s.SetProperty(rec => rec.LAST_TRACE_ID, rec => statusRecord.LAST_TRACE_ID)
                     .SetProperty(rec => rec.PROGRAM_STATUS, rec => statusRecord.PROGRAM_STATUS)
-                    .SetProperty(rec => rec.LAST_TRACE_ID, rec => statusRecord.LAST_TRACE_ID)
+                    .SetProperty(rec => rec.LAST_LOG_TIME, rec => statusRecord.LAST_LOG_TIME)
                     .SetProperty(rec => rec.NOTES, rec => statusRecord.NOTES)
                     .SetProperty(rec => rec.EDIT_BY, rec => statusRecord.EDIT_BY)
                     .SetProperty(rec => rec.EDIT_TIME, rec => statusRecord.EDIT_TIME)
@@ -252,6 +251,10 @@ namespace DBConnectionLibrary
 
         public static async Task UpdateTaskStatuses(AppDBMainContext DBContext, string app_ID, string program_type, string edit_by)
         {
+            var app_id_param = DBContext.SQLParameterType("APP_ID", DbType.String, app_ID, ParameterDirection.Input);
+			var program_type_param = DBContext.SQLParameterType("PROGRAM_TYPE", DbType.String, program_type, ParameterDirection.Input);
+			var edit_by_param = DBContext.SQLParameterType("EDIT_BY", DbType.String, edit_by, ParameterDirection.Input);
+            /*
             var app_id_param = new SqlParameter
             {
                 ParameterName = "APP_ID",
@@ -275,9 +278,10 @@ namespace DBConnectionLibrary
                 Direction = System.Data.ParameterDirection.Input,
                 Value = edit_by
             };
-
-            var parameters = new object[] { app_id_param, program_type_param, edit_by_param };
-            await DBContext.Database.ExecuteSqlRawAsync("EXEC APPLICATIONS.UPDATE_TASK_STATUSES @APP_ID, @PROGRAM_TYPE, @EDIT_BY", parameters);
+            */
+			var parameters = new object[] { app_id_param, program_type_param, edit_by_param };
+            string SQLCommand = DBContext.FormatExecSPSQL("APPLICATIONS.UPDATE_TASK_STATUSES", new string[] { "@APP_ID", "@PROGRAM_TYPE", "@EDIT_BY" });
+            await DBContext.Database.ExecuteSqlRawAsync(SQLCommand, parameters);
         }
 
 

@@ -41,7 +41,8 @@ builder.Services.AddTransient<ExceptionMiddleware>();
 
 builder.Services.Configure<GCPOAuth2ClientSecretKeyObject>(builder.Configuration); // get Google credentials client secret config
 // Link Entity Framework Core DB Context to establish reference to the App database:
-builder.Services.AddDbContext<AppDBMainContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseAppMainConnectionString")));
+// builder.Services.AddDbContext<AppDBMainContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseAppMainConnectionString")));
+builder.Services.AddDbContext<AppDBMainContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DatabaseAppMainConnectionString")));
 
 // Add CORS method
 // Reference: https://www.yogihosting.com/aspnet-core-enable-cors/

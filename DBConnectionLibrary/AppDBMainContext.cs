@@ -10,6 +10,11 @@ namespace DBConnectionLibrary
 {
     public class AppDBMainContext : DbContext
     {
+        public enum DBProvider { 
+            SQLSERVER,
+            POSTGRESQL
+        }
+
 
         public DbSet<TB_APP> Apps { get; set; }
         public DbSet<TB_APP_DATA_CONTROL> AppDataControls { get; set; }
@@ -38,17 +43,24 @@ namespace DBConnectionLibrary
 
 
 
+		private readonly DBProvider __db_provider = DBProvider.SQLSERVER;
 
-        private readonly QueryListValidator __query_list_validator;
+		private readonly QueryListValidator __query_list_validator;
 
         private Func<String, String> __db_name = (String name) => name;
 
         public AppDBMainContext(DbContextOptions<AppDBMainContext> options, IOptions<DynamicQueryConfig>? QueryableOptionsAccessor) : base(options)
         {
-            DynamicQueryConfig dynamic_qeury_config = (QueryableOptionsAccessor == null) ? new DynamicQueryConfig() : QueryableOptionsAccessor.Value;
+			// Set provider: (TODO: use dependency injection!)
+			this.__db_provider = DBProvider.POSTGRESQL;
+
+			DynamicQueryConfig dynamic_qeury_config = (QueryableOptionsAccessor == null) ? new DynamicQueryConfig() : QueryableOptionsAccessor.Value;
             this.__query_list_validator = new QueryListValidator(dynamic_qeury_config);
         }
         public QueryListValidator Validator { get => this.__query_list_validator; }
+
+        public DBProvider Provider { get => this.__db_provider; }
+
 
 
 
