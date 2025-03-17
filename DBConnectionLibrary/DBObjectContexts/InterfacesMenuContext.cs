@@ -50,28 +50,45 @@ namespace DBConnectionLibrary.DBObjectContexts
 
             string headerID = (await DBContext.WebsiteMenuHeaders.Where(header => header.SITE_ID == site_ID && header.MENU_NAME == menu_name && header.USER_ID == user_id).Select(header => header.HEADER_ID).SingleAsync())!;
 
-            var changedItemList = await DBContext.WebsiteMenuItems
+            var menu_item_names = menu_items.Select(i => i.ITEM_NAME);
+            var changedItemQueryables = //await
+                DBContext.WebsiteMenuItems
                 .Where((item) => item.HEADER_ID == headerID)
-                .WhereBulkContains(menu_items, item => item.ITEM_NAME)
-                .ToListAsync();
+                //.WhereBulkContains(menu_items, item => item.ITEM_NAME)
+                .Where((item) => menu_item_names.Contains(item.ITEM_NAME))
+                //.ToListAsync();
+                .AsQueryable();
             //.ExecuteUpdateAsync(item => item.SetProperty(p => p.RANKING, 5));
+
+            int db_change_count = await changedItemQueryables.CountAsync();
+            if (db_change_count != menu_items.Count()) {
+                throw new InvalidDataException("Website menu item update list must only contain items on the server records!");
+            }
 
             DateTime current_time = await DBTransactionContext.DBGetDateTime(DBContext);
 
-            changedItemList.ForEach(item => {
-                var inputItem = menu_items.Single(input => input.ITEM_NAME == item.ITEM_NAME);
-                item.RANKING = inputItem.RANKING;
-                if (inputItem.ROUTE == "DELETED") { // Shu-Yuan Yang 20240712 added disabling logic.
-                    item.RANKING = -1;
-                    item.IS_ENABLED = 'N';
-                }
-                item.EDIT_BY = user_id;
-                item.EDIT_TIME = current_time;
+            menu_items.ForEach(local_item =>
+            {
+                string local_item_name = local_item.ITEM_NAME!;
+                var DBItem = changedItemQueryables.First(i => i.ITEM_NAME == local_item_name); //Async(); // do not use async action for now.
+                DBItem.RANKING = local_item.RANKING;
+                if (local_item.ROUTE == "DELETED") // Shu-Yuan Yang 20240712 added disabling logic.
+				{
+                    DBItem.RANKING = -1;
+                    DBItem.IS_ENABLED = 'N';
+				}
+                DBItem.EDIT_BY = user_id;
+                DBItem.EDIT_TIME = current_time;
             });
 
+            // 03/17/2025 switched from bulk update syntax to update range syntax:
+            /*
             await DBContext.BulkUpdateAsync(changedItemList, options =>
                 options.ColumnInputExpression = item => new { item.RANKING, item.IS_ENABLED, item.EDIT_BY, item.EDIT_TIME }
             );
+            */
+            DBContext.UpdateRange(changedItemQueryables);
+            await DBContext.SaveChangesAsync();
         }
 
 
