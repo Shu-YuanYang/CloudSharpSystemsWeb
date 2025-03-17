@@ -14,6 +14,7 @@ namespace DBConnectionLibrary.DBObjectContexts
 {
     public class NetworkUserSessionContext
     {
+        // Method deprecated 03/17/2025
         public static async Task LockUserSessionTable(AppDBMainContext DBContext) {
             await DBContext.Database.ExecuteSqlRawAsync("SELECT TOP 1 1 FROM NETWORK.TB_USER_SESSION WITH(TABLOCKX, HOLDLOCK)");
         }
@@ -127,7 +128,9 @@ namespace DBConnectionLibrary.DBObjectContexts
                 Value = hostIP
             };
 
-            await DBContext.Database.ExecuteSqlRawAsync("EXEC NETWORK.INVALIDATE_USER_SESSIONS @SESSION_ID, @CLIENT_IP, @THREAD_ID, @HOST_IP", new object[] { session_id_param, client_ip_param, thread_id_param, host_ip_param });
+            var parameters = new System.Data.Common.DbParameter[] { session_id_param, client_ip_param, thread_id_param, host_ip_param };
+            string formatted_sql_str = DBContext.FormatExecSPSQL("NETWORK.INVALIDATE_USER_SESSIONS", parameters);
+            await DBContext.Database.ExecuteSqlRawAsync(formatted_sql_str, parameters);
         }
 
 

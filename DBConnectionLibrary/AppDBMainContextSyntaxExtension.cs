@@ -3,6 +3,7 @@ using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,7 @@ namespace DBConnectionLibrary
 		private const string NOT_IMPLEMENTED_MESSAGE = "Syntax for this DB provider is not supported yet!";
 
 
-		public static object SQLParameterType(this AppDBMainContext DBContext, string ParameterName, DbType DbType, object? Value=null, ParameterDirection Direction=ParameterDirection.Input) {
+		public static DbParameter SQLParameterType(this AppDBMainContext DBContext, string ParameterName, DbType DbType, object? Value=null, ParameterDirection Direction=ParameterDirection.Input) {
 			switch (DBContext.Provider)
 			{
 				case AppDBMainContext.DBProvider.SQLSERVER:
@@ -41,9 +42,25 @@ namespace DBConnectionLibrary
 		}
 
 
-		public static string FormatExecSPSQL(this AppDBMainContext DBContext, string ProcedureName, string[] Params) {
+		private static string FormatSQLOutputParam(this AppDBMainContext DBContext, DbParameter Param) {
+			switch (DBContext.Provider)
+			{
+				case AppDBMainContext.DBProvider.SQLSERVER:
+					return $"@{Param.ParameterName} OUTPUT";
+				case AppDBMainContext.DBProvider.POSTGRESQL:
+					return "NULL";
+				default:
+					throw new NotImplementedException(NOT_IMPLEMENTED_MESSAGE);
+			}
+		}
+
+		public static string FormatExecSPSQL(this AppDBMainContext DBContext, string ProcedureName, DbParameter[] Params) {
 			string SQLCommand;
-			string params_str = string.Join(", ", Params);
+			var param_str_lst = Params.Select(p => 
+				(p.Direction == ParameterDirection.Output)? DBContext.FormatSQLOutputParam(p) : $"@{p.ParameterName}"
+			);
+			string params_str = string.Join(", ", param_str_lst);
+
 			switch (DBContext.Provider) {
 				case AppDBMainContext.DBProvider.SQLSERVER:
 					SQLCommand = $"EXEC {ProcedureName} {params_str}";

@@ -1,6 +1,7 @@
 ﻿using DBConnectionLibrary.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,10 +65,9 @@ namespace DBConnectionLibrary.DBObjectContexts
                 Direction = System.Data.ParameterDirection.Output
             };
 
-            var parameters = new object[] { site_ID_param, client_IP_param, thread_ID_param, resource_size_param, host_IP_param, resource_unit_param };
-
-
-            await DBContext.Database.ExecuteSqlRawAsync("EXEC NETWORK.LOAD_BALANCE @SITE_ID, @CLIENT_IP, @CLIENT_THREAD_ID, @RESOURCE_SIZE, @HOST_IP OUTPUT, @RESOURCE_UNIT OUTPUT", parameters);
+            var parameters = new System.Data.Common.DbParameter[] { site_ID_param, client_IP_param, thread_ID_param, resource_size_param, host_IP_param, resource_unit_param };
+            string formatted_sql_str = DBContext.FormatExecSPSQL("NETWORK.LOAD_BALANCE", parameters);
+            await DBContext.Database.ExecuteSqlRawAsync(formatted_sql_str, parameters);
 
             var session = new TB_USER_SESSION
             {
@@ -125,9 +125,9 @@ namespace DBConnectionLibrary.DBObjectContexts
                 Value = edit_by
             };
 
-            var parameters = new object[] { site_ID_param, algorithm_param, max_search_count_param, edit_by_param };
-
-            await DBContext.Database.ExecuteSqlRawAsync("EXEC NETWORK.LOAD_BALANCE_RESET @SITE_ID, @ALGORITHM, @MAX_SEARCH_COUNT, @EDIT_BY", parameters);
+            var parameters = new System.Data.Common.DbParameter[] { site_ID_param, algorithm_param, max_search_count_param, edit_by_param };
+            string formatted_sql_str = DBContext.FormatExecSPSQL("NETWORK.LOAD_BALANCE_RESET", parameters);
+            await DBContext.Database.ExecuteSqlRawAsync(formatted_sql_str, parameters);
         }
 
 

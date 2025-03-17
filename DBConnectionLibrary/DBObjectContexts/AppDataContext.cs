@@ -21,14 +21,6 @@ namespace DBConnectionLibrary
         public static async Task<List<TB_APP>> GetAllAppData(AppDBMainContext DBContext)
         {
             return await DBContext.Apps.ToListAsync();
-
-            /*
-            var columnValue = new SqlParameter("columnValue", 1);
-            var apps = this._app_main_db_context.Database
-                .SqlQueryRaw<string>($"SELECT APP_ID FROM APPLICATIONS.TB_APP WHERE 1 = @columnValue", columnValue)
-                .ToList();
-            
-            return apps;*/
         }
 
         public static async Task<string> GetTestProcedureOutput(AppDBMainContext DBContext)
@@ -48,72 +40,17 @@ namespace DBConnectionLibrary
                 Size = 100,
                 Direction = System.Data.ParameterDirection.Output
             };
-            await DBContext.Database.ExecuteSqlRawAsync("EXEC [dbo].[PROC_TEST] @MESG, @ID OUTPUT", new object[] { mesg, id });
+
+            var parameters = new System.Data.Common.DbParameter[] { mesg, id };
+			string formatted_sql_string = DBContext.FormatExecSPSQL("dbo.PROC_TEST", parameters);
+            await DBContext.Database.ExecuteSqlRawAsync(formatted_sql_string, parameters);
             string id_str = id.Value.ToString()!;
             return id_str;
         }
 
+
+        // Method below has been decrecated 03/17/2025
         /*
-        private static IQueryable<V_APP_DATA_CONTROL> _GetAppDataControlQuery(AppDBMainContext DBContext, string app_ID, string? control_name, string? control_type, string? control_level) 
-        {
-
-            if (String.IsNullOrEmpty(app_ID)) {
-                throw new AccessViolationException("Access to app data settings must be queried with valid app ID specification.");
-            }
-
-            string query_string = "SELECT * FROM APPLICATIONS.V_APP_DATA_CONTROL WHERE APP_ID = @ID AND CONTROL_NAME = @CNAME AND CONTROL_TYPE = @CTYPE AND CONTROL_LEVEL = @CLEVEL AND IS_APP_ENABLED = 'Y' AND IS_CONTROL_ENABLED = 'Y'";
-
-            var param_list = new List<object> { };
-
-            var app_id_param = new SqlParameter { ParameterName = "ID", Value = app_ID, DbType = System.Data.DbType.String, Direction = System.Data.ParameterDirection.Input };
-            param_list.Add(app_id_param);
-
-
-            if (String.IsNullOrEmpty(control_name))
-            {
-                query_string = query_string.Replace("@CNAME", "CONTROL_NAME");
-            }
-            else
-            {
-                var control_name_param = new SqlParameter { ParameterName = "CNAME", Value = control_name, DbType = System.Data.DbType.String, Direction = System.Data.ParameterDirection.Input };
-                param_list.Add(control_name_param);
-            }
-
-            if (String.IsNullOrEmpty(control_type))
-            {
-                query_string = query_string.Replace("@CTYPE", "CONTROL_TYPE");
-            }
-            else
-            {
-                var control_type_param = new SqlParameter { ParameterName = "CTYPE", Value = control_type, DbType = System.Data.DbType.String, Direction = System.Data.ParameterDirection.Input };
-                param_list.Add(control_type_param);
-            }
-
-            if (String.IsNullOrEmpty(control_level))
-            {
-                query_string = query_string.Replace("@CLEVEL", "CONTROL_LEVEL");
-            }
-            else
-            {
-                var control_level_param = new SqlParameter { ParameterName = "CLEVEL", Value = control_level, DbType = System.Data.DbType.String, Direction = System.Data.ParameterDirection.Input };
-                param_list.Add(control_level_param);
-            }
-
-
-            var result_set = DBContext.Database.SqlQueryRaw<V_APP_DATA_CONTROL>(query_string, param_list.ToArray());
-            //var result_set = DBContext.Database.SqlQueryRaw<Object>(query_string);
-            
-            return result_set;
-        }
-
-        public static async Task<List<V_APP_DATA_CONTROL> > GetAppDataControlList(AppDBMainContext DBContext, string app_ID, string? control_name, string? control_type, string? control_level)
-        {
-            var result_set = await _GetAppDataControlQuery(DBContext, app_ID, control_name, control_type, control_level).ToListAsync();
-            return result_set;
-        }
-        */
-
-
         public static async Task<string> GetAppDataControlValue(AppDBMainContext DBContext, string app_ID, string? control_name, string? control_type, string? control_level)
         {
             //Object control = await _GetAppDataControlQuery(DBContext, app_ID, control_name, control_type, control_level).SingleAsync();
@@ -175,7 +112,7 @@ namespace DBConnectionLibrary
             
             //return control;
         }
-
+        */
 
 
         // The following fields can be used to query for V_APP_DATA_CONTROL records in conjunction: APP_ID, CONTROL_NAME, CONTROL_TYPE, CONTROL_LEVEL, CONTROL_VALUE, CONTROL_NOTE
@@ -254,33 +191,9 @@ namespace DBConnectionLibrary
             var app_id_param = DBContext.SQLParameterType("APP_ID", DbType.String, app_ID, ParameterDirection.Input);
 			var program_type_param = DBContext.SQLParameterType("PROGRAM_TYPE", DbType.String, program_type, ParameterDirection.Input);
 			var edit_by_param = DBContext.SQLParameterType("EDIT_BY", DbType.String, edit_by, ParameterDirection.Input);
-            /*
-            var app_id_param = new SqlParameter
-            {
-                ParameterName = "APP_ID",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = app_ID
-            };
-
-            var program_type_param = new SqlParameter
-            {
-                ParameterName = "PROGRAM_TYPE",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = program_type
-            };
-
-            var edit_by_param = new SqlParameter
-            {
-                ParameterName = "EDIT_BY",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = edit_by
-            };
-            */
-			var parameters = new object[] { app_id_param, program_type_param, edit_by_param };
-            string SQLCommand = DBContext.FormatExecSPSQL("APPLICATIONS.UPDATE_TASK_STATUSES", new string[] { "@APP_ID", "@PROGRAM_TYPE", "@EDIT_BY" });
+            
+			var parameters = new System.Data.Common.DbParameter[] { app_id_param, program_type_param, edit_by_param };
+            string SQLCommand = DBContext.FormatExecSPSQL("APPLICATIONS.UPDATE_TASK_STATUSES", parameters);
             await DBContext.Database.ExecuteSqlRawAsync(SQLCommand, parameters);
         }
 

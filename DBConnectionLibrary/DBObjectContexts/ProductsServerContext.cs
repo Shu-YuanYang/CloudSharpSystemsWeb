@@ -61,9 +61,9 @@ namespace DBConnectionLibrary.DBObjectContexts
                 Value = preset_error_rate
             };
 
-            var parameters = new object[] { host_IP_param, capacity_param, edit_by_param, preset_error_rate_param };
-            
-            await DBContext.Database.ExecuteSqlRawAsync("EXEC NETWORK.RESET_SERVER_CAPACITY @HOST_IP, @CAPACITY, @EDIT_BY, @PRESET_ERROR_RATE", parameters);
+            var parameters = new System.Data.Common.DbParameter[] { host_IP_param, capacity_param, edit_by_param, preset_error_rate_param };
+            string formatted_sql_str = DBContext.FormatExecSPSQL("NETWORK.RESET_SERVER_CAPACITY", parameters);
+            await DBContext.Database.ExecuteSqlRawAsync(formatted_sql_str, parameters);
         }
 
 

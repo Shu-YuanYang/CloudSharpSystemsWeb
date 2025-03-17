@@ -46,8 +46,10 @@ namespace DBConnectionLibrary.DBObjectContexts
                 Direction = System.Data.ParameterDirection.Input,
                 Value = new_IP
             };
-            await DBContext.Database.ExecuteSqlRawAsync("EXEC NETWORK.UPDATE_HOST_IP_BY_SN @SN, @NEW_IP", new object[] { SNparam, ipparam });
 
+            var parameters = new System.Data.Common.DbParameter[] { SNparam, ipparam };
+            string formatted_sql_str = DBContext.FormatExecSPSQL("NETWORK.UPDATE_HOST_IP_BY_SN", parameters);
+            await DBContext.Database.ExecuteSqlRawAsync(formatted_sql_str, parameters);
         }
 
 
@@ -109,7 +111,9 @@ namespace DBConnectionLibrary.DBObjectContexts
                 Value = latency
             };
 
-            await DBContext.Database.ExecuteSqlRawAsync("EXEC NETWORK.UPDATE_HOST_STATUS @HOST_IP, @PORT, @STATUS, @EDIT_BY, @TRACE_ID, @INPUT_MESSAGE, @LATENCY", new object[] { host_IP_param, port_param, status_param, edit_by_param, trace_ID_param, additional_message_param, latency_param });
+            var parameters = new System.Data.Common.DbParameter[] { host_IP_param, port_param, status_param, edit_by_param, trace_ID_param, additional_message_param, latency_param };
+            string formatted_sql_str = DBContext.FormatExecSPSQL("NETWORK.UPDATE_HOST_STATUS", parameters);
+            await DBContext.Database.ExecuteSqlRawAsync(formatted_sql_str, parameters);
 
         }
 
@@ -186,8 +190,9 @@ namespace DBConnectionLibrary.DBObjectContexts
                 Value = edit_by
             };
 
-            var proc_params = new object[] { host_IP_param, host_status_param, trace_ID_param, input_message_param, edit_by_param };
-            await DBContext.Database.ExecuteSqlRawAsync("EXEC NETWORK.INSERT_HOST_STATUS_LOG @HOST_IP, @HOST_STATUS, @TRACE_ID, @INPUT_MESSAGE, @EDIT_BY", proc_params);
+            var proc_params = new System.Data.Common.DbParameter[] { host_IP_param, host_status_param, trace_ID_param, input_message_param, edit_by_param };
+            string formatted_sql_str = DBContext.FormatExecSPSQL("NETWORK.INSERT_HOST_STATUS_LOG", proc_params);
+            await DBContext.Database.ExecuteSqlRawAsync(formatted_sql_str, proc_params);
             
         }
 

@@ -133,8 +133,9 @@ namespace DBConnectionLibrary.DBObjectContexts
                 Value = edit_by
             };
 
-            var parameters = new object[] { menu_header_ID_param, item_name_param, item_display_name_param, route_type_param, route_param, icon_param, edit_by_param };
-            await DBContext.Database.ExecuteSqlRawAsync("EXEC INTERFACES.ADD_WEBSITE_MENU_ITEM @MENU_HEADER_ID, @ITEM_NAME, @ITEM_DISPLAY_NAME, @ROUTE_TYPE, @ROUTE, @ICON, @EDIT_BY", parameters);
+            var parameters = new System.Data.Common.DbParameter[] { menu_header_ID_param, item_name_param, item_display_name_param, route_type_param, route_param, icon_param, edit_by_param };
+            string formatted_sql_str = DBContext.FormatExecSPSQL("INTERFACES.ADD_WEBSITE_MENU_ITEM", parameters);
+            await DBContext.Database.ExecuteSqlRawAsync(formatted_sql_str, parameters);
         }
 
 

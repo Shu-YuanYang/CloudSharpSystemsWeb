@@ -38,15 +38,6 @@ namespace DBConnectionLibrary.DBObjectContexts
         public static async Task<DateTime> DBGetDateTime(AppDBMainContext DBContext) {
 
             var datetime = DBContext.SQLParameterType("DATE_TIME", System.Data.DbType.DateTime, null, System.Data.ParameterDirection.Output);
-            /*
-		    var datetime = new NpgsqlParameter
-            {
-                ParameterName = "DATE_TIME",
-                DbType = System.Data.DbType.DateTime,
-                //Size = 100,
-                Direction = System.Data.ParameterDirection.Output
-            };
-            */
 
             string SQLCommand = DBContext.FormatSelectCurrentTimestampSQL("@DATE_TIME");
 			await DBContext.Database.ExecuteSqlRawAsync(SQLCommand, new object[] { datetime });

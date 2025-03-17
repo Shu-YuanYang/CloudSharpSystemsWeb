@@ -251,11 +251,18 @@ namespace CustomMiddleWares
             await DBTransactionContext.DBTransact(db_context, async (app_db_context, transaction) =>
             {
 
-                await NetworkUserSessionContext.LockUserSessionTable(app_db_context);
+                //await NetworkUserSessionContext.LockUserSessionTable(app_db_context);
 
 
                 // i. Get maximum retries count:
-                string max_search_control_value = await AppDataContext.GetAppDataControlValue(db_context, "CloudSharpSystemsWeb", "LOAD_BALANCING_ALGORITHM", "MAX_HOST_SEARCH_COUNT", "");
+                V_APP_DATA_CONTROL search_criteria = new V_APP_DATA_CONTROL
+                {
+                    APP_ID = "CloudSharpSystemsWeb",
+                    CONTROL_NAME = "LOAD_BALANCING_ALGORITHM",
+                    CONTROL_TYPE = "MAX_HOST_SEARCH_COUNT"
+				};
+                var control_resultset = await AppDataContext.GetAppDataControlViews(db_context, search_criteria);
+				string max_search_control_value = control_resultset.First().CONTROL_VALUE!;
                 int load_balance_max_search_count = Int32.Parse(max_search_control_value);
 
 
