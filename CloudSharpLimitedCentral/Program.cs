@@ -23,6 +23,14 @@ builder.Services.AddControllers()
     });
 
 
+/*
+// Use UTC time:
+builder.Services.Configure<AbpClockOptions>(options =>
+{
+	options.Kind = DateTimeKind.Utc;
+});
+*/
+
 // Use forwarded headers
 // Reference: https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-5.0
 builder.Services.Configure<ForwardedHeadersOptions>(options =>

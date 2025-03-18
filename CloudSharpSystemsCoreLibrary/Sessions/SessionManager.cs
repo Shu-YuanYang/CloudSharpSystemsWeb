@@ -93,7 +93,7 @@ namespace CloudSharpSystemsCoreLibrary.Sessions
                 HOST_IP = hostIP,
                 RESOURCE_UNIT = 0,
                 CLIENT_LOCATION = "protected",
-                REQUESTED_TIME = DateTime.Now,
+                REQUESTED_TIME = DateTime.UtcNow, // Use UTC time!
                 RESOURCE_SIZE = (int)client_info.request_size,
                 EDIT_BY = appID, //identity.USERID,
                 //EDIT_TIME = DateTime.Now,

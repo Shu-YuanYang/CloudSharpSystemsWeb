@@ -22,7 +22,7 @@ namespace DBConnectionLibrary.DBObjectContexts
         {
             DateTime current_time = await DBTransactionContext.DBGetDateTime(DBContext);
             session_obj.EDIT_TIME = current_time;
-
+            
             await DBContext.UserSessions.AddAsync(session_obj);
             await DBContext.SaveChangesAsync();
 
@@ -96,37 +96,10 @@ namespace DBConnectionLibrary.DBObjectContexts
 
 
         public static async Task InvalidateUserSessions(AppDBMainContext DBContext, string sessionID, string clientIP, string threadID, string hostIP) {
-            var session_id_param = new SqlParameter
-            {
-                ParameterName = "SESSION_ID",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = sessionID
-            };
-
-            var client_ip_param = new SqlParameter
-            {
-                ParameterName = "CLIENT_IP",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = clientIP
-            };
-
-            var thread_id_param = new SqlParameter
-            {
-                ParameterName = "THREAD_ID",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = threadID
-            };
-
-            var host_ip_param = new SqlParameter
-            {
-                ParameterName = "HOST_IP",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = hostIP
-            };
+			var session_id_param = DBContext.SQLParameterType("SESSION_ID", System.Data.DbType.String, sessionID, System.Data.ParameterDirection.Input);
+			var client_ip_param = DBContext.SQLParameterType("CLIENT_IP", System.Data.DbType.String, clientIP, System.Data.ParameterDirection.Input);
+			var thread_id_param = DBContext.SQLParameterType("THREAD_ID", System.Data.DbType.String, threadID, System.Data.ParameterDirection.Input);
+			var host_ip_param = DBContext.SQLParameterType("HOST_IP", System.Data.DbType.String, hostIP, System.Data.ParameterDirection.Input);
 
             var parameters = new System.Data.Common.DbParameter[] { session_id_param, client_ip_param, thread_id_param, host_ip_param };
             string formatted_sql_str = DBContext.FormatExecSPSQL("NETWORK.INVALIDATE_USER_SESSIONS", parameters);

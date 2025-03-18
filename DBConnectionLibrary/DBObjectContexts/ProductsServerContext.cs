@@ -29,39 +29,12 @@ namespace DBConnectionLibrary.DBObjectContexts
         public static async Task ResetServerCapacity(AppDBMainContext DBContext, string hostIP, int capacity, float preset_error_rate, string editBy)
         {
 
-            var host_IP_param = new SqlParameter
-            {
-                ParameterName = "HOST_IP",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = hostIP
-            };
+			var host_IP_param = DBContext.SQLParameterType("HOST_IP", System.Data.DbType.String, hostIP, System.Data.ParameterDirection.Input);
+			var capacity_param = DBContext.SQLParameterType("CAPACITY", System.Data.DbType.Int32, capacity, System.Data.ParameterDirection.Input);
+			var edit_by_param = DBContext.SQLParameterType("EDIT_BY", System.Data.DbType.String, editBy, System.Data.ParameterDirection.Input);
+			var preset_error_rate_param = DBContext.SQLParameterType("PRESET_ERROR_RATE", System.Data.DbType.Decimal, preset_error_rate, System.Data.ParameterDirection.Input);
 
-            var capacity_param = new SqlParameter
-            {
-                ParameterName = "CAPACITY",
-                DbType = System.Data.DbType.Int32,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = capacity
-            };
-
-            var edit_by_param = new SqlParameter
-            {
-                ParameterName = "EDIT_BY",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = editBy
-            };
-
-            var preset_error_rate_param = new SqlParameter
-            {
-                ParameterName = "PRESET_ERROR_RATE",
-                DbType = System.Data.DbType.Decimal,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = preset_error_rate
-            };
-
-            var parameters = new System.Data.Common.DbParameter[] { host_IP_param, capacity_param, edit_by_param, preset_error_rate_param };
+			var parameters = new System.Data.Common.DbParameter[] { host_IP_param, capacity_param, edit_by_param, preset_error_rate_param };
             string formatted_sql_str = DBContext.FormatExecSPSQL("NETWORK.RESET_SERVER_CAPACITY", parameters);
             await DBContext.Database.ExecuteSqlRawAsync(formatted_sql_str, parameters);
         }

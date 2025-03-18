@@ -31,21 +31,8 @@ namespace DBConnectionLibrary.DBObjectContexts
 
         public static async Task UpdateComputerIP(AppDBMainContext DBContext, string SerialNo, string new_IP)
         {
-            var SNparam = new SqlParameter
-            {
-                ParameterName = "SN",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = SerialNo
-            };
-
-            var ipparam = new SqlParameter
-            {
-                ParameterName = "NEW_IP",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = new_IP
-            };
+			var SNparam = DBContext.SQLParameterType("SN", System.Data.DbType.String, SerialNo, System.Data.ParameterDirection.Input);
+			var ipparam = DBContext.SQLParameterType("NEW_IP", System.Data.DbType.String, new_IP, System.Data.ParameterDirection.Input);
 
             var parameters = new System.Data.Common.DbParameter[] { SNparam, ipparam };
             string formatted_sql_str = DBContext.FormatExecSPSQL("NETWORK.UPDATE_HOST_IP_BY_SN", parameters);
@@ -55,63 +42,15 @@ namespace DBConnectionLibrary.DBObjectContexts
 
         public static async Task UpdateHostStatus(AppDBMainContext DBContext, string host_IP, string port, string status, string trace_ID, string additional_message, string edit_by, double latency)
         {
-            var host_IP_param = new SqlParameter
-            {
-                ParameterName = "HOST_IP",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = host_IP
-            };
+			var host_IP_param = DBContext.SQLParameterType("HOST_IP", System.Data.DbType.String, host_IP, System.Data.ParameterDirection.Input);
+			var port_param = DBContext.SQLParameterType("PORT", System.Data.DbType.String, port, System.Data.ParameterDirection.Input);
+			var status_param = DBContext.SQLParameterType("STATUS", System.Data.DbType.String, status, System.Data.ParameterDirection.Input);
+			var edit_by_param = DBContext.SQLParameterType("EDIT_BY", System.Data.DbType.String, edit_by, System.Data.ParameterDirection.Input);
+			var trace_ID_param = DBContext.SQLParameterType("TRACE_ID", System.Data.DbType.String, trace_ID, System.Data.ParameterDirection.Input);
+			var additional_message_param = DBContext.SQLParameterType("INPUT_MESSAGE", System.Data.DbType.String, additional_message, System.Data.ParameterDirection.Input);
+			var latency_param = DBContext.SQLParameterType("LATENCY", System.Data.DbType.Double, latency, System.Data.ParameterDirection.Input);
 
-            var port_param = new SqlParameter
-            {
-                ParameterName = "PORT",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = port
-            };
-
-            var status_param = new SqlParameter
-            {
-                ParameterName = "STATUS",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = status
-            };
-
-            var edit_by_param = new SqlParameter
-            {
-                ParameterName = "EDIT_BY",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = edit_by
-            };
-
-            var trace_ID_param = new SqlParameter
-            {
-                ParameterName = "TRACE_ID",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = trace_ID
-            };
-
-            var additional_message_param = new SqlParameter
-            {
-                ParameterName = "INPUT_MESSAGE",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = additional_message
-            };
-
-            var latency_param = new SqlParameter
-            {
-                ParameterName = "LATENCY",
-                DbType = System.Data.DbType.Double,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = latency
-            };
-
-            var parameters = new System.Data.Common.DbParameter[] { host_IP_param, port_param, status_param, edit_by_param, trace_ID_param, additional_message_param, latency_param };
+			var parameters = new System.Data.Common.DbParameter[] { host_IP_param, port_param, status_param, edit_by_param, trace_ID_param, additional_message_param, latency_param };
             string formatted_sql_str = DBContext.FormatExecSPSQL("NETWORK.UPDATE_HOST_STATUS", parameters);
             await DBContext.Database.ExecuteSqlRawAsync(formatted_sql_str, parameters);
 
@@ -150,47 +89,13 @@ namespace DBConnectionLibrary.DBObjectContexts
         public static async Task InsertHostStatusLog(AppDBMainContext DBContext, string host_IP, string status, string trace_ID, string message, string edit_by)
         {
 
-            var host_IP_param = new SqlParameter
-            {
-                ParameterName = "@HOST_IP",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = host_IP
-            };
+			var host_IP_param = DBContext.SQLParameterType("HOST_IP", System.Data.DbType.String, host_IP, System.Data.ParameterDirection.Input);
+			var host_status_param = DBContext.SQLParameterType("HOST_STATUS", System.Data.DbType.String, status, System.Data.ParameterDirection.Input);
+			var trace_ID_param = DBContext.SQLParameterType("TRACE_ID", System.Data.DbType.String, trace_ID, System.Data.ParameterDirection.Input);
+			var input_message_param = DBContext.SQLParameterType("INPUT_MESSAGE", System.Data.DbType.String, message, System.Data.ParameterDirection.Input);
+			var edit_by_param = DBContext.SQLParameterType("EDIT_BY", System.Data.DbType.String, edit_by, System.Data.ParameterDirection.Input);
 
-            var host_status_param = new SqlParameter
-            {
-                ParameterName = "@HOST_STATUS",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = status
-            };
-
-            var trace_ID_param = new SqlParameter
-            {
-                ParameterName = "@TRACE_ID",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = trace_ID
-            };
-
-            var input_message_param = new SqlParameter
-            {
-                ParameterName = "@INPUT_MESSAGE",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = message
-            };
-
-            var edit_by_param = new SqlParameter
-            {
-                ParameterName = "@EDIT_BY",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = edit_by
-            };
-
-            var proc_params = new System.Data.Common.DbParameter[] { host_IP_param, host_status_param, trace_ID_param, input_message_param, edit_by_param };
+			var proc_params = new System.Data.Common.DbParameter[] { host_IP_param, host_status_param, trace_ID_param, input_message_param, edit_by_param };
             string formatted_sql_str = DBContext.FormatExecSPSQL("NETWORK.INSERT_HOST_STATUS_LOG", proc_params);
             await DBContext.Database.ExecuteSqlRawAsync(formatted_sql_str, proc_params);
             

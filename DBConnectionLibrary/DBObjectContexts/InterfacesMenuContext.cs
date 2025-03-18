@@ -94,61 +94,13 @@ namespace DBConnectionLibrary.DBObjectContexts
 
         public static async Task InsertNewMenuItemProcedure(AppDBMainContext DBContext, string menu_header_ID, T_WEBSITE_MENU_ITEM menu_item, string edit_by)
         {
-            var menu_header_ID_param = new SqlParameter
-            {
-                ParameterName = "MENU_HEADER_ID",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = menu_header_ID
-            };
-
-            var item_name_param = new SqlParameter
-            {
-                ParameterName = "ITEM_NAME",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = menu_item.ITEM_NAME
-            };
-
-            var item_display_name_param = new SqlParameter
-            {
-                ParameterName = "ITEM_DISPLAY_NAME",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = menu_item.DISPLAY_NAME
-            };
-
-            var route_type_param = new SqlParameter
-            {
-                ParameterName = "ROUTE_TYPE",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = menu_item.ROUTE_TYPE
-            };
-
-            var route_param = new SqlParameter
-            {
-                ParameterName = "ROUTE",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = menu_item.ROUTE
-            };
-
-            var icon_param = new SqlParameter
-            {
-                ParameterName = "ICON",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = menu_item.ICON
-            };
-
-            var edit_by_param = new SqlParameter
-            {
-                ParameterName = "EDIT_BY",
-                DbType = System.Data.DbType.String,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = edit_by
-            };
+            var menu_header_ID_param = DBContext.SQLParameterType("MENU_HEADER_ID", System.Data.DbType.String, menu_header_ID, System.Data.ParameterDirection.Input);
+            var item_name_param = DBContext.SQLParameterType("ITEM_NAME", System.Data.DbType.String, menu_item.ITEM_NAME, System.Data.ParameterDirection.Input);
+            var item_display_name_param = DBContext.SQLParameterType("ITEM_DISPLAY_NAME", System.Data.DbType.String, menu_item.DISPLAY_NAME, System.Data.ParameterDirection.Input);
+            var route_type_param = DBContext.SQLParameterType("ROUTE_TYPE", System.Data.DbType.String, menu_item.ROUTE_TYPE, System.Data.ParameterDirection.Input);
+            var route_param = DBContext.SQLParameterType("ROUTE", System.Data.DbType.String, menu_item.ROUTE, System.Data.ParameterDirection.Input);
+            var icon_param = DBContext.SQLParameterType("ICON", System.Data.DbType.String, menu_item.ICON, System.Data.ParameterDirection.Input);
+            var edit_by_param = DBContext.SQLParameterType("EDIT_BY", System.Data.DbType.String, edit_by, System.Data.ParameterDirection.Input);
 
             var parameters = new System.Data.Common.DbParameter[] { menu_header_ID_param, item_name_param, item_display_name_param, route_type_param, route_param, icon_param, edit_by_param };
             string formatted_sql_str = DBContext.FormatExecSPSQL("INTERFACES.ADD_WEBSITE_MENU_ITEM", parameters);

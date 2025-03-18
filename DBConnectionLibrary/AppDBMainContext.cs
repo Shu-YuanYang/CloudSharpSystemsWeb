@@ -104,7 +104,6 @@ namespace DBConnectionLibrary
 			}
 		}
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 			// Configure composite primary keys:

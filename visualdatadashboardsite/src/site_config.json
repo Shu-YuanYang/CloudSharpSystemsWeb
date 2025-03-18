@@ -3,7 +3,7 @@
 
   "APIEndpoints": {
     "CloudSharpLimitedCentral": {
-      "url": "https://cloudsharplimitedcentral.azurewebsites.net",
+      "url": "https://cloudsharplimitedcentral-us.azurewebsites.net",
       "api": {
         "auth_gcp_login": {
           "path": "/auth/gcp/login",

@@ -247,7 +247,7 @@ namespace CustomMiddleWares
             // Do Load Balancing
             string? selected_host_IP = "";
             var session_obj = new TB_USER_SESSION();
-            DateTime requested_time = DateTime.Now;
+            DateTime requested_time = DateTime.UtcNow; // Use UTC time!
             await DBTransactionContext.DBTransact(db_context, async (app_db_context, transaction) =>
             {
 
