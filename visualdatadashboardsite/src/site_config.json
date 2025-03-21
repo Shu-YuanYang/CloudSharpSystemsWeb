@@ -13,7 +13,7 @@
       }
     },
     "CloudSharpMicroService": {
-      "url": "https://cloudsharpsystemswebmicro.azurewebsites.net",
+      "url": "https://cloudsharpsystemsweb-us.azurewebsites.net",
       "api": {
         "get_system_log_volume": {
           "path": "/home/get_system_log_volume",

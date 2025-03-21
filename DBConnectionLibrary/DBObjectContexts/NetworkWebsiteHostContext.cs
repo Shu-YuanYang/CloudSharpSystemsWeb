@@ -67,20 +67,19 @@ namespace DBConnectionLibrary.DBObjectContexts
 
         // Get latency statistics:
         public static async Task<List<T_HOST_LATENCY_STATISTICS>[]> GetRecentHostLatencyStatistics(AppDBMainContext DBContext, int TimeOffSetHours, int TimeIntervalMinutes, string[] hostIPs) {
-            DateTime current_time = await DBTransactionContext.DBGetDateTime(DBContext);
             var queries = hostIPs.Select((hostIP) =>
             {
-                var query = from stat in DBContext.GET_DB_HOST_LATENCY_STATISTICS_TEST(TimeOffSetHours, TimeIntervalMinutes, hostIP, current_time)
+                var query = from stat in DBContext.GET_DB_HOST_LATENCY_STATISTICS(TimeOffSetHours, TimeIntervalMinutes, hostIP)
                             orderby stat.END_TIME
                             select stat;
                 
                 return query;
             });
 
-            var results = queries.Select((query) => {
-                try { return query.ToList(); }
+            var results = queries.Select(async (query) => {
+                try { return await query.ToListAsync(); }
                 catch { return new List<T_HOST_LATENCY_STATISTICS>(); }
-            });
+            }).Select(r => r.Result);
 
             return results.ToArray();
         }
