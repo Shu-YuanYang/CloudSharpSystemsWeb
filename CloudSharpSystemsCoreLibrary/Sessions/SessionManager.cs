@@ -151,8 +151,9 @@ namespace CloudSharpSystemsCoreLibrary.Sessions
             // Session deletion transaction:
             await DBTransactionContext.DBTransact(this._app_db_main_context, async (app_db_context, transaction) =>
             {
-                await NetworkUserSessionContext.InvalidateUserSessions(app_db_context, session.SESSION_ID!, "", session.THREAD_ID!, "");
-            });
+				//await NetworkUserSessionContext.InvalidateUserSessions(app_db_context, session.SESSION_ID!, "", session.THREAD_ID!, "");
+				await NetworkUserSessionContext.InvalidateUserSessions(app_db_context, session.SESSION_ID!, null, session.THREAD_ID!, null);
+			});
         }
 
 

@@ -26,7 +26,7 @@ namespace DBConnectionLibrary
 						ParameterName = ParameterName,
 						DbType = DbType,
 						Direction = Direction,
-						Value = Value
+						Value = (Value == null)? DBNull.Value : Value
 					};
 				case AppDBMainContext.DBProvider.POSTGRESQL:
 					return new NpgsqlParameter
@@ -34,7 +34,7 @@ namespace DBConnectionLibrary
 						ParameterName = ParameterName,
 						DbType = DbType,
 						Direction = Direction,
-						Value = Value
+						Value = (Value == null) ? DBNull.Value : Value
 					};
 				default:
 					throw new NotImplementedException(NOT_IMPLEMENTED_MESSAGE);

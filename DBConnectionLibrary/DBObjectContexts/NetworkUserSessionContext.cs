@@ -95,7 +95,7 @@ namespace DBConnectionLibrary.DBObjectContexts
 
 
 
-        public static async Task InvalidateUserSessions(AppDBMainContext DBContext, string sessionID, string clientIP, string threadID, string hostIP) {
+        public static async Task InvalidateUserSessions(AppDBMainContext DBContext, string? sessionID, string? clientIP, string? threadID, string? hostIP) {
 			var session_id_param = DBContext.SQLParameterType("SESSION_ID", System.Data.DbType.String, sessionID, System.Data.ParameterDirection.Input);
 			var client_ip_param = DBContext.SQLParameterType("CLIENT_IP", System.Data.DbType.String, clientIP, System.Data.ParameterDirection.Input);
 			var thread_id_param = DBContext.SQLParameterType("THREAD_ID", System.Data.DbType.String, threadID, System.Data.ParameterDirection.Input);
