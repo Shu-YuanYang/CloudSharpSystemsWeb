@@ -117,7 +117,7 @@ namespace CloudSharpSystemsCoreLibrary.Sessions
             await DBTransactionContext.DBTransact(this._app_db_main_context, async (app_db_context, transaction) =>
             {
                 // If session exists, invalidate and preserve other identity info
-                await NetworkUserSessionContext.InvalidateUserSessions(app_db_context, "", "", identity.USERID!, hostIP);
+                await NetworkUserSessionContext.InvalidateUserSessions(app_db_context, null, null, identity.USERID!, hostIP);
 
                 // create a new session with identity item
                 new_session = await NetworkUserSessionContext.InsertNewUserSession(app_db_context, new_session);
