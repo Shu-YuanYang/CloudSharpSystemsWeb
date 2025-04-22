@@ -101,7 +101,12 @@ namespace DBConnectionLibrary.DBObjectContexts
 			var thread_id_param = DBContext.SQLParameterType("THREAD_ID", System.Data.DbType.String, threadID, System.Data.ParameterDirection.Input);
 			var host_ip_param = DBContext.SQLParameterType("HOST_IP", System.Data.DbType.String, hostIP, System.Data.ParameterDirection.Input);
 
-            var parameters = new System.Data.Common.DbParameter[] { session_id_param, client_ip_param, thread_id_param, host_ip_param };
+            //Console.WriteLine($"Session ID: {session_id_param.Value}, is null? {session_id_param.Value == DBNull.Value}");
+			//Console.WriteLine($"Client IP: {client_ip_param.Value}, is null? {client_ip_param.Value == DBNull.Value}");
+			//Console.WriteLine($"Thread ID: {thread_id_param.Value}, is null? {thread_id_param.Value == DBNull.Value}");
+			//Console.WriteLine($"Host IP: {host_ip_param.Value}, is null? {host_ip_param.Value == DBNull.Value}");
+
+			var parameters = new System.Data.Common.DbParameter[] { session_id_param, client_ip_param, thread_id_param, host_ip_param };
             string formatted_sql_str = DBContext.FormatExecSPSQL("NETWORK.INVALIDATE_USER_SESSIONS", parameters);
             await DBContext.Database.ExecuteSqlRawAsync(formatted_sql_str, parameters);
         }
