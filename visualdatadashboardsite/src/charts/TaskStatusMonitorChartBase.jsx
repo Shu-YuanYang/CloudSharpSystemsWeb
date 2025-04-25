@@ -7,9 +7,9 @@ import useFetch from "../endpoints/api/useFetch";
 import { APIEndpoints } from "../site_config.json";
 
 
-const TaskStatusMonitorChart = ({ title, refreshTriggered }) => {
+const TaskStatusMonitorChartBase = ({ title, refreshTriggered, app_id }) => {
     
-    const { data: statusData, refreshData: refreshStatusData, isPending: isStatusDataPending, error: statusDataFetchError } = useFetch(api_full_path_with_query(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "get_task_status_statistics").path, "app_id=CloudSharpTaskManager"));
+    const { data: statusData, refreshData: refreshStatusData, isPending: isStatusDataPending, error: statusDataFetchError } = useFetch(api_full_path_with_query(APIEndpoints.CloudSharpMicroService.url, get_api(APIEndpoints.CloudSharpMicroService, "get_task_status_statistics").path, `app_id=${app_id}`));
 
     const standardizedData = useMemo(() => {
         if (!statusData) return [];
@@ -32,4 +32,4 @@ const TaskStatusMonitorChart = ({ title, refreshTriggered }) => {
     );
 };
 
-export default TaskStatusMonitorChart;
+export default TaskStatusMonitorChartBase;
