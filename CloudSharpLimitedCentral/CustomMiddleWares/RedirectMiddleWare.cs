@@ -148,7 +148,7 @@ namespace CloudSharpLimitedCentral.CustomMiddleWares
 
             // Validate return url to prevent dangerous redirects:
             Uri origin_return_uri_obj = new Uri(origin_return_uri);
-            bool is_origin_return_uri_allowed = client_secrets.web!.redirect_uris!
+            bool is_origin_return_uri_allowed = client_secrets.web!.javascript_origins!
                 .Any((uri) => {
                     var uri_obj = new Uri(uri);
                     return uri_obj.IsBaseOf(origin_return_uri_obj);
