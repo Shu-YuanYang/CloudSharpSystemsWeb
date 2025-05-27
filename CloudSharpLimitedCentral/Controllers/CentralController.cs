@@ -86,5 +86,20 @@ namespace CloudSharpLimitedCentral.Controllers
             return new GeneralAPIResponse { Status = "Success", Message = "Task statuses updated!" }; ;
         }
 
-    }
+
+		[HttpGet("get_requester_domain")]
+		[Produces("application/json")]
+		[Consumes("application/json")]
+		public object GetRequesterDomain()
+		{
+			string clientDomain = HttpContext.Request.Headers.Origin.ToString();
+
+			return new { ClientDomain = clientDomain };
+			//string ClientIP = HttpContext.Connection.RemoteIpAddress!.ToString();
+			//string TraceID = HttpContext.TraceIdentifier;
+			//int ResourceSize = (int)Request.ContentLength!;
+
+		}
+
+	}
 }
