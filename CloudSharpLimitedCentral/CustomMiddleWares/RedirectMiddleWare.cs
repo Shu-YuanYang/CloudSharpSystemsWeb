@@ -54,7 +54,7 @@ namespace CloudSharpLimitedCentral.CustomMiddleWares
             if (url!.Contains("/auth/gcp/authenticate")) {
                 var token_info = await this.GCPAuthenticate(context, gcp_client_secrets, gcp_credentials_helper);
                 var user_info = await GoogleAPIHelper.GetUserInfo(_external_api_map.GoogleAPI!.url!, _external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_userinfo")!, token_info.access_token!);
-                var session_data = await this.SaveSession(context, config["HostConfig"]!, token_info, user_info, db_context, _app_id);
+                var session_data = await this.SaveSession(context, token_info, user_info, db_context, _app_id);
                 this.RedirectBackToOrigin(context, gcp_client_secrets, session_data.SESSION_ID!);
                 return;
             }
@@ -132,10 +132,13 @@ namespace CloudSharpLimitedCentral.CustomMiddleWares
             };
         }
 
-        private async Task<TB_USER_SESSION> SaveSession(HttpContext context, string hostIP, GoogleAPIOauth2TokenResponse token_response, GoogleAPIOAuth2UserInfo user_info, AppDBMainContext db_context, string appID) {
+        private async Task<TB_USER_SESSION> SaveSession(HttpContext context, GoogleAPIOauth2TokenResponse token_response, GoogleAPIOAuth2UserInfo user_info, AppDBMainContext db_context, string appID) {
             var client_info = HttpRequestHeaderHelper.GetClientHttpInfoFromHttpContext(context);
+            var uriBuilder = new UriBuilder(context.Session.GetString(ORIGIN_RETURN_URL)!);
+            client_info.client_origin = $"{uriBuilder.Scheme}://{uriBuilder.Host}";
+            client_info.client_host = uriBuilder.Host; // Rewrite host to redirect initiator due to Oauth2 origin interception
             SessionManager session_manager = new SessionManager(db_context);
-            var session_data = await session_manager.UpdateSession(hostIP, client_info, token_response, user_info, appID);
+            var session_data = await session_manager.UpdateSession(client_info, token_response, user_info, appID);
             return session_data;
         }
 

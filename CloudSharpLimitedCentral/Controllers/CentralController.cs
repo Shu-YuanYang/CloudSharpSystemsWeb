@@ -93,8 +93,9 @@ namespace CloudSharpLimitedCentral.Controllers
 		public object GetRequesterDomain()
 		{
 			string clientDomain = HttpContext.Request.Headers.Origin.ToString();
+            var uriBuilder = new UriBuilder(clientDomain);
 
-			return new { ClientDomain = clientDomain };
+			return new { RequesterDomain = clientDomain, RequesterHost = uriBuilder.Host };
 			//string ClientIP = HttpContext.Connection.RemoteIpAddress!.ToString();
 			//string TraceID = HttpContext.TraceIdentifier;
 			//int ResourceSize = (int)Request.ContentLength!;

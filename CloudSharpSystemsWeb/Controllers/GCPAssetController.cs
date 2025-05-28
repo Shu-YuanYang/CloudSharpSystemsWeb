@@ -101,7 +101,7 @@ namespace CloudSharpSystemsWeb.Controllers
             var client_info = HttpRequestHeaderHelper.GetClientHttpInfoFromHttpContext(Request.HttpContext);
             var user_info = await GoogleAPIHelper.GetUserInfo(_external_api_map.GoogleAPI!.url!, _external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_userinfo")!, token_info.access_token!);
             SessionManager session_manager = new SessionManager(this._app_db_main_context);
-            var session_data = await session_manager.UpdateSession(this.MY_PUBLIC_IP, client_info, token_info, user_info, this.APP_ID, "TOKEN_REFRESHED");
+            var session_data = await session_manager.UpdateSession(client_info, token_info, user_info, this.APP_ID, "TOKEN_REFRESHED");
             
             return new TB_USER_SESSION { 
                 SESSION_ID = session_data.SESSION_ID,
@@ -128,7 +128,7 @@ namespace CloudSharpSystemsWeb.Controllers
             
             // Write system log to record token revoking:
             var client_info = HttpRequestHeaderHelper.GetClientHttpInfoFromHttpContext(Request.HttpContext);
-            await this._session_manager.WriteLogOutSystemLog(this.MY_PUBLIC_IP, client_info, session, GCP_session_item, this.APP_ID, logout_result);
+            await this._session_manager.WriteLogOutSystemLog(client_info, session, GCP_session_item, this.APP_ID, logout_result);
 
             // Session deletion transaction:
             await this._session_manager.InvalidateSession(session);

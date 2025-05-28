@@ -5,6 +5,8 @@ namespace AuxiliaryClassLibrary.Network
 
     public struct ClientHttpContextInfo 
     {
+        public string client_origin;
+        public string client_host;
         public string client_IP;
         public string trace_ID;
         public long request_size;
@@ -32,8 +34,13 @@ namespace AuxiliaryClassLibrary.Network
 
         public static ClientHttpContextInfo GetClientHttpInfoFromHttpContext(HttpContext context)
         {
-            return new ClientHttpContextInfo
+            string? origin;
+            bool has_origin = TryParseHeaderValueFirst(context.Request, "Origin", out origin);
+
+			return new ClientHttpContextInfo
             {
+                client_origin = has_origin? origin! : "",
+				client_host = has_origin? (new UriBuilder(origin!)).Host : "",
                 client_IP = context.Connection.RemoteIpAddress!.ToString(),
                 trace_ID = context.TraceIdentifier,
                 request_size = HttpRequestHeaderHelper.ASSUMED_HEADER_SIZE + (context.Request.ContentLength ?? 0)

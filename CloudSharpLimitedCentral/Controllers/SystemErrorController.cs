@@ -9,8 +9,6 @@ namespace CloudSharpLimitedCentral.Controllers
     [ApiController]
     public class SystemErrorController : ControllerBase
     {
-        
-
         protected readonly ILogger<WeatherForecastController> _logger;
         protected readonly AppDBMainContext _app_db_main_context;
         protected readonly IConfiguration _configuration;

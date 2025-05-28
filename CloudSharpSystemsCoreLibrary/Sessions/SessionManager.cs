@@ -54,7 +54,7 @@ namespace CloudSharpSystemsCoreLibrary.Sessions
             return session;
         }
 
-        public async Task<TB_USER_SESSION> UpdateSession(string hostIP, ClientHttpContextInfo client_info, GoogleAPIOauth2TokenResponse token_response, GoogleAPIOAuth2UserInfo user_info, string appID, string updateType = "SIGNED_IN")
+        public async Task<TB_USER_SESSION> UpdateSession(ClientHttpContextInfo client_info, GoogleAPIOauth2TokenResponse token_response, GoogleAPIOAuth2UserInfo user_info, string appID, string updateType = "SIGNED_IN")
         {
             // Search for existing session and identity
             // by user_info.email
@@ -67,7 +67,7 @@ namespace CloudSharpSystemsCoreLibrary.Sessions
 
 
             // Find current session, and recover refresh token if necessary:
-            IEnumerable<TB_USER_SESSION> current_sessions = await NetworkUserSessionContext.GetUserSessions(this._app_db_main_context, new TB_USER_SESSION { THREAD_ID = identity.USERID, HOST_IP = hostIP, IS_VALID = 'Y' });
+            IEnumerable<TB_USER_SESSION> current_sessions = await NetworkUserSessionContext.GetUserSessions(this._app_db_main_context, new TB_USER_SESSION { THREAD_ID = identity.USERID, HOST_IP = client_info.client_host, IS_VALID = 'Y' });
             string item_name = $"IDENTITY/{identity.IDENTITY_PROVIDER}";
             var current_session_items_raw = current_sessions.Select(session => {
                 var session_items = session.SESSION_ITEMS?.Where(item => item.ITEM_NAME == item_name);
@@ -90,7 +90,7 @@ namespace CloudSharpSystemsCoreLibrary.Sessions
                 SESSION_ID = session_id,
                 CLIENT_IP = client_info.client_IP, // GCP IP, NOT ACCURATE
                 THREAD_ID = identity.USERID,
-                HOST_IP = hostIP,
+                HOST_IP = client_info.client_host, //hostIP,
                 RESOURCE_UNIT = 0,
                 CLIENT_LOCATION = "protected",
                 REQUESTED_TIME = DateTime.UtcNow, // Use UTC time!
@@ -117,7 +117,7 @@ namespace CloudSharpSystemsCoreLibrary.Sessions
             await DBTransactionContext.DBTransact(this._app_db_main_context, async (app_db_context, transaction) =>
             {
                 // If session exists, invalidate and preserve other identity info
-                await NetworkUserSessionContext.InvalidateUserSessions(app_db_context, null, null, identity.USERID!, hostIP);
+                await NetworkUserSessionContext.InvalidateUserSessions(app_db_context, null, null, identity.USERID!, client_info.client_host);
 
                 // create a new session with identity item
                 new_session = await NetworkUserSessionContext.InsertNewUserSession(app_db_context, new_session);
@@ -127,7 +127,7 @@ namespace CloudSharpSystemsCoreLibrary.Sessions
                 await AppDataContext.WriteSystemLog(app_db_context, new TB_CENTRAL_SYSTEM_LOG
                 {
                     APP_ID = appID,
-                    SYSTEM_NAME = hostIP,
+                    SYSTEM_NAME = client_info.client_host,
                     TRACE_ID = client_info.trace_ID,
                     RECORD_TYPE = "GOOD",
                     RECORD_KEY = "OAUTH2",
@@ -157,7 +157,7 @@ namespace CloudSharpSystemsCoreLibrary.Sessions
         }
 
 
-        public async Task WriteLogOutSystemLog(string hostIP, ClientHttpContextInfo client_info, TB_USER_SESSION session, TB_USER_SESSION_ITEM session_item, string appID, string oauth2_logout_response) {
+        public async Task WriteLogOutSystemLog(ClientHttpContextInfo client_info, TB_USER_SESSION session, TB_USER_SESSION_ITEM session_item, string appID, string oauth2_logout_response) {
             await DBTransactionContext.DBTransact(this._app_db_main_context, async (app_db_context, transaction) =>
             {
                 var user_identity = (await AppUserContext.GetUserIdentities(app_db_context, new TB_APP_USER_IDENTITY
@@ -169,7 +169,7 @@ namespace CloudSharpSystemsCoreLibrary.Sessions
                 await AppDataContext.WriteSystemLog(app_db_context, new TB_CENTRAL_SYSTEM_LOG
                 {
                     APP_ID = appID,
-                    SYSTEM_NAME = hostIP,
+                    SYSTEM_NAME = client_info.client_host,
                     TRACE_ID = client_info.trace_ID,
                     RECORD_TYPE = "GOOD",
                     RECORD_KEY = "OAUTH2",
