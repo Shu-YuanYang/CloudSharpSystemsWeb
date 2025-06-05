@@ -5,6 +5,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Azure.Communication.Email" Version="1.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.3.0" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\APIConnector\APIConnector.csproj" />
     <ProjectReference Include="..\DBConnectionLibrary\DBConnectionLibrary.csproj" />
   </ItemGroup>

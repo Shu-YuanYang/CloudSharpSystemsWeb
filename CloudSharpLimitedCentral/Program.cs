@@ -1,6 +1,7 @@
 using APIConnector.Model;
 using AuxiliaryClassLibrary.ExceptionHelper;
 using CloudSharpLimitedCentral.CustomMiddleWares;
+using CloudSharpSystemsCoreLibrary.Messaging;
 using CustomMiddleWares;
 using DBConnectionLibrary;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -51,6 +52,9 @@ builder.Services.Configure<GCPOAuth2ClientSecretKeyObject>(builder.Configuration
 // Link Entity Framework Core DB Context to establish reference to the App database:
 // builder.Services.AddDbContext<AppDBMainContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseAppMainConnectionString")));
 builder.Services.AddDbContext<AppDBMainContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DatabaseAppMainConnectionString")));
+
+// Link Mongo DB Context to establish reference to the App Mongo database and:
+builder.Services.AddSingleton<AppDBMongoContext, AppDBMongoContext>(s => new AppDBMongoContext(builder.Configuration.GetConnectionString("DatabaseMongoConnectionString")!));
 
 // Add CORS method
 // Reference: https://www.yogihosting.com/aspnet-core-enable-cors/

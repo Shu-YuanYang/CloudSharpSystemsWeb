@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Access Code Verification</title>
+  <style>
+    body {{
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }}
+
+    .container {{
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 80vw;
+    }}
+
+    h1 {{
+      margin-bottom: 20px;
+    }}
+
+
+    .input-group {{
+      /*display: flex;*/
+      /*justify-content: space-between;*/
+      margin-bottom: 20px;
+    }}
+
+
+    .input-group input {{
+      width: 80%;
+      height: 40px;
+      text-align: center;
+      font-size: 18px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }}
+
+    button {{
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }}
+
+    button:hover {{
+      background-color: #45a049;
+    }}
+
+    .error-message {{
+      color: red;
+      font-size: 14px;
+      display: none;
+    }}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Enter Your Access Code</h1>
+    <p id="instruction">
+      A login code has been sent to your email at {0}
+      <br />
+      Please enter the code here:
+    </p>
+    <form id="verification-form">
+      <div class="input-group">
+        <input type="text" id="code-1" maxlength="6" required>
+      </div>
+      <button type="submit">Verify Code</button>
+    </form>
+    <p id="error-message" class="error-message"></p>
+  </div>
+
+  <script>
+
+    // script.js
+    document.getElementById('verification-form').addEventListener('submit', function (event) {{
+      event.preventDefault();
+
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+
+      const verification_method = urlParams.get('verification_method');
+      const message_id = urlParams.get('message_id');
+      const state = urlParams.get('state');
+
+      const code = document.getElementById('code-1').value;
+      fetch("/central/cloudsharp_submit_login", {{
+        method: 'POST',
+        headers: {{
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }},
+        body: JSON.stringify({{
+            verification_method: verification_method,
+            message_id: message_id,
+            verification_code: code,
+            state: state
+        }})
+      }})
+      .then(res => res.json())
+      .then(obj => {{ window.location = obj.response_url }})
+      .catch (err => {{
+        document.getElementById('error-message').textContent = 'Invalid code. Please try again.';
+        document.getElementById('error-message').style.display = 'block';
+        console.error(err);
+      }});
+      
+    }});
+  </script>
+</body>
+</html>

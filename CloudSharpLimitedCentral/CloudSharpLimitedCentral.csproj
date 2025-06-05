@@ -15,4 +15,12 @@
     <ProjectReference Include="..\CloudSharpSystemsCoreLibrary\CloudSharpSystemsCoreLibrary.csproj" />
     <ProjectReference Include="..\DBConnectionLibrary\DBConnectionLibrary.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Views\access_code_email.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\access_code_verification.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

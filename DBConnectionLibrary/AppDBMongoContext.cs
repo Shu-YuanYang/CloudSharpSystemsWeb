@@ -1,4 +1,5 @@
 ﻿using DBConnectionLibrary.DBQueryContexts;
+using DBConnectionLibrary.Models;
 using DBConnectionLibrary.Models.Mongo;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -19,7 +20,9 @@ namespace DBConnectionLibrary
         public readonly IMongoCollection<CL_TEAM_NOTE> TeamNotes;
         public readonly IMongoCollection<CL_TEAM_NOTE_LOG> TeamNoteLogs;
 
-        public readonly IMongoCollection<CL_GOOGLE_DAILY_TREND> GoogleDailyTrendsCollection;
+        public readonly IMongoCollection<CL_TEMPLATED_EMAIL> TemplatedEmails;
+
+		public readonly IMongoCollection<CL_GOOGLE_DAILY_TREND> GoogleDailyTrendsCollection;
 
 
         public AppDBMongoContext(string connection_string)
@@ -38,7 +41,9 @@ namespace DBConnectionLibrary
             this.AppDataControl = this._cloudsharp_userdoc_db.GetCollection<CL_APP_DATA_CONTROL>(typeof(CL_APP_DATA_CONTROL).Name);
             this.TeamNotes = this._cloudsharp_userdoc_db.GetCollection<CL_TEAM_NOTE>(typeof(CL_TEAM_NOTE).Name);
             this.TeamNoteLogs = this._cloudsharp_userdoc_db.GetCollection<CL_TEAM_NOTE_LOG>(typeof(CL_TEAM_NOTE_LOG).Name);
-            this.GoogleDailyTrendsCollection = this._gcp_doc_db.GetCollection<CL_GOOGLE_DAILY_TREND>(typeof(CL_GOOGLE_DAILY_TREND).Name);
+            this.TemplatedEmails = this._cloudsharp_userdoc_db.GetCollection<CL_TEMPLATED_EMAIL>(typeof(CL_TEMPLATED_EMAIL).Name);
+
+			this.GoogleDailyTrendsCollection = this._gcp_doc_db.GetCollection<CL_GOOGLE_DAILY_TREND>(typeof(CL_GOOGLE_DAILY_TREND).Name);
         }
 
         public Object PingDatabases() {

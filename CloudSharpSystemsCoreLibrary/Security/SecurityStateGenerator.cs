@@ -16,6 +16,14 @@ namespace CloudSharpSystemsCoreLibrary.Security
         }
 
 
+        public static string GenerateRandomCode(int code_length) {
+			Random random = new Random();
+			const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var codes = new char[code_length];
+            for (int i = 0; i < code_length; ++i) codes[i] = chars[random.Next(chars.Length)];
+			return new string(codes);
+		}
+
         public static string GenerateRandomState(Salt salt) {
             using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
             {
@@ -23,8 +31,8 @@ namespace CloudSharpSystemsCoreLibrary.Security
                 if (salt == Salt.Test) return "STATEGENERATETESTSHORTVERSION";
 
                 rng.GetBytes(random_number);
-                string state = Convert.ToBase64String(random_number);
-                return state;
+                string state = Base64UrlEncodeCompact(random_number); //Convert.ToBase64String(random_number);
+				return state;
             }
         }
 
@@ -42,7 +50,35 @@ namespace CloudSharpSystemsCoreLibrary.Security
             
         }
 
-    }
+
+		private static string Base64UrlEncodeCompact(byte[] data) =>
+		Convert.ToBase64String(data)
+			.Replace("+", "-")
+			.Replace("/", "_")
+			.TrimEnd('=');
+
+		public static string GenerateAuthorizationCode(int size) {
+			using var rng = RandomNumberGenerator.Create();
+			var randomBytes = new byte[size];
+			rng.GetBytes(randomBytes);
+			var verifier = Base64UrlEncodeCompact(randomBytes);
+
+			var buffer = Encoding.UTF8.GetBytes(verifier);
+			var hash = SHA256.Create().ComputeHash(buffer);
+			var code = Base64UrlEncodeCompact(hash);
+
+            return code;
+		}
+
+        public static string GenerateAuthenticationToken() {
+			byte[] time = BitConverter.GetBytes(DateTime.UtcNow.ToBinary());
+			byte[] key = Guid.NewGuid().ToByteArray();
+			string authentication_token = Convert.ToBase64String(time.Concat(key).ToArray());
+            return authentication_token;
+        }
+
+
+	}
 
 
 }

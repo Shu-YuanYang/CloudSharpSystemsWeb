@@ -16,6 +16,7 @@ namespace DBConnectionLibrary.Models
 		public const string INTERFACES = "INTERFACES";
 		public const string EXTERNAL_STACKEXCHANGE = "EXTERNAL_STACKEXCHANGE";
 		public const string AUTH = "AUTH";
+		public const string COMMUNICATIONS = "COMMUNICATIONS";
 		/*
 		public const string APPLICATIONS = "applications";
 		public const string PRODUCTS = "products";

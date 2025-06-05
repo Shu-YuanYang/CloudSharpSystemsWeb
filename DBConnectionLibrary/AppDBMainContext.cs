@@ -31,14 +31,14 @@ namespace DBConnectionLibrary
         public DbSet<TB_USER_SESSION> UserSessions { get; set; }
         public DbSet<TB_USER_SESSION_ITEM> UserSessionItems { get; set; }
         public DbSet<TB_HOST_STATUS_LOG> HostStatusLogs { get; set; }
-
         public DbSet<TB_WEBSITE_MENU_HEADER> WebsiteMenuHeaders { get; set; }
         public DbSet<TB_WEBSITE_MENU_ITEM> WebsiteMenuItems { get; set; }
 
         public DbSet<TB_CS_EDUCATOR_POSTS> ExternalStackExchangeCsEducatorPosts { get; set; }
+		public DbSet<TB_EMAIL_HEADER> EmailHeaders { get; set; }
 
 
-        public DbSet<V_APP_DATA_CONTROL> AppDataControlView { get; set; }
+		public DbSet<V_APP_DATA_CONTROL> AppDataControlView { get; set; }
         public DbSet<V_SERVER_USAGE> ServerUsageView { get; set; }
 
 

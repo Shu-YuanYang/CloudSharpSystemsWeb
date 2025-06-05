@@ -3,17 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using APIConnector.Model;
 using APIConnector.GoogleCloud;
-using AuxiliaryClassLibrary.Network;
 using DBConnectionLibrary.Models;
 using DBConnectionLibrary.DBObjectContexts;
-using CloudSharpSystemsCoreLibrary.Models;
 using System.Security.Authentication;
-using System.Text.Json;
-using Microsoft.EntityFrameworkCore;
-using CloudSharpSystemsCoreLibrary.Sessions;
-using Google.Apis.Auth.OAuth2.Responses;
-using Microsoft.Extensions.Hosting;
-using CloudSharpLimitedCentralWeb.Models;
 using DBConnectionLibrary.DBObjectContexts.Mongo;
 using DBConnectionLibrary.Models.Mongo;
 
@@ -49,11 +41,10 @@ namespace CloudSharpSystemsWeb.Controllers
         [Consumes("application/json")]
         public async Task<T_APP_IDENTITY_USER_PROFILE_HEADER> GetGCPIdentityUserProfile() 
         {
-            
-            var session = await this._session_manager.GetSessionByAuthorizationHeader(Request, true, GCPCredentialsHelper.IDENTITY_PROVIDER);
+			var session = await this._session_manager.GetLinkedSessionByAuthorizationHeader(Request, GCPCredentialsHelper.IDENTITY_PROVIDER); //await this._session_manager.GetSessionByAuthorizationHeader(Request, true, GCPCredentialsHelper.IDENTITY_PROVIDER);
 
-            // query for aliased profile:
-            T_APP_IDENTITY_USER_PROFILE_HEADER profile_header = await AppUserContext.GetUserIdentityProfileHeader(this._app_db_main_context, GCPCredentialsHelper.IDENTITY_PROVIDER, session.THREAD_ID!);
+			// query for aliased profile:
+			T_APP_IDENTITY_USER_PROFILE_HEADER profile_header = await AppUserContext.GetUserIdentityProfileHeader(this._app_db_main_context, GCPCredentialsHelper.IDENTITY_PROVIDER, session.THREAD_ID!);
 
             // fetch identity data from Google:
             GoogleAPIOAuth2UserInfo user_info_data;
@@ -78,63 +69,6 @@ namespace CloudSharpSystemsWeb.Controllers
 
 
 
-        [HttpGet("identity_refresh_token")]
-        [Produces("application/json")]
-        [Consumes("application/json")]
-        public async Task<TB_USER_SESSION> GCPIdentityRefreshToken()
-        {
-            var session = await this._session_manager.GetSessionByAuthorizationHeader(Request, true, GCPCredentialsHelper.IDENTITY_PROVIDER);
-            var GCP_session_item = session.SESSION_ITEMS!.First();
-
-            var token_info = JsonSerializer.Deserialize<GoogleAPIOauth2TokenResponse>(GCP_session_item.ITEM_DESCRIPTION!);
-            string refresh_token = token_info!.refresh_token!;
-
-            // Revoke access token and refresh token: Doc at https://developers.google.com/identity/protocols/oauth2/web-server#httprest_8 - Revoking a Token
-            string refresh_result = await this._gcp_credentials_helper.RefreshOAuth2AccessToken(this._gcp_client_secrets, refresh_token);
-
-            // parse new token info:
-            token_info = JsonSerializer.Deserialize<GoogleAPIOauth2TokenResponse>(refresh_result);
-            token_info!.issued_utc = DateTime.UtcNow;
-            token_info!.refresh_token = refresh_token;
-
-            // update session
-            var client_info = HttpRequestHeaderHelper.GetClientHttpInfoFromHttpContext(Request.HttpContext);
-            var user_info = await GoogleAPIHelper.GetUserInfo(_external_api_map.GoogleAPI!.url!, _external_api_map.GoogleAPI!.api!.GetValueOrDefault("oauth2_userinfo")!, token_info.access_token!);
-            SessionManager session_manager = new SessionManager(this._app_db_main_context);
-            var session_data = await session_manager.UpdateSession(client_info, token_info, user_info, this.APP_ID, "TOKEN_REFRESHED");
-            
-            return new TB_USER_SESSION { 
-                SESSION_ID = session_data.SESSION_ID,
-                CLIENT_IP = session_data.CLIENT_IP,
-                HOST_IP = session_data.HOST_IP,
-                RESOURCE_UNIT = session_data.RESOURCE_UNIT,
-                CLIENT_LOCATION = session_data.CLIENT_LOCATION,
-                REQUESTED_TIME = session_data.REQUESTED_TIME,
-                RESOURCE_SIZE = session_data.RESOURCE_SIZE
-            };
-        }
-
-
-        [HttpGet("identity_log_out")]
-        [Produces("application/json")]
-        [Consumes("application/json")]
-        public async Task<GeneralAPIResponse> GCPIdentityLogOut() {
-
-            var session = await this._session_manager.GetSessionByAuthorizationHeader(Request, true, GCPCredentialsHelper.IDENTITY_PROVIDER);
-            var GCP_session_item = session.SESSION_ITEMS!.First();
-
-            
-            string logout_result = await this._gcp_credentials_helper.RevokeOAuth2AccessToken(GCP_session_item.ITEM_POLICY!);
-            
-            // Write system log to record token revoking:
-            var client_info = HttpRequestHeaderHelper.GetClientHttpInfoFromHttpContext(Request.HttpContext);
-            await this._session_manager.WriteLogOutSystemLog(client_info, session, GCP_session_item, this.APP_ID, logout_result);
-
-            // Session deletion transaction:
-            await this._session_manager.InvalidateSession(session);
-
-            return new GeneralAPIResponse { Status = "OK", Message = "Logged out." };
-        }
 
 
 
